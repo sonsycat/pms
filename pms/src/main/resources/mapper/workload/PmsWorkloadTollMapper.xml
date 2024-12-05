@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.workload.mapper.PmsWorkloadTollMapper">
+
+    <resultMap type="PmsWorkloadToll" id="PmsWorkloadTollResult">
+        <result property="id" column="ID"/>
+        <result property="projectCode" column="PROJECT_CODE"/>
+        <result property="hisName" column="HIS_NAME"/>
+        <result property="hisCode" column="HIS_CODE"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <sql id="selectPmsWorkloadTollVo">
+        select ID,
+               PROJECT_CODE,
+               HIS_NAME,
+               HIS_CODE,
+               DEL_FLAG,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK
+        from pms_workload_toll
+    </sql>
+
+    <select id="selectPmsWorkloadTollList" parameterType="PmsWorkloadToll" resultMap="PmsWorkloadTollResult">
+        <include refid="selectPmsWorkloadTollVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="projectCode != null  and projectCode != ''">and PROJECT_CODE = #{projectCode}</if>
+            <if test="hisName != null  and hisName != ''">and HIS_NAME like concat('%', #{hisName}, '%')</if>
+            <if test="hisCode != null  and hisCode != ''">and HIS_CODE = #{hisCode}</if>
+            <if test="delFlag != null  and delFlag != ''">and DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and REMARK = #{remark}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsWorkloadTollById" parameterType="Long" resultMap="PmsWorkloadTollResult">
+        <include refid="selectPmsWorkloadTollVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+
+    <insert id="insertPmsWorkloadToll" parameterType="PmsWorkloadToll" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_workload_toll
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectCode != null">PROJECT_CODE,</if>
+            <if test="hisName != null">HIS_NAME,</if>
+            <if test="hisCode != null">HIS_CODE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="hisName != null">#{hisName},</if>
+            <if test="hisCode != null">#{hisCode},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsWorkloadToll" parameterType="PmsWorkloadToll">
+        update pms_workload_toll
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="hisName != null">HIS_NAME = #{hisName},</if>
+            <if test="hisCode != null">HIS_CODE = #{hisCode},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsWorkloadTollById" parameterType="Long">
+        update pms_workload_toll
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsWorkloadTollByIds" parameterType="String">
+        update pms_workload_toll set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectAll" resultType="com.zjry.pms.workload.domain.PmsWorkloadToll">
+        select pwh.HIS_CODE,
+        pwh.HIS_NAME
+        from pms_workload_his pwh
+        left join pms_workload_toll pwt
+        on pwh.HIS_CODE = pwt.HIS_CODE and pwt.PROJECT_CODE = #{projectCode} and pwt.DEL_FLAG = '0'
+        where pwh.DEL_FLAG = '0'
+        <if test="type == '1'.toString() ">
+            and pwt.id is not null
+
+        </if>
+        <if test="type == '2'.toString() ">
+            and pwt.id is null
+            <if test="histName != null and histName != '' ">
+                and pwh.HIS_NAME like concat('%',#{histName},'%')
+            </if>
+            <if test="existCode != null and existCode.size() >0  ">
+                and pwh.his_code not in
+                <foreach collection="existCode" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </if>
+    </select>
+
+    <delete id="realDelete">
+        delete
+        from pms_workload_toll
+        where PROJECT_CODE = #{projectCode}
+    </delete>
+
+    <insert id="saveBatch">
+        <foreach collection="list" item="item" separator=";" close=";">
+            insert into pms_workload_toll
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.projectCode != null">PROJECT_CODE,</if>
+                <if test="item.hisName != null">HIS_NAME,</if>
+                <if test="item.hisCode != null">HIS_CODE,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.projectCode != null">#{item.projectCode},</if>
+                <if test="item.hisName != null">#{item.hisName},</if>
+                <if test="item.hisCode != null">#{item.hisCode},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <delete id="realDeleteByDate">
+        delete
+        from pms_workload_toll
+        where PROJECT_CODE in (
+            select pms_workload.PROJECT_CODE
+            from pms_workload
+            where WORKLOAD_DATE = #{copyDate}
+        )
+
+    </delete>
+
+</mapper>

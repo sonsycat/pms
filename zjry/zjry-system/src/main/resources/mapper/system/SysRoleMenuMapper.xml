@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.system.mapper.SysRoleMenuMapper">
+
+	<resultMap type="SysRoleMenu" id="SysRoleMenuResult">
+		<result property="roleId"     column="role_id"      />
+		<result property="menuId"     column="menu_id"      />
+	</resultMap>
+
+	<select id="checkMenuExistRole" resultType="Integer">
+	    select count(1) from comm.sys_role_menu_ry
+	    where menu_id = #{menuId}
+	    and del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+	</select>
+
+	<delete id="deleteRoleMenuByRoleId" parameterType="Long">
+		delete from comm.sys_role_menu_ry
+		where role_id=#{roleId}
+	</delete>
+
+	<delete id="deleteRoleMenu" parameterType="Long">
+ 		delete from comm.sys_role_menu_ry where role_id in
+ 		<foreach collection="array" item="roleId" open="(" separator="," close=")">
+ 			#{roleId}
+        </foreach>
+ 	</delete>
+
+	<insert id="batchRoleMenu" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into comm.sys_role_menu_ry(role_id, menu_id)
+<!--		<foreach item="item" index="index" collection="list" separator=",">-->
+<!--			(#{item.roleId},#{item.menuId})-->
+<!--		</foreach>-->
+		<foreach collection="list" item="item" index="index" separator="union all">
+			( select
+			#{item.roleId},
+			#{item.menuId}
+			from DUAL)
+		</foreach>
+	</insert>
+
+</mapper>

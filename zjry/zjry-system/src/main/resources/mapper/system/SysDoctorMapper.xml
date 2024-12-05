@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.system.mapper.SysDoctorMapper">
+    
+    <resultMap type="SysDoctor" id="SysDoctorResult">
+        <result property="id"    column="id"    />
+        <result property="docCode"    column="doc_code"    />
+        <result property="docName"    column="doc_name"    />
+        <result property="docLevel"    column="doc_level"    />
+        <result property="orgCode"    column="org_code"    />
+        <result property="depCode"    column="dep_code"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="cardType"    column="card_type"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="education"    column="education"    />
+        <result property="profType"    column="prof_type"    />
+        <result property="profLevel"    column="prof_level"    />
+        <result property="profNum"    column="prof_num"    />
+        <result property="profOrg"    column="prof_org"    />
+        <result property="technical"    column="technical"    />
+        <result property="tel"    column="tel"    />
+        <result property="email"    column="email"    />
+        <result property="personStatus"    column="person_status"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="recruitmentMethods"    column="recruitment_methods"    />
+        <result property="homeAddress"    column="home_address"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="orgName"    column="dept_name"    />
+    </resultMap>
+
+    <sql id="selectSysDoctorVo">
+        select t.dept_name, r.id, r.doc_code, r.doc_name, r.doc_level, r.org_code, r.dep_code, r.sex, r.birthday, r.card_type, r.card_no, r.education, r.prof_type, r.prof_level, r.prof_num, r.prof_org, r.technical, r.tel, r.email, r.person_status, r.entry_time, r.recruitment_methods, r.home_address, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
+        from sys_doctor r
+        left join sys_dept t on r.org_code = t.dept_id
+    </sql>
+
+    <select id="selectSysDoctorList" parameterType="SysDoctor" resultMap="SysDoctorResult">
+        <include refid="selectSysDoctorVo"/>
+        <where>  
+            <if test="docCode != null  and docCode != ''"> and doc_code = #{docCode}</if>
+            <if test="docName != null  and docName != ''"> and doc_name like concat('%', #{docName}, '%')</if>
+            <if test="docLevel != null  and docLevel != ''"> and doc_level = #{docLevel}</if>
+            <if test="orgCode != null"> and org_code = #{orgCode}</if>
+            <if test="depCode != null"> and dep_code = #{depCode}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysDoctorById" parameterType="Long" resultMap="SysDoctorResult">
+        <include refid="selectSysDoctorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysDoctor" parameterType="SysDoctor" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_doctor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="docCode != null">doc_code,</if>
+            <if test="docName != null and docName != ''">doc_name,</if>
+            <if test="docLevel != null">doc_level,</if>
+            <if test="orgCode != null and orgCode != ''">org_code,</if>
+            <if test="depCode != null and depCode != ''">dep_code,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="cardNo != null">card_no,</if>
+            <if test="education != null">education,</if>
+            <if test="profType != null">prof_type,</if>
+            <if test="profLevel != null">prof_level,</if>
+            <if test="profNum != null">prof_num,</if>
+            <if test="profOrg != null">prof_org,</if>
+            <if test="technical != null">technical,</if>
+            <if test="tel != null">tel,</if>
+            <if test="email != null">email,</if>
+            <if test="personStatus != null">person_status,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="recruitmentMethods != null">recruitment_methods,</if>
+            <if test="homeAddress != null">home_address,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="docCode != null">#{docCode},</if>
+            <if test="docName != null and docName != ''">#{docName},</if>
+            <if test="docLevel != null">#{docLevel},</if>
+            <if test="orgCode != null and orgCode != ''">#{orgCode},</if>
+            <if test="depCode != null and depCode != ''">#{depCode},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="cardNo != null">#{cardNo},</if>
+            <if test="education != null">#{education},</if>
+            <if test="profType != null">#{profType},</if>
+            <if test="profLevel != null">#{profLevel},</if>
+            <if test="profNum != null">#{profNum},</if>
+            <if test="profOrg != null">#{profOrg},</if>
+            <if test="technical != null">#{technical},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="email != null">#{email},</if>
+            <if test="personStatus != null">#{personStatus},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="recruitmentMethods != null">#{recruitmentMethods},</if>
+            <if test="homeAddress != null">#{homeAddress},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDoctor" parameterType="SysDoctor">
+        update sys_doctor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="docCode != null">doc_code = #{docCode},</if>
+            <if test="docName != null and docName != ''">doc_name = #{docName},</if>
+            <if test="docLevel != null">doc_level = #{docLevel},</if>
+            <if test="orgCode != null and orgCode != ''">org_code = #{orgCode},</if>
+            <if test="depCode != null and depCode != ''">dep_code = #{depCode},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="cardNo != null">card_no = #{cardNo},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="profType != null">prof_type = #{profType},</if>
+            <if test="profLevel != null">prof_level = #{profLevel},</if>
+            <if test="profNum != null">prof_num = #{profNum},</if>
+            <if test="profOrg != null">prof_org = #{profOrg},</if>
+            <if test="technical != null">technical = #{technical},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="personStatus != null">person_status = #{personStatus},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="recruitmentMethods != null">recruitment_methods = #{recruitmentMethods},</if>
+            <if test="homeAddress != null">home_address = #{homeAddress},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysDoctorById" parameterType="Long">
+        delete from sys_doctor where id = #{id}
+    </delete>
+
+    <delete id="deleteSysDoctorByIds" parameterType="String">
+        delete from sys_doctor where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getAllCode" resultType="java.lang.String">
+        select r.doc_code
+        from sys_doctor r
+    </select>
+</mapper>

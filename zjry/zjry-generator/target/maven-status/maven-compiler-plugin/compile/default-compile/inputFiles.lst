@@ -1,0 +1,13 @@
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\util\VelocityUtils.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\domain\GenTable.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\controller\GenController.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\service\GenTableServiceImpl.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\service\IGenTableColumnService.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\service\GenTableColumnServiceImpl.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\util\VelocityInitializer.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\domain\GenTableColumn.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\mapper\GenTableMapper.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\mapper\GenTableColumnMapper.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\util\GenUtils.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\config\GenConfig.java
+D:\work\pms_oracle\zjry\zjry-generator\src\main\java\com\zjry\generator\service\IGenTableService.java

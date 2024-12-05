@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.apport.mapper.CostApportDetailMapper">
+    
+    <resultMap type="CostApportDetail" id="CostApportDetailResult">
+        <result property="id"    column="ID"    />
+        <result property="apportCode"    column="APPORT_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="deptName"    column="DEPT_NAME"    />
+        <result property="deptType"    column="DEPT_TYPE"    />
+        <result property="projectCode"    column="PROJECT_CODE"    />
+        <result property="ratioCode"    column="RATIO_CODE"    />
+        <result property="costType"    column="COST_TYPE"    />
+        <result property="apportType"    column="APPORT_TYPE"    />
+        <result property="amount"    column="AMOUNT"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectCostApportDetailVo">
+        select ID, APPORT_CODE, DEPT_CODE, PROJECT_CODE, RATIO_CODE, COST_TYPE, APPORT_TYPE, AMOUNT, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from cost_apport_detail a 
+    </sql>
+
+    <select id="selectCostApportDetailList" parameterType="CostApportDetail" resultMap="CostApportDetailResult">
+        <include refid="selectCostApportDetailVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="apportCode != null  and apportCode != ''"> and APPORT_CODE = #{apportCode}</if>
+            <if test="deptCode != null "> and DEPT_CODE = #{deptCode}</if>
+            <if test="projectCode != null  and projectCode != ''"> and PROJECT_CODE = #{projectCode}</if>
+            <if test="costType != null  and costType != ''"> and COST_TYPE = #{costType}</if>
+            <if test="apportType != null  and apportType != ''"> and APPORT_TYPE = #{apportType}</if>
+            <if test="amount != null"> and AMOUNT = #{amount}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectCostApportDetailLists" parameterType="CostApportDetail" resultMap="CostApportDetailResult">
+        select PROJECT_CODE,sum(AMOUNT) as AMOUNT from cost_apport_detail
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="apportCode != null  and apportCode != ''"> and APPORT_CODE = #{apportCode}</if>
+            <if test="deptCode != null "> and DEPT_CODE = #{deptCode}</if>
+            <if test="projectCode != null  and projectCode != ''"> and PROJECT_CODE = #{projectCode}</if>
+            <if test="costType != null  and costType != ''"> and COST_TYPE = #{costType}</if>
+            <if test="apportType != null  and apportType != ''"> and APPORT_TYPE = #{apportType}</if>
+            <if test="amount != null"> and AMOUNT = #{amount}</if>
+        </where>
+        group by PROJECT_CODE
+    </select>
+    
+    <select id="selectCostApportZjcb" parameterType="CostApportDetail" resultMap="CostApportDetailResult">
+        select APPORT_CODE,
+        <if test="deptCode != null ">DEPT_CODE,</if>
+        <if test="projectCode != null  and projectCode != ''">PROJECT_CODE,</if>
+        sum(AMOUNT) as AMOUNT from cost_apport_detail
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="apportCode != null  and apportCode != ''"> and APPORT_CODE = #{apportCode}</if>
+            <if test="deptCode != null "> and DEPT_CODE = #{deptCode}</if>
+            <if test="projectCode != null  and projectCode != ''"> and PROJECT_CODE = #{projectCode}</if>
+            <if test="costType != null  and costType != ''"> and COST_TYPE = #{costType}</if>
+            <if test="deptType != null  and deptType != ''"> and DEPT_TYPE <![CDATA[ >= ]]> #{deptType}</if>
+            <if test="apportType != null  and apportType != ''"> and APPORT_TYPE = #{apportType}</if>
+        </where>
+        group by APPORT_CODE
+        <if test="deptCode != null ">,DEPT_CODE</if>
+        <if test="projectCode != null  and projectCode != ''">,PROJECT_CODE</if>
+    </select>
+    
+    <select id="selectCostApportDetailListGroupDept" parameterType="CostApportDetail" resultMap="CostApportDetailResult">
+        select DEPT_CODE from cost_apport_detail
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="apportCode != null  and apportCode != ''"> and APPORT_CODE = #{apportCode}</if>
+            <if test="deptCode != null "> and DEPT_CODE = #{deptCode}</if>
+            <if test="projectCode != null  and projectCode != ''"> and PROJECT_CODE = #{projectCode}</if>
+            <if test="costType != null  and costType != ''"> and COST_TYPE = #{costType}</if>
+            <if test="apportType != null  and apportType != ''"> and APPORT_TYPE = #{apportType}</if>
+            <if test="amount != null"> and AMOUNT = #{amount}</if>
+        </where>
+        group by DEPT_CODE order by DEPT_CODE
+    </select>
+    
+    <select id="selectCostApportDetailById" parameterType="Long" resultMap="CostApportDetailResult">
+        <include refid="selectCostApportDetailVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+    
+    <select id="selectDeptRoomById" parameterType="Long" resultMap="CostApportDetailResult">
+        select type as DEPT_TYPE from sys_dept_room where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND dept_room_id = #{id}
+    </select>
+    
+    <select id="selectDeptNameById" parameterType="Long" resultMap="CostApportDetailResult">
+        select dept_room_name as DEPT_NAME from sys_dept_room where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND dept_room_id = #{id}
+    </select>
+    
+    <select id="selectCostApportFtje" parameterType="CostApportDetail" resultMap="CostApportDetailResult">
+        select 
+        <if test="deptCode != null ">a.DEPT_CODE,</if>
+        <if test="deptType != null  and deptType != ''">a.DEPT_TYPE,</if>
+        <if test="costType != null  and costType != ''">a.COST_TYPE,</if>
+        <if test="apportType != null  and apportType != ''">a.APPORT_TYPE,</if>
+        a.PROJECT_CODE,sum(a.AMOUNT) as AMOUNT from cost_apport_detail a
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="apportCode != null and apportCode != ''"> and a.APPORT_CODE = #{apportCode}</if>
+            <if test="deptCode != null "> and a.DEPT_CODE = #{deptCode}</if>
+            <if test="deptType != null  and deptType != ''"> and a.DEPT_TYPE = #{deptType}</if>
+            <if test="costType != null  and costType != ''"> and a.COST_TYPE = #{costType}</if>
+            <if test="apportType != null  and apportType != ''"> and a.APPORT_TYPE = #{apportType}</if>
+            <if test="projectCode != null and projectCode != ''"> and a.PROJECT_CODE = #{projectCode}</if>
+        </where>
+        group by <if test="deptCode != null ">a.DEPT_CODE,</if>
+        <if test="deptType != null  and deptType != ''">a.DEPT_TYPE,</if>
+        <if test="costType != null  and costType != ''">a.COST_TYPE,</if>
+        <if test="apportType != null  and apportType != ''">a.APPORT_TYPE,</if>
+        a.PROJECT_CODE order by a.PROJECT_CODE 
+    </select>
+        
+    <insert id="insertCostApportDetail" parameterType="CostApportDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into cost_apport_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="apportCode != null">APPORT_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="deptType != null">DEPT_TYPE,</if>
+            <if test="projectCode != null">PROJECT_CODE,</if>
+            <if test="ratioCode != null">RATIO_CODE,</if>
+            <if test="costType != null">COST_TYPE,</if>
+            <if test="apportType != null">APPORT_TYPE,</if>
+            <if test="amount != null">AMOUNT,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="apportCode != null">#{apportCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="deptType != null">#{deptType},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="ratioCode != null">#{ratioCode},</if>
+            <if test="costType != null">#{costType},</if>
+            <if test="apportType != null">#{apportType},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCostApportDetail" parameterType="CostApportDetail">
+        update cost_apport_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="apportCode != null">APPORT_CODE = #{apportCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="deptType != null">DEPT_TYPE = #{deptType},</if>
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="ratioCode != null">RATIO_CODE = #{ratioCode},</if>
+            <if test="costType != null">COST_TYPE = #{costType},</if>
+            <if test="apportType != null">APPORT_TYPE = #{apportType},</if>
+            <if test="amount != null">AMOUNT = #{amount},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteCostApportDetailById" parameterType="Long">
+        update cost_apport_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+    
+    <delete id="deleteCostApportDetailByCode" parameterType="CostApportDetail">
+    	delete from cost_apport_detail where APPORT_CODE = #{apportCode}
+    </delete>
+
+    <delete id="deleteCostApportDetailByIds" parameterType="String">
+        update cost_apport_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

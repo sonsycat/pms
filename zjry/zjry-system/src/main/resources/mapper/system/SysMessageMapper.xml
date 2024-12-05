@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.system.mapper.SysMessageMapper">
+    
+    <resultMap type="SysMessage" id="SysMessageResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="msgUrl"    column="msg_url"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="isRead"    column="is_read"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysMessageVo">
+        select a.id, a.title, a.content, a.msg_url, a.receive_user_id, a.send_user_id, a.send_time, 
+        a.is_read, a.create_by, a.create_time, a.update_by, a.update_time, a.del_flag,
+        (select b.nick_name from sys_user b where b.user_id = a.send_user_id) sendUserName,
+        (select c.nick_name from sys_user c where c.user_id = a.receive_user_id) receiveUserName
+        from sys_message a
+    </sql>
+
+    <select id="selectSysMessageList" parameterType="SysMessage" resultMap="SysMessageResult">
+        <include refid="selectSysMessageVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="isRead != null  and isRead != ''"> and is_read = #{isRead}</if>
+            <if test="receiveUserId != null  and receiveUserId != ''"> and receive_user_id = #{receiveUserId}</if>
+        </where>
+        ORDER BY is_read, send_time DESC
+    </select>
+    
+    <select id="selectSysMessageById" parameterType="Long" resultMap="SysMessageResult">
+        <include refid="selectSysMessageVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND id = #{id}
+    </select>
+    
+    <insert id="insertSysMessage" parameterType="SysMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_message (
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="msgUrl != null">msg_url,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="sendTime != null">send_time,</if>
+            <if test="isRead != null">is_read,</if>
+            <if test="busiId != null">busi_id,</if>
+            <if test="createBy != null">create_by,</if>
+            create_time
+        ) values (
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="msgUrl != null">#{msgUrl},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="isRead != null">#{isRead},</if>
+            <if test="busiId != null">#{busiId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateSysMessage" parameterType="SysMessage">
+        update sys_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="msgUrl != null">msg_url = #{msgUrl},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="isRead != null">is_read = #{isRead},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysMessageById" parameterType="Long">
+        update sys_message set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where id = #{id}
+    </delete>
+
+    <delete id="deleteSysMessageByIds" parameterType="String">
+        update sys_message set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

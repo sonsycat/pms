@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>zjry</artifactId>
+		<groupId>com.zjry</groupId>
+		<version>3.5.14</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>jar</packaging>
+	<artifactId>zjry-formDesign</artifactId>
+
+	<description>
+        	自定义表单
+    </description>
+
+	<dependencies>
+		<!-- spring-boot-devtools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional> <!-- 表示依赖不会传递 -->
+		</dependency>
+
+		<!-- Mysql驱动包 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.zjry</groupId>
+			<artifactId>zjry-common</artifactId>
+			<!--			<exclusions>-->
+			<!--				<exclusion>-->
+			<!--					<groupId>com.github.xiaoymin</groupId>-->
+			<!--					<artifactId>swagger-bootstrap-ui</artifactId>-->
+			<!--				</exclusion>-->
+			<!--			</exclusions>-->
+		</dependency>
+		<dependency>
+			<groupId>com.zjry</groupId>
+			<artifactId>zjry-system</artifactId>
+		</dependency>
+		<!-- 核心模块 -->
+		<dependency>
+			<groupId>com.zjry</groupId>
+			<artifactId>zjry-framework</artifactId>
+		</dependency>
+
+		<!-- 定时任务 -->
+		<dependency>
+			<groupId>com.zjry</groupId>
+			<artifactId>zjry-quartz</artifactId>
+		</dependency>
+
+		<!-- 代码生成 -->
+		<dependency>
+			<groupId>com.zjry</groupId>
+			<artifactId>zjry-generator</artifactId>
+		</dependency>
+
+		<!-- demo样例 -->
+		<dependency>
+			<groupId>com.zjry</groupId>
+			<artifactId>zjry-admin</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+	</dependencies>
+		<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.1.1.RELEASE</version>
+				<configuration>
+					<fork>true</fork> 如果没有该配置，devtools不会生效
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> -->
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<warName>${project.artifactId}</warName>
+				</configuration>
+			</plugin> -->
+		</plugins>
+		<finalName>${project.artifactId}</finalName>
+	</build>
+
+</project>

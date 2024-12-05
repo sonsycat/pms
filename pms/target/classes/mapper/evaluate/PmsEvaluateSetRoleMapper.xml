@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsEvaluateSetRoleMapper">
+    
+    <resultMap type="PmsEvaluateSetRole" id="PmsEvaluateSetRoleResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="setCode"    column="SET_CODE"    />
+        <result property="indexName"    column="INDEX_NAME"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="indexN"    column="indexN"    />
+    </resultMap>
+
+    <sql id="selectPmsEvaluateSetRoleVo">
+
+	SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.SET_CODE,
+	a.INDEX_NAME,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK,
+	b.role_name as indexN
+FROM
+	pms_evaluate_set_role a
+	left join sys_role b on a.INDEX_NAME = b.role_key </sql>
+
+    <select id="selectPmsEvaluateSetRoleList" parameterType="PmsEvaluateSetRole" resultMap="PmsEvaluateSetRoleResult">
+        <include refid="selectPmsEvaluateSetRoleVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="setCode != null  and setCode != ''"> and a.SET_CODE = #{setCode}</if>
+            <if test="indexName != null  and indexName != ''"> and a.INDEX_NAME = #{indexName}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectPmsEvaluateSetRoleById" parameterType="Long" resultMap="PmsEvaluateSetRoleResult">
+        <include refid="selectPmsEvaluateSetRoleVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsEvaluateSetRole" parameterType="PmsEvaluateSetRole" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_evaluate_set_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="setCode != null">SET_CODE,</if>
+            <if test="indexName != null">INDEX_NAME,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="setCode != null">#{setCode},</if>
+            <if test="indexName != null">#{indexName},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateSetRole" parameterType="PmsEvaluateSetRole">
+        update pms_evaluate_set_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="setCode != null">SET_CODE = #{setCode},</if>
+            <if test="indexName != null">INDEX_NAME = #{indexName},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsEvaluateSetRoleById" parameterType="Long">
+        update pms_evaluate_set_role set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteByCompCodeAndsetCode" >
+        delete from pms_evaluate_set_role  where SET_CODE = #{setCode} and COMP_CODE = #{compCode}
+    </delete>
+
+    <delete id="deletePmsEvaluateSetRoleByIds" parameterType="String">
+        update pms_evaluate_set_role set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

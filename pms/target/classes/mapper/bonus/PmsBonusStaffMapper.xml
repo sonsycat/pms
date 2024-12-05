@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsBonusStaffMapper">
+    <insert id="insertData">
+        INSERT INTO pms_bonus_staff(dept_code, dept_name, staff_code, staff_name, bonus_date, bonus_amount,create_by,create_time,del_flag)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deptCode},#{item.deptName},#{item.staffCode},#{item.staffName},#{item.actDate},#{item.bonusAmount},#{item.createBy},#{item.createTime},0)
+        </foreach>
+    </insert>
+    <update id="updateData">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE pms_bonus_staff
+            SET
+            update_by =#{item.updateBy},
+            update_time = #{item.updateTime},
+            bonus_amount = #{item.bonusAmount}
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
+    <delete id="deleteBonusStaff">
+        UPDATE pms_bonus_staff
+        SET
+             del_flag = 1
+        WHERE dept_code = #{deptCode} and date_format(bonus_date,'%Y-%m-%d') = date_format(#{actDate},'%Y-%m-%d') and del_flag = 0
+    </delete>
+    <select id="selectListBonusStaff" resultType="com.zjry.pms.bonus.domain.PmsBonusStaff">
+        SELECT
+            b.id,
+            date_format(#{actDate},'%Y-%m-%d') as actDate,
+            a.staff_code as staffCode,
+            a.staff_name as staffName,
+            a.dept_code as deptCode,
+            a.dept_name as deptName,
+            IFNULL(b.bonus_amount ,'0.00') as bonusAmount
+        FROM
+            sys_staff a
+                LEFT JOIN pms_bonus_staff b ON a.staff_code = b.staff_code  and a.dept_code = b.dept_code
+                AND date_format(b.bonus_date,'%Y-%m-%d') = date_format(#{actDate},'%Y-%m-%d')
+                AND b.del_flag = 0
+        WHERE
+            a.dept_code = #{deptCode}
+          AND a.del_flag = 0
+    </select>
+    <select id="selectBonusTotalAmount" resultType="String">
+        SELECT
+               sum(guide_value_result) AS bonusTotalAmount
+        FROM pms_evaluate_data
+      WHERE dept_code = #{deptCode} AND act_date = date_format( #{actDate}, '%Y-%m-01' ) and del_flag = 0
+    </select>
+    <select id="selectSystemStaffByDeptCode" resultType="com.zjry.pms.system.domain.PmsSystemStaff">
+        select id,
+            staff_code as staffCode,
+            staff_name as staffName,
+            org_code as orgCode,
+            org_name as orgName,
+            dept_code as deptCode,
+            dept_name as deptName
+          from
+          sys_staff
+          where
+          dept_code = #{deptCode}
+          and DEL_FLAG = 0
+    </select>
+    <select id="selectBonusAssignedAmount" resultType="java.lang.String">
+        SELECT
+            sum(bonus_amount) AS bonusAssignedAmount
+        FROM pms_bonus_staff
+        WHERE dept_code = #{deptCode} AND bonus_date = date_format( #{actDate}, '%Y-%m-01' ) and del_flag = 0
+    </select>
+</mapper>

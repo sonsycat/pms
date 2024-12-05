@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsBalancedScorecardMapper">
+
+    <resultMap type="PmsBalancedScorecard" id="PmsBalancedScorecardResult">
+        <result property="id" column="ID"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="nowDate" column="NOW_DATE"/>
+        <result property="indexCode" column="INDEX_CODE"/>
+        <result property="scorecardValue" column="SCORECARD_VALUE"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <sql id="selectPmsBalancedScorecardVo">
+        select ID,
+               COMP_CODE,
+               ACCOUNT_CODE,
+               DEPT_CODE,
+               NOW_DATE,
+               INDEX_CODE,
+               SCORECARD_VALUE,
+               DEL_FLAG,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK
+        from pms_balanced_scorecard
+    </sql>
+
+    <select id="selectPmsBalancedScorecardList" parameterType="PmsBalancedScorecard"
+            resultMap="PmsBalancedScorecardResult">
+        <include refid="selectPmsBalancedScorecardVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null ">and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''">and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="deptCode != null  and deptCode != ''">and DEPT_CODE = #{deptCode}</if>
+            <if test="nowDate != null ">and NOW_DATE = #{nowDate}</if>
+            <if test="indexCode != null  and indexCode != ''">and INDEX_CODE = #{indexCode}</if>
+            <if test="scorecardValue != null ">and SCORECARD_VALUE = #{scorecardValue}</if>
+            <if test="delFlag != null  and delFlag != ''">and DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and REMARK = #{remark}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsBalancedScorecardById" parameterType="Long" resultMap="PmsBalancedScorecardResult">
+        <include refid="selectPmsBalancedScorecardVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+
+    <insert id="insertPmsBalancedScorecard" parameterType="PmsBalancedScorecard" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into pms_balanced_scorecard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="indexCode != null">INDEX_CODE,</if>
+            <if test="scorecardValue != null">SCORECARD_VALUE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="indexCode != null">#{indexCode},</if>
+            <if test="scorecardValue != null">#{scorecardValue},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsBalancedScorecard" parameterType="PmsBalancedScorecard">
+        update pms_balanced_scorecard
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="scorecardValue != null">SCORECARD_VALUE = #{scorecardValue},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsBalancedScorecardById" parameterType="Long">
+        update pms_balanced_scorecard
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsBalancedScorecardByIds" parameterType="String">
+        update pms_balanced_scorecard set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID
+        in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="saveBatch">
+        <foreach collection="list" item="item" separator=";" close=";">
+            insert into pms_balanced_scorecard
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">COMP_CODE,</if>
+                <if test="item.accountCode != null">ACCOUNT_CODE,</if>
+                <if test="item.deptCode != null">DEPT_CODE,</if>
+                <if test="item.nowDate != null">NOW_DATE,</if>
+                <if test="item.indexCode != null">INDEX_CODE,</if>
+                <if test="item.scorecardValue != null">SCORECARD_VALUE,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">#{item.compCode},</if>
+                <if test="item.accountCode != null">#{item.accountCode},</if>
+                <if test="item.deptCode != null">#{item.deptCode},</if>
+                <if test="item.nowDate != null">#{item.nowDate},</if>
+                <if test="item.indexCode != null">#{item.indexCode},</if>
+                <if test="item.scorecardValue != null">#{item.scorecardValue},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <delete id="deleteByMonth" parameterType="String">
+        DELETE FROM pms_balanced_scorecard WHERE now_date = #{nowDate}
+    </delete>
+</mapper>

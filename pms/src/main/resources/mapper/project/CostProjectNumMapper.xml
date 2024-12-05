@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.project.mapper.CostProjectNumMapper">
+    
+    <resultMap type="CostProjectNum" id="CostProjectNumResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="projectCode"    column="PROJECT_CODE"    />
+        <result property="projectName"    column="PROJECT_NAME"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="deptType"    column="DEPT_TYPE"    />
+        <result property="nowDate"    column="NOW_DATE"    />
+        <result property="money"    column="MONEY"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="deptName"    column="dept_room_name"    />
+        <result property="projectName"    column="PROJECT_NAME"    />
+    </resultMap>
+
+    <sql id="selectCostProjectNumVo">
+        SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.PROJECT_CODE,
+	a.DEPT_CODE,
+	a.NOW_DATE,
+	a.MONEY,
+	a.DEL_FLAG,
+	b.dept_room_name,
+	b.type as DEPT_TYPE,
+	c.PROJECT_NAME
+FROM
+	cost_project_num a
+	LEFT JOIN sys_dept_room b ON a.DEPT_CODE = b.dept_room_id and b.DEL_FLAG = 0
+	left join cost_project c on a.PROJECT_CODE = c.PROJECT_CODE and c.DEL_FLAG =0
+    </sql>
+
+
+    <select id="selectCostPNDept" parameterType="CostProjectNum" resultType="Long">
+        SELECT DEPT_CODE from cost_project_num
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="deptCode != null "> and DEPT_CODE = #{deptCode}</if>
+            <if test="nowDate != null "> and NOW_DATE = #{nowDate}</if>
+        </where>
+        group by DEPT_CODE
+    </select>
+    <select id="selectCostProjectNumList" parameterType="CostProjectNum" resultMap="CostProjectNumResult">
+        <include refid="selectCostProjectNumVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="projectCode != null  and projectCode != ''"> and a.PROJECT_CODE = #{projectCode}</if>
+            <if test="deptCode != null "> and a.DEPT_CODE = #{deptCode}</if>
+            <if test="deptType != null "> and b.type = #{deptType}</if>
+            <if test="nowDate != null "> and a.NOW_DATE = #{nowDate}</if>
+            <if test="money != null "> and a.MONEY = #{money}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectCostProjectNumListGroup" parameterType="CostProjectNum" resultMap="CostProjectNumResult">
+        select a.COMP_CODE,a.NOW_DATE,a.PROJECT_CODE,c.PROJECT_NAME,sum(MONEY) as MONEY from (select a.COMP_CODE,a.PROJECT_CODE,r.TYPE AS DEPT_TYPE,a.MONEY,a.NOW_DATE from cost_project_num a 
+        left join sys_dept_room r on a.DEPT_CODE = r.dept_room_id where a.del_flag='0'
+        <if test="deptType != null and deptType != ''"> and r.TYPE = #{deptType}</if>) a 
+        left join cost_project c on a.PROJECT_CODE = c.PROJECT_CODE and c.DEL_FLAG =0
+        where a.COMP_CODE = #{compCode}
+        <if test="projectCode != null and projectCode != ''"> and a.PROJECT_CODE = #{projectCode}</if>
+        <if test="nowDate != null "> and a.NOW_DATE = #{nowDate}</if>
+         group by a.COMP_CODE,a.NOW_DATE,a.PROJECT_CODE,c.PROJECT_NAME order by a.PROJECT_CODE
+    </select>
+    
+    <select id="selectCostProjectNumById" parameterType="Long" resultMap="CostProjectNumResult">
+        <include refid="selectCostProjectNumVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertCostProjectNum" parameterType="CostProjectNum" useGeneratedKeys="true" keyProperty="id">
+        insert into cost_project_num
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="projectCode != null">PROJECT_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="money != null">MONEY,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="money != null">#{money},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCostProjectNum" parameterType="CostProjectNum">
+        update cost_project_num
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="money != null">MONEY = #{money},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteCostProjectNumById" parameterType="Long">
+        update cost_project_num set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteCostProjectNumByIds" parameterType="String">
+        update cost_project_num set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByCodeAndDate">
+         delete from cost_project_num  where DEPT_CODE = #{deptCode} and NOW_DATE = #{nowDate}
+    </delete>
+</mapper>

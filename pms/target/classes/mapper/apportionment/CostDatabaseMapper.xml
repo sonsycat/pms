@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.apportionment.mapper.CostDatabaseMapper">
+    
+    <resultMap type="CostDatabase" id="CostDatabaseResult">
+        <result property="id"    column="ID"    />
+        <result property="code"    column="CODE"    />
+        <result property="name"    column="NAME"    />
+        <result property="type"    column="TYPE"    />
+        <result property="url"    column="URL"    />
+        <result property="userName"    column="USER_NAME"    />
+        <result property="passWord"    column="PASS_WORD"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectCostDatabaseVo">
+        select ID, CODE, NAME, TYPE, URL, USER_NAME, PASS_WORD, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from cost_database
+    </sql>
+
+    <select id="selectCostDatabaseList" parameterType="CostDatabase" resultMap="CostDatabaseResult">
+        <include refid="selectCostDatabaseVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="code != null  and code != ''"> and CODE = #{code}</if>
+            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and TYPE = #{type}</if>
+            <if test="url != null  and url != ''"> and URL = #{url}</if>
+            <if test="userName != null  and userName != ''"> and USER_NAME like concat('%', #{userName}, '%')</if>
+            <if test="passWord != null  and passWord != ''"> and PASS_WORD = #{passWord}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectCostDatabaseById" parameterType="Long" resultMap="CostDatabaseResult">
+        <include refid="selectCostDatabaseVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+    
+    <select id="selectCostDatabaseByCode" parameterType="String" resultMap="CostDatabaseResult">
+        <include refid="selectCostDatabaseVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND CODE = #{code}
+    </select>
+        
+    <insert id="insertCostDatabase" parameterType="CostDatabase" useGeneratedKeys="true" keyProperty="id">
+        insert into cost_database
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">CODE,</if>
+            <if test="name != null">NAME,</if>
+            <if test="type != null">TYPE,</if>
+            <if test="url != null">URL,</if>
+            <if test="userName != null">USER_NAME,</if>
+            <if test="passWord != null">PASS_WORD,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="url != null">#{url},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="passWord != null">#{passWord},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCostDatabase" parameterType="CostDatabase">
+        update cost_database
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">CODE = #{code},</if>
+            <if test="name != null">NAME = #{name},</if>
+            <if test="type != null">TYPE = #{type},</if>
+            <if test="url != null">URL = #{url},</if>
+            <if test="userName != null">USER_NAME = #{userName},</if>
+            <if test="passWord != null">PASS_WORD = #{passWord},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteCostDatabaseById" parameterType="Long">
+        update cost_database set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteCostDatabaseByIds" parameterType="String">
+        update cost_database set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsEvaluateDataMapper">
+    <resultMap type="PmsEvaluateData" id="PmsEvaluateDataResult">
+        <result property="id" column="ID"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="unitCode" column="UNIT_CODE"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="guideCode" column="GUIDE_CODE"/>
+        <result property="setCode" column="SET_CODE"/>
+        <result property="guideValue" column="GUIDE_VALUE"/>
+        <result property="guideValueResult" column="GUIDE_VALUE_RESULT"/>
+        <result property="guideType" column="GUIDE_TYPE"/>
+        <result property="dataType" column="DATA_TYPE"/>
+        <result property="actDate" column="ACT_DATE"/>
+        <result property="actDateEnd" column="ACT_DATE_END"/>
+        <result property="actDateBegin" column="ACT_DATE_BEGIN"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <sql id="selectPmsEvaluateDataVo">
+        select ID,
+               COMP_CODE,
+               ACCOUNT_CODE,
+               DEPT_CODE,
+               UNIT_CODE,
+               SET_CODE,
+               GUIDE_CODE,
+               GUIDE_VALUE,
+               GUIDE_VALUE_RESULT,
+               GUIDE_TYPE,
+               DATA_TYPE,
+               ACT_DATE,
+               ACT_DATE_END,
+               ACT_DATE_BEGIN,
+               DEL_FLAG,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK
+        from pms_evaluate_data
+    </sql>
+
+    <select id="selectPmsEvaluateDataList" parameterType="PmsEvaluateData" resultMap="PmsEvaluateDataResult">
+        <include refid="selectPmsEvaluateDataVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null  and compCode != ''">and COMP_CODE = #{compCode}</if>
+            <if test="deptCode != null  and deptCode != ''">and DEPT_CODE = #{deptCode}</if>
+            <if test="unitCode != null  and unitCode != ''">and UNIT_CODE = #{unitCode}</if>
+            <if test="guideCode != null  and guideCode != ''">and GUIDE_CODE = #{guideCode}</if>
+            <if test="guideValue != null  and guideValue != ''">and GUIDE_VALUE = #{guideValue}</if>
+            <if test="guideType != null  and guideType != ''">and GUIDE_TYPE = #{guideType}</if>
+            <if test="actDate != null ">and ACT_DATE = #{actDate}</if>
+            <if test="actDateEnd != null ">and ACT_DATE_END = #{actDateEnd}</if>
+            <if test="actDateBegin != null ">and ACT_DATE_BEGIN = #{actDateBegin}</if>
+            <if test="delFlag != null  and delFlag != ''">and DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and REMARK = #{remark}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsEvaluateDataById" parameterType="Long" resultMap="PmsEvaluateDataResult">
+        <include refid="selectPmsEvaluateDataVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+
+    <insert id="insertPmsEvaluateData" parameterType="PmsEvaluateData" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_evaluate_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">COMP_CODE,</if>
+            <if test="accountCode != null and accountCode != ''">ACCOUNT_CODE,</if>
+            <if test="deptCode != null and deptCode != ''">DEPT_CODE,</if>
+            <if test="unitCode != null and unitCode != ''">UNIT_CODE,</if>
+            <if test="setCode != null and setCode != ''">SET_CODE,</if>
+            <if test="guideCode != null and guideCode != ''">GUIDE_CODE,</if>
+            <if test="guideValue != null and guideValue != ''">GUIDE_VALUE,</if>
+            <if test="guideValueResult != null and guideValueResult != ''">GUIDE_VALUE_RESULT,</if>
+            <if test="guideType != null and guideType != ''">GUIDE_TYPE,</if>
+            <if test="dataType != null and dataType != ''">DATA_TYPE,</if>
+            <if test="actDate != null">ACT_DATE,</if>
+            <if test="actDateEnd != null">ACT_DATE_END,</if>
+            <if test="actDateBegin != null">ACT_DATE_BEGIN,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">#{compCode},</if>
+            <if test="accountCode != null and accountCode != ''">#{accountCode},</if>
+            <if test="deptCode != null and deptCode != ''">#{deptCode},</if>
+            <if test="unitCode != null and unitCode != ''">#{unitCode},</if>
+            <if test="setCode != null and setCode != ''">#{setCode},</if>
+            <if test="guideCode != null and guideCode != ''">#{guideCode},</if>
+            <if test="guideValue != null and guideValue != ''">#{guideValue},</if>
+            <if test="guideValueResult != null and guideValueResult != ''">#{guideValueResult},</if>
+            <if test="guideType != null and guideType != ''">#{guideType},</if>
+            <if test="dataType != null and dataType != ''">#{dataType},</if>
+            <if test="actDate != null">#{actDate},</if>
+            <if test="actDateEnd != null">#{actDateEnd},</if>
+            <if test="actDateBegin != null">#{actDateBegin},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateData" parameterType="PmsEvaluateData">
+        update pms_evaluate_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptCode != null and deptCode != ''">DEPT_CODE = #{deptCode},</if>
+            <if test="unitCode != null and unitCode != ''">UNIT_CODE = #{unitCode},</if>
+            <if test="guideCode != null and guideCode != ''">GUIDE_CODE = #{guideCode},</if>
+            <if test="setCode != null and setCode != ''">SET_CODE = #{setCode},</if>
+            <if test="guideValue != null and guideValue != ''">GUIDE_VALUE = #{guideValue},</if>
+            <if test="guideValueResult != null and guideValueResult != ''">GUIDE_VALUE_RESULT = #{guideValueResult},</if>
+            <if test="guideType != null and guideType != ''">GUIDE_TYPE = #{guideType},</if>
+            <if test="dataType != null and dataType != ''">DATA_TYPE = #{dataType},</if>
+            <if test="actDate != null">ACT_DATE = #{actDate},</if>
+            <if test="actDateEnd != null">ACT_DATE_END = #{actDateEnd},</if>
+            <if test="actDateBegin != null">ACT_DATE_BEGIN = #{actDateBegin},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+
+    <delete id="deletePmsEvaluateDataById" parameterType="Long">
+        update pms_evaluate_data
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsEvaluateDataByIds" parameterType="String">
+        DELETE FROM pms_evaluate_data WHERE ID IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+<!--    <insert id="insertBatch" parameterType="list">-->
+<!--        INSERT INTO pms_evaluate_data( COMP_CODE,-->
+<!--        ACCOUNT_CODE,-->
+<!--        DEPT_CODE,-->
+<!--        UNIT_CODE,-->
+<!--        SET_CODE,-->
+<!--        GUIDE_CODE,-->
+<!--        GUIDE_VALUE,-->
+<!--        GUIDE_VALUE_RESULT,-->
+<!--        GUIDE_TYPE,-->
+<!--        DATA_TYPE,-->
+<!--        ACT_DATE,-->
+<!--        ACT_DATE_END,-->
+<!--        ACT_DATE_BEGIN,-->
+<!--        DEL_FLAG,-->
+<!--        CREATE_BY,-->
+<!--        CREATE_TIME,-->
+<!--        UPDATE_BY,-->
+<!--        UPDATE_TIME,-->
+<!--        REMARK)-->
+<!--        VALUES-->
+<!--        <foreach collection="list" item="item" separator=",">-->
+<!--           ( #{item.compCode},-->
+<!--            #{item.accountCode},-->
+<!--            #{item.deptCode},-->
+<!--            #{item.unitCode},-->
+<!--           #{item.setCode},-->
+<!--            #{item.guideCode},-->
+<!--           #{item.guideValue},-->
+<!--            #{item.guideValueResult},-->
+<!--            #{item.guideType},-->
+<!--            #{item.dataType},-->
+<!--            #{item.actDate},-->
+<!--           #{item.actDateBegin},-->
+<!--            #{item.actDateEnd},-->
+<!--            #{item.delFlag},-->
+<!--            #{item.createBy},-->
+<!--            #{item.createTime},-->
+<!--            #{item.updateBy},-->
+<!--            #{item.updateTime},-->
+<!--           #{item.remark})-->
+<!--            </foreach>-->
+<!--    </insert>-->
+    <insert id="insertBatch">
+        <foreach collection="list" item="item" separator=";" close=";">
+            INSERT INTO pms_evaluate_data
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">COMP_CODE,</if>
+                <if test="item.accountCode != null">ACCOUNT_CODE,</if>
+                <if test="item.deptCode != null">DEPT_CODE,</if>
+                <if test="item.unitCode != null">UNIT_CODE,</if>
+                <if test="item.setCode != null">SET_CODE,</if>
+                <if test="item.guideCode != null">GUIDE_CODE,</if>
+                <if test="item.guideValue != null">GUIDE_VALUE,</if>
+                <if test="item.guideValueResult != null">GUIDE_VALUE_RESULT,</if>
+                <if test="item.guideType != null">GUIDE_TYPE,</if>
+                <if test="item.dataType != null and item.dataType != ''">DATA_TYPE,</if>
+                <if test="item.actDate != null">ACT_DATE,</if>
+                <if test="item.actDateBegin != null">ACT_DATE_BEGIN,</if>
+                <if test="item.actDateEnd != null">ACT_DATE_END,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">#{item.compCode},</if>
+                <if test="item.accountCode != null">#{item.accountCode},</if>
+                <if test="item.deptCode != null">#{item.deptCode},</if>
+                <if test="item.unitCode != null">#{item.unitCode},</if>
+                <if test="item.setCode != null">#{item.setCode},</if>
+                <if test="item.guideCode != null">#{item.guideCode},</if>
+                <if test="item.guideValue != null">#{item.guideValue},</if>
+                <if test="item.guideValueResult != null">#{item.guideValueResult},</if>
+                <if test="item.guideType != null">#{item.guideType},</if>
+                <if test="item.dataType != null and item.dataType != ''">#{item.dataType},</if>
+                <if test="item.actDate != null">#{item.actDate},</if>
+                <if test="item.actDateBegin != null">#{item.actDateBegin},</if>
+                <if test="item.actDateEnd != null">#{item.actDateEnd},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatch" parameterType="PmsEvaluateData">
+        DELETE FROM pms_evaluate_data
+        WHERE DATA_TYPE = #{dataType} AND COMP_CODE = #{compCode} AND ACT_DATE = date_format(#{actDate}, '%Y-%m-01')
+        <if test="guideType != null">AND GUIDE_TYPE = #{guideType}</if>
+    </delete>
+
+    <select id="selectAccountDeptEvaluateDataList" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT a.dept_room_id       AS deptRoomId,
+               a.dept_room_code     AS deptRoomCode,
+               a.dept_room_name     AS deptRoomName,
+               d.GUIDE_CODE         AS guideCode,
+               d.GUIDE_VALUE        AS guideValue,
+               d.GUIDE_VALUE_RESULT AS guideValueResult,
+               d.ACT_DATE           AS actDate,
+               e.INDEX_NAME         AS indexName
+        FROM sys_dept_room a LEFT JOIN pms_evaluate_data d ON d.DEL_FLAG = '0'
+            AND d.GUIDE_TYPE = 'K'
+            AND a.DEPT_ROOM_ID = d.UNIT_CODE
+            AND d.DATA_TYPE = '2'
+                 LEFT JOIN pms_evaluate_index e ON e.INDEX_CODE = d.GUIDE_CODE
+        WHERE a.DEL_FLAG = '0'
+          AND a.DEPT_ID = #{compCode}
+          AND a.IS_INDEPENDENT_ACCOUNTING = #{deptType}
+          AND d.ACT_DATE = #{actDate}
+    </select>
+
+    <select id="selectAccountDeptIndex" parameterType="PmsEvaluateData"
+            resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT
+            DISTINCT a.GUIDE_CODE AS "guideCode",
+            e.INDEX_NAME AS "indexName",
+        a.update_time AS "updateTime"
+        FROM pms_evaluate_data a
+        LEFT JOIN sys_dept_room d ON d.DEPT_ROOM_ID = a.UNIT_CODE AND d.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        LEFT JOIN pms_evaluate_index e ON e.INDEX_CODE = a.GUIDE_CODE AND e.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            AND a.DATA_TYPE = '2'
+            <if test="compCode != null and compCode != ''">AND a.COMP_CODE = #{compCode}</if>
+            <if test="deptType != null and deptType != ''">AND d.IS_INDEPENDENT_ACCOUNTING = #{deptType}</if>
+            <if test="unitCode != null and unitCode != ''">and a.UNIT_CODE = #{unitCode}</if>
+            <if test="guideCode != null and guideCode != ''">and a.GUIDE_CODE = #{guideCode}</if>
+            <if test="guideValue != null and guideValue != ''">and a.GUIDE_VALUE = #{guideValue}</if>
+            <if test="guideType != null and guideType != ''">and a.GUIDE_TYPE = #{guideType}</if>
+            <if test="actDate != null">and a.ACT_DATE = #{actDate}</if>
+            <if test="actDateEnd != null">and a.ACT_DATE_END = #{actDateEnd}</if>
+            <if test="actDateBegin != null">and a.ACT_DATE_BEGIN = #{actDateBegin}</if>
+            <if test="delFlag != null and delFlag != ''">and a.DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null and createBy != ''">and a.CREATE_BY = #{createBy}</if>
+            <if test="createTime != null">and a.CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null and updateBy != ''">and a.UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null">and a.UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null and remark != ''">and a.REMARK = #{remark}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+    <select id="selectAccountPersonIndex" parameterType="PmsEvaluateData"
+            resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT
+        DISTINCT a.GUIDE_CODE AS "guideCode",
+        e.INDEX_NAME AS "indexName",
+        a.update_time AS "updateTime"
+        FROM
+        pms_evaluate_data a
+        LEFT JOIN sys_doctor t ON t.doc_code = a.UNIT_CODE
+        LEFT JOIN pms_evaluate_index e ON e.INDEX_CODE = a.GUIDE_CODE AND e.DEL_FLAG = '0'
+        LEFT JOIN sys_dept_room r ON r.dept_room_id = t.dep_code AND r.DEPT_ROOM_CODE = #{deptCode}
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            AND a.DATA_TYPE = '3'
+            <if test="unitCode != null  and unitCode != ''">and a.UNIT_CODE = #{unitCode}</if>
+            <if test="guideCode != null  and guideCode != ''">and a.GUIDE_CODE = #{guideCode}</if>
+            <if test="guideValue != null  and guideValue != ''">and a.GUIDE_VALUE = #{guideValue}</if>
+            <if test="guideType != null  and guideType != ''">and a.GUIDE_TYPE = #{guideType}</if>
+            <if test="actDate != null ">and a.ACT_DATE = #{actDate}</if>
+            <if test="actDateEnd != null ">and a.ACT_DATE_END = #{actDateEnd}</if>
+            <if test="actDateBegin != null ">and a.ACT_DATE_BEGIN = #{actDateBegin}</if>
+            <if test="delFlag != null  and delFlag != ''">and a.DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and a.CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and a.CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and a.UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and a.UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and a.REMARK = #{remark}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+    <select id="selectAccountPersonEvaluateDataList"
+            resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT
+            b.DEPT_CODE AS deptRoomCode,
+            d.DEPT_ROOM_NAME AS deptRoomName,
+            b.GUIDE_CODE AS guideCode,
+            b.GUIDE_VALUE AS guideValue,
+            b.GUIDE_VALUE_RESULT AS guideValueResult,
+            c.INDEX_NAME AS indexName,
+            a.DOC_NAME AS docName,
+            a.DOC_CODE AS docCode
+        FROM
+            pms_evaluate_data b
+                LEFT JOIN sys_doctor a ON b.DEL_FLAG = '0'
+                AND b.GUIDE_TYPE = 'R'
+                AND a.DOC_CODE = b.UNIT_CODE
+                LEFT JOIN pms_evaluate_index c ON c.INDEX_CODE = b.GUIDE_CODE
+                LEFT JOIN sys_dept_room d ON b.DEPT_CODE = d.DEPT_ROOM_ID
+        WHERE
+            a.DEL_FLAG = '0'
+          AND d.DEPT_ROOM_ID = #{deptCode}
+          AND b.ACT_DATE = #{actDate}
+    </select>
+
+    <select id="selectBonusList" parameterType="PmsEvaluateData" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateData">
+        SELECT d.dept_code                 AS deptCode,
+               d.unit_code                 AS unitCode,
+               d.guide_value_result        AS guideValueResult,
+               r.is_independent_accounting AS deptType
+        FROM (SELECT dept_code, unit_code, guide_value_result FROM pms_evaluate_data
+              WHERE comp_code = #{compCode} AND act_date = date_format(#{actDate}, '%Y-%m-01') AND data_type = #{dataType}) AS d
+        LEFT JOIN sys_dept_room AS r ON d.dept_code = r.dept_room_id
+        WHERE r.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+
+
+    <insert id="insertBatch2">
+        <foreach collection="list" item="item" separator=";" close=";">
+            INSERT INTO pms_evaluate_data
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">COMP_CODE,</if>
+                <if test="item.accountCode != null">ACCOUNT_CODE,</if>
+                <if test="item.deptCode != null">DEPT_CODE,</if>
+                <if test="item.unitCode != null">UNIT_CODE,</if>
+                <if test="item.guideCode != null">GUIDE_CODE,</if>
+                <if test="item.guideValue != null">GUIDE_VALUE,</if>
+                <if test="item.guideValueResult != null and item.guideValueResult != ''">GUIDE_VALUE_RESULT,</if>
+                <if test="item.guideType != null">GUIDE_TYPE,</if>
+                <if test="item.dataType != null and item.dataType != ''">DATA_TYPE,</if>
+                <if test="item.actDate != null">ACT_DATE,</if>
+                <if test="item.actDateBegin != null">ACT_DATE_BEGIN,</if>
+                <if test="item.actDateEnd != null">ACT_DATE_END,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">#{item.compCode},</if>
+                <if test="item.accountCode != null">#{item.accountCode},</if>
+                <if test="item.deptCode != null">#{item.deptCode},</if>
+                <if test="item.unitCode != null">#{item.unitCode},</if>
+                <if test="item.guideCode != null">#{item.guideCode},</if>
+                <if test="item.guideValue != null">#{item.guideValue},</if>
+                <if test="item.guideValueResult != null and item.guideValueResult != ''">#{item.guideValueResult},</if>
+                <if test="item.guideType != null">#{item.guideType},</if>
+                <if test="item.dataType != null and item.dataType != ''">#{item.dataType},</if>
+                <if test="item.actDate != null">#{item.actDate},</if>
+                <if test="item.actDateBegin != null">#{item.actDateBegin},</if>
+                <if test="item.actDateEnd != null">#{item.actDateEnd},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateBatch">
+        <foreach collection="list" item="item" separator=";" close=";">
+            update pms_evaluate_data
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="item.deptCode != null and item.deptCode != ''">DEPT_CODE = #{item.deptCode},</if>
+                <if test="item.unitCode != null and item.unitCode != ''">UNIT_CODE = #{item.unitCode},</if>
+                <if test="item.guideCode != null and item.guideCode != ''">GUIDE_CODE = #{item.guideCode},</if>
+                <if test="item.guideValue != null and item.guideValue != ''">GUIDE_VALUE = #{item.guideValue},</if>
+                <if test="item.guideValueResult != null and item.guideValueResult != ''">GUIDE_VALUE_RESULT =
+                    #{item.guideValueResult},
+                </if>
+                <if test="item.guideType != null and item.guideType != ''">GUIDE_TYPE = #{item.guideType},</if>
+                <if test="item.dataType != null and item.dataType != ''">DATA_TYPE = #{item.dataType},</if>
+                <if test="item.actDate != null">ACT_DATE = #{item.actDate},</if>
+                <if test="item.actDateEnd != null">ACT_DATE_END = #{item.actDateEnd},</if>
+                <if test="item.actDateBegin != null">ACT_DATE_BEGIN = #{item.actDateBegin},</if>
+                <if test="item.delFlag != null">DEL_FLAG = #{item.delFlag},</if>
+                <if test="item.createBy != null">CREATE_BY = #{item.createBy},</if>
+                <if test="item.createTime != null">CREATE_TIME = #{item.createTime},</if>
+                <if test="item.updateBy != null">UPDATE_BY = #{item.updateBy},</if>
+                <if test="item.updateTime != null">UPDATE_TIME = #{item.updateTime},</if>
+                <if test="item.remark != null">REMARK = #{item.remark},</if>
+            </trim>
+            where ID = #{item.id}
+        </foreach>
+
+    </update>
+
+    <select id="selectAccountPersonEvaluateDataTempList" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT
+            b.DEPT_CODE AS deptRoomCode,
+            d.DEPT_ROOM_NAME AS deptRoomName,
+            b.GUIDE_CODE AS guideCode,
+            b.GUIDE_VALUE AS guideValue,
+            b.GUIDE_VALUE_RESULT AS guideValueResult,
+            c.INDEX_NAME AS indexName,
+            a.DOC_NAME AS docName,
+            a.DOC_CODE AS docCode,
+            b.REMARK AS remark
+        FROM
+            pms_evaluate_data_temp b
+                LEFT JOIN sys_doctor a ON b.DEL_FLAG = '0'
+                AND b.GUIDE_TYPE = 'R'
+                AND a.DOC_CODE = b.UNIT_CODE
+                LEFT JOIN pms_evaluate_index c ON c.INDEX_CODE = b.GUIDE_CODE
+                LEFT JOIN sys_dept_room d ON b.DEPT_CODE = d.DEPT_ROOM_ID
+        WHERE
+            a.DEL_FLAG = '0'
+          AND d.DEPT_ROOM_ID = #{deptCode}
+          AND b.DEPT_CODE = #{deptCode}
+          AND b.ACT_DATE = #{actDate}
+    </select>
+
+    <select id="selectDoctorListNotBonus" resultType="com.zjry.pms.evaluate.domain.PmsEvaluatePersonNotBonus">
+        SELECT
+            doc.DOC_CODE AS docCode,
+            doc.DOC_NAME AS docName
+        FROM
+            sys_doctor doc
+                LEFT JOIN sys_dept_room room ON room.DEPT_ROOM_ID = doc.DEP_CODE
+        WHERE
+                doc.DOC_CODE NOT IN (
+                SELECT
+                    a.DOC_CODE
+                FROM
+                    pms_evaluate_data_temp b
+                        LEFT JOIN sys_doctor a ON b.DEL_FLAG = '0'
+                        AND b.GUIDE_TYPE = 'R'
+                        AND a.DOC_CODE = b.UNIT_CODE
+                        LEFT JOIN pms_evaluate_index c ON c.INDEX_CODE = b.GUIDE_CODE
+                        LEFT JOIN sys_dept_room d ON b.DEPT_CODE = d.DEPT_ROOM_ID
+                WHERE
+                    a.DEL_FLAG = '0'
+                  AND d.DEPT_ROOM_ID = #{deptCode}
+                  AND b.DEPT_CODE = #{deptCode}
+                  AND b.ACT_DATE = #{actDate}
+            )
+        <if test="deptRoomCode != null  and deptRoomCode != ''">AND room.DEPT_ROOM_CODE = #{deptRoomCode}</if>
+    </select>
+
+    <select id="selectDoctorListNotBonusData" resultType="com.zjry.pms.evaluate.domain.PmsEvaluatePersonNotBonus">
+        SELECT
+            doc.DOC_CODE AS docCode,
+            doc.DOC_NAME AS docName
+        FROM
+            sys_doctor doc
+                LEFT JOIN sys_dept_room room ON room.DEPT_ROOM_ID = doc.DEP_CODE
+        WHERE
+                doc.DOC_CODE NOT IN (
+                SELECT
+                    a.DOC_CODE
+                FROM
+                    pms_evaluate_data b
+                        LEFT JOIN sys_doctor a ON b.DEL_FLAG = '0'
+                        AND b.GUIDE_TYPE = 'R'
+                        AND a.DOC_CODE = b.UNIT_CODE
+                        LEFT JOIN pms_evaluate_index c ON c.INDEX_CODE = b.GUIDE_CODE
+                        LEFT JOIN sys_dept_room d ON b.DEPT_CODE = d.DEPT_ROOM_ID
+                WHERE
+                    a.DEL_FLAG = '0'
+                  AND d.DEPT_ROOM_ID = #{deptCode}
+                  AND b.DEPT_CODE = #{deptCode}
+                  AND b.ACT_DATE = #{actDate}
+            )
+        <if test="deptRoomCode != null  and deptRoomCode != ''">AND room.DEPT_ROOM_CODE = #{deptRoomCode}</if>
+    </select>
+
+    <select id="selectDeptBonusList" parameterType="PmsEvaluateData" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT
+            d.GUIDE_CODE         AS guideCode,
+            d.GUIDE_VALUE        AS guideValue,
+            d.GUIDE_VALUE_RESULT AS guideValueResult,
+            e.INDEX_NAME         AS indexName
+        FROM (SELECT GUIDE_CODE,GUIDE_VALUE,GUIDE_VALUE_RESULT FROM pms_evaluate_data
+                WHERE COMP_CODE = #{compCode} AND ACT_DATE = #{actDate} AND DATA_TYPE = #{dataType} <if test="unitCode != null">
+                AND UNIT_CODE = #{unitCode}</if> AND GUIDE_TYPE = 'K') AS d
+        LEFT JOIN pms_evaluate_index e ON e.INDEX_CODE = d.GUIDE_CODE
+        WHERE e.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+</mapper>

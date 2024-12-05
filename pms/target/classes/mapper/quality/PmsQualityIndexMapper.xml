@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.quality.mapper.PmsQualityIndexMapper">
+    
+    <resultMap type="PmsQualityIndex" id="PmsQualityIndexResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="deptName"    column="DEPT_NAME"    />
+        <result property="indexCode"    column="INDEX_CODE"    />
+        <result property="indexName"    column="INDEX_NAME"    />
+        <result property="indexScore"    column="INDEX_SCORE"    />
+        <result property="tempCode"    column="TEMP_CODE"    />
+        <result property="dateCol"    column="DATE_COL"    />
+        <result property="deptCol"    column="DEPT_COL"    />
+        <result property="numCol"    column="NUM_COL"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="dateColName"    column="DATE_COL_NAME"    />
+        <result property="deptColName"    column="DEPT_COL_NAME"    />
+        <result property="numColName"    column="NUM_COL_NAME"    />
+    </resultMap>
+
+    <sql id="selectPmsQualityIndexVo">
+       SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.DEPT_CODE,
+	b.DEPT_ROOM_NAME AS DEPT_NAME,
+	a.INDEX_CODE,
+	a.INDEX_NAME,
+	a.INDEX_SCORE,
+	a.TEMP_CODE,
+	a.DATE_COL,
+	c.FIELD_DESC as DATE_COL_NAME,
+	a.DEPT_COL,
+	d.FIELD_DESC as DEPT_COL_NAME,
+	a.NUM_COL,
+	e.FIELD_DESC as NUM_COL_NAME,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK
+FROM
+	pms_quality_index a
+	LEFT JOIN sys_dept_room b ON a.DEPT_CODE = b.dept_room_id
+	left join form_design_field c on a.DATE_COL = c.id
+	left join form_design_field d on a.DEPT_COL = d.id
+	left join form_design_field e on a.NUM_COL = e.id
+
+    </sql>
+
+    <select id="selectPmsQualityIndexList" parameterType="PmsQualityIndex" resultMap="PmsQualityIndexResult">
+        <include refid="selectPmsQualityIndexVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="deptCode != null "> and a.DEPT_CODE = #{deptCode}</if>
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="tempCode != null "> and a.TEMP_CODE = #{tempCode}</if>
+            <if test="indexName != null  and indexName != ''"> and a.INDEX_NAME like concat('%', #{indexName}, '%')</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectPmsQualityIndexById" parameterType="Long" resultMap="PmsQualityIndexResult">
+        <include refid="selectPmsQualityIndexVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsQualityIndex" parameterType="PmsQualityIndex" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_quality_index
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="indexCode != null">INDEX_CODE,</if>
+            <if test="indexName != null">INDEX_NAME,</if>
+            <if test="indexScore != null">INDEX_SCORE,</if>
+            <if test="tempCode != null">TEMP_CODE,</if>
+            <if test="dateCol != null">DATE_COL,</if>
+            <if test="deptCol != null">DEPT_COL,</if>
+            <if test="numCol != null">NUM_COL,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="indexCode != null">#{indexCode},</if>
+            <if test="indexName != null">#{indexName},</if>
+            <if test="indexScore != null">#{indexScore},</if>
+            <if test="tempCode != null">#{tempCode},</if>
+            <if test="dateCol != null">#{dateCol},</if>
+            <if test="deptCol != null">#{deptCol},</if>
+            <if test="numCol != null">#{numCol},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsQualityIndex" parameterType="PmsQualityIndex">
+        update pms_quality_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="indexName != null">INDEX_NAME = #{indexName},</if>
+            <if test="indexScore != null">INDEX_SCORE = #{indexScore},</if>
+            <if test="tempCode != null">TEMP_CODE = #{tempCode},</if>
+            <if test="dateCol != null">DATE_COL = #{dateCol},</if>
+            <if test="deptCol != null">DEPT_COL = #{deptCol},</if>
+            <if test="numCol != null">NUM_COL = #{numCol},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsQualityIndexById" parameterType="Long">
+        update pms_quality_index set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsQualityIndexByIds" parameterType="String">
+        update pms_quality_index set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

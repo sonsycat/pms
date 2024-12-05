@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.skill.mapper.PmsSkillTechnologyMapper">
+    
+    <resultMap type="PmsSkillTechnology" id="PmsSkillTechnologyResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="technoCode"    column="TECHNO_CODE"    />
+        <result property="technoName"    column="TECHNO_NAME"    />
+        <result property="developTime"    column="DEVELOP_TIME"    />
+        <result property="technoType"    column="TECHNO_TYPE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="completeNum"    column="COMPLETE_NUM"    />
+        <result property="personCode"    column="PERSON_CODE"    />
+        <result property="education"    column="EDUCATION"    />
+        <result property="special"    column="SPECIAL"    />
+        <result property="titleCode"    column="TITLE_CODE"    />
+        <result property="effect"    column="EFFECT"    />
+        <result property="techno"    column="TECHNO"    />
+        <result property="progress"    column="PROGRESS"    />
+        <result property="annex"    column="ANNEX"    />
+        <result property="auditState"    column="AUDIT_STATE"    />
+        <result property="procedureId"    column="PROCEDURE_ID"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSkillTechnologyVo">
+        select
+            pms_skill_technology.ID,
+            pms_skill_technology.COMP_CODE,
+            pms_skill_technology.ACCOUNT_CODE,
+            pms_skill_technology.TECHNO_CODE,
+            pms_skill_technology.TECHNO_NAME,
+            pms_skill_technology.DEVELOP_TIME,
+            pms_skill_technology.TECHNO_TYPE,
+            pms_skill_technology.DEPT_CODE,
+            pms_skill_technology.COMPLETE_NUM,
+            pms_skill_technology.PERSON_CODE,
+            u.NICK_NAME as personName,
+            pms_skill_technology.EDUCATION,
+            pms_skill_technology.SPECIAL,
+            pms_skill_technology.TITLE_CODE,
+            pms_skill_technology.EFFECT,
+            pms_skill_technology.TECHNO,
+            pms_skill_technology.PROGRESS,
+            pms_skill_technology.ANNEX,
+            pms_skill_technology.AUDIT_STATE,
+            pms_skill_technology.PROCEDURE_ID,
+            pms_skill_technology.DEL_FLAG,
+            pms_skill_technology.CREATE_BY,
+            pms_skill_technology.CREATE_TIME,
+            pms_skill_technology.UPDATE_BY,
+            pms_skill_technology.UPDATE_TIME,
+            pms_skill_technology.REMARK,
+            sys_dept_room.dept_room_name as deptName
+        from pms_skill_technology
+        left join sys_dept_room on pms_skill_technology.dept_code = sys_dept_room.dept_room_id
+        LEFT JOIN sys_user u ON pms_skill_technology.PERSON_CODE = u.user_id
+    </sql>
+
+    <select id="selectPmsSkillTechnologyList" parameterType="PmsSkillTechnology" resultMap="PmsSkillTechnologyResult">
+        <include refid="selectPmsSkillTechnologyVo"/>
+        <where>  
+        AND pms_skill_technology.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and pms_skill_technology.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and pms_skill_technology.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="technoCode != null  and technoCode != ''"> and pms_skill_technology.TECHNO_CODE = #{technoCode}</if>
+            <if test="technoName != null  and technoName != ''"> and pms_skill_technology.TECHNO_NAME like concat('%', #{technoName}, '%')</if>
+            <if test="technoType != null  and technoType != ''"> and pms_skill_technology.TECHNO_TYPE = #{technoType}</if>
+            <if test="deptCode != null "> and pms_skill_technology.DEPT_CODE = #{deptCode}</if>
+            <if test="completeNum != null  and completeNum != ''"> and pms_skill_technology.COMPLETE_NUM = #{completeNum}</if>
+            <if test="personCode != null  and personCode != ''"> and pms_skill_technology.PERSON_CODE = #{personCode}</if>
+            <if test="education != null  and education != ''"> and pms_skill_technology.EDUCATION = #{education}</if>
+            <if test="special != null  and special != ''"> and pms_skill_technology.SPECIAL = #{special}</if>
+            <if test="titleCode != null  and titleCode != ''"> and pms_skill_technology.TITLE_CODE = #{titleCode}</if>
+            <if test="effect != null  and effect != ''"> and pms_skill_technology.EFFECT = #{effect}</if>
+            <if test="techno != null  and techno != ''"> and pms_skill_technology.TECHNO = #{techno}</if>
+            <if test="progress != null  and progress != ''"> and pms_skill_technology.PROGRESS = #{progress}</if>
+            <if test="annex != null  and annex != ''"> and pms_skill_technology.ANNEX = #{annex}</if>
+            <if test="auditState != null  and auditState != ''"> and pms_skill_technology.AUDIT_STATE = #{auditState}</if>
+            <if test="procedureId != null  and procedureId != ''"> and pms_skill_technology.PROCEDURE_ID = #{procedureId}</if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                and (pms_skill_technology.DEVELOP_TIME between #{params.beginTime} and #{params.endTime})
+            </if>
+        </where>
+        order by pms_skill_technology.update_time desc
+    </select>
+    
+    <select id="selectPmsSkillTechnologyListByName" parameterType="PmsSkillTechnology" resultMap="PmsSkillTechnologyResult">
+        <include refid="selectPmsSkillTechnologyVo"/>
+        <where>
+        AND pms_skill_technology.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="id != null "> and pms_skill_technology.ID != #{id}</if>
+            <if test="compCode != null "> and pms_skill_technology.COMP_CODE = #{compCode}</if>
+            <if test="technoName != null  and technoName != ''"> and pms_skill_technology.TECHNO_NAME = #{technoName}</if>
+        </where>
+    </select>
+
+    <select id="selectPmsSkillTechnologyById" parameterType="Long" resultMap="PmsSkillTechnologyResult">
+        <include refid="selectPmsSkillTechnologyVo"/>
+        where pms_skill_technology.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND pms_skill_technology.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsSkillTechnology" parameterType="PmsSkillTechnology" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_skill_technology
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="technoCode != null and technoCode != ''">TECHNO_CODE,</if>
+            <if test="technoName != null and technoName != ''">TECHNO_NAME,</if>
+            <if test="developTime != null ">DEVELOP_TIME,</if>
+            <if test="technoType != null and technoType != ''">TECHNO_TYPE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="completeNum != null and completeNum != ''">COMPLETE_NUM,</if>
+            <if test="personCode != null and personCode != ''">PERSON_CODE,</if>
+            <if test="education != null and education != ''">EDUCATION,</if>
+            <if test="special != null and special != ''">SPECIAL,</if>
+            <if test="titleCode != null and titleCode != ''">TITLE_CODE,</if>
+            <if test="effect != null and effect != ''">EFFECT,</if>
+            <if test="techno != null and techno != ''">TECHNO,</if>
+            <if test="progress != null and progress != ''">PROGRESS,</if>
+            <if test="annex != null">ANNEX,</if>
+            <if test="auditState != null">AUDIT_STATE,</if>
+            <if test="procedureId != null">PROCEDURE_ID,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="technoCode != null and technoCode != ''">#{technoCode},</if>
+            <if test="technoName != null and technoName != ''">#{technoName},</if>
+            <if test="developTime != null">#{developTime},</if>
+            <if test="technoType != null and technoType != ''">#{technoType},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="completeNum != null and completeNum != ''">#{completeNum},</if>
+            <if test="personCode != null and personCode != ''">#{personCode},</if>
+            <if test="education != null and education != ''">#{education},</if>
+            <if test="special != null and special != ''">#{special},</if>
+            <if test="titleCode != null and titleCode != ''">#{titleCode},</if>
+            <if test="effect != null and effect != ''">#{effect},</if>
+            <if test="techno != null and techno != ''">#{techno},</if>
+            <if test="progress != null and progress != ''">#{progress},</if>
+            <if test="annex != null">#{annex},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="procedureId != null">#{procedureId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSkillTechnology" parameterType="PmsSkillTechnology">
+        update pms_skill_technology
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="technoCode != null and technoCode != ''">TECHNO_CODE = #{technoCode},</if>
+            <if test="technoName != null and technoName != ''">TECHNO_NAME = #{technoName},</if>
+            <if test="developTime != null">DEVELOP_TIME = #{developTime},</if>
+            <if test="technoType != null and technoType != ''">TECHNO_TYPE = #{technoType},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="completeNum != null and completeNum != ''">COMPLETE_NUM = #{completeNum},</if>
+            <if test="personCode != null and personCode != ''">PERSON_CODE = #{personCode},</if>
+            <if test="education != null and education != ''">EDUCATION = #{education},</if>
+            <if test="special != null and special != ''">SPECIAL = #{special},</if>
+            <if test="titleCode != null and titleCode != ''">TITLE_CODE = #{titleCode},</if>
+            <if test="effect != null and effect != ''">EFFECT = #{effect},</if>
+            <if test="techno != null and techno != ''">TECHNO = #{techno},</if>
+            <if test="progress != null and progress != ''">PROGRESS = #{progress},</if>
+            <if test="annex != null">ANNEX = #{annex},</if>
+            <if test="auditState != null">AUDIT_STATE = #{auditState},</if>
+            <if test="procedureId != null">PROCEDURE_ID = #{procedureId},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSkillTechnologyById" parameterType="Long">
+        update pms_skill_technology set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSkillTechnologyByIds" parameterType="String">
+        update pms_skill_technology set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

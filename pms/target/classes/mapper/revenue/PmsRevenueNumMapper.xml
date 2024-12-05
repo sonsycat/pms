@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.revenue.mapper.PmsRevenueNumMapper">
+    
+    <resultMap type="PmsRevenueNum" id="PmsRevenueNumResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="revenueCode"    column="REVENUE_CODE"    />
+        <result property="revenueName"    column="REVENUE_NAME"    />
+        <result property="billDeptName"    column="BILL_DEPT_NAME"    />
+        <result property="execDeptName"    column="EXEC_DEPT_NAME"    />
+        <result property="careDeptName"    column="CARE_DEPT_NAME"    />
+        <result property="receiveNum"    column="RECEIVE_NUM"    />
+        <result property="actualNum"    column="ACTUAL_NUM"    />
+        <result property="billDept"    column="BILL_DEPT"    />
+        <result property="execDept"    column="EXEC_DEPT"    />
+        <result property="careDept"    column="CARE_DEPT"    />
+        <result property="billDoc"    column="BILL_DOC"    />
+        <result property="occureTime"    column="OCCURE_TIME"    />
+        <result property="revenueType"    column="REVENUE_TYPE"    />
+        <result property="settleMark"    column="SETTLE_MARK"    />
+        <result property="revenueKind"    column="REVENUE_KIND"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsRevenueNumVo">
+      SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.REVENUE_CODE,
+	e.REVENUE_NAME,
+	a.RECEIVE_NUM,
+	a.ACTUAL_NUM,
+	a.BILL_DEPT,
+	b.dept_room_name as BILL_DEPT_NAME,
+	a.EXEC_DEPT,
+	c.dept_room_name as EXEC_DEPT_NAME,
+	a.CARE_DEPT,
+	d.dept_room_name as CARE_DEPT_NAME,
+	a.BILL_DOC,
+	a.OCCURE_TIME,
+	a.REVENUE_TYPE,
+	a.SETTLE_MARK,
+	a.REVENUE_KIND,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK
+FROM
+	pms_revenue_num a
+	left join sys_dept_room b on a.BILL_DEPT = b.dept_room_id and b.del_flag =0
+	left join sys_dept_room c on a.EXEC_DEPT = c.dept_room_id and c.del_flag =0
+	left join sys_dept_room d on a.CARE_DEPT = d.dept_room_id and d.del_flag =0
+	left join pms_revenue e on a.REVENUE_CODE = e.REVENUE_CODE and e.del_flag =0
+
+	 </sql>
+
+    <select id="selectPmsRevenueNumList" parameterType="PmsRevenueNum" resultMap="PmsRevenueNumResult">
+        <include refid="selectPmsRevenueNumVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="revenueCode != null  and revenueCode != ''"> and a.REVENUE_CODE = #{revenueCode}</if>
+            <if test="receiveNum != null "> and a.RECEIVE_NUM = #{receiveNum}</if>
+            <if test="actualNum != null "> and a.ACTUAL_NUM = #{actualNum}</if>
+            <if test="billDept != null "> and a.BILL_DEPT = #{billDept}</if>
+            <if test="execDept != null "> and a.EXEC_DEPT = #{execDept}</if>
+            <if test="careDept != null "> and a.CARE_DEPT = #{careDept}</if>
+            <if test="billDoc != null  and billDoc != ''"> and a.BILL_DOC = #{billDoc}</if>
+            <if test="params.beginOccureTime != null and params.beginOccureTime != '' and params.endOccureTime != null and params.endOccureTime != ''"> and a.OCCURE_TIME between #{params.beginOccureTime} and #{params.endOccureTime}</if>
+            <if test="revenueType != null  and revenueType != ''"> and a.REVENUE_TYPE = #{revenueType}</if>
+            <if test="settleMark != null  and settleMark != ''"> and a.SETTLE_MARK = #{settleMark}</if>
+            <if test="revenueKind != null  and revenueKind != ''"> and a.REVENUE_KIND = #{revenueKind}</if>
+            <if test="occureT != null "> and date_format(a.OCCURE_TIME, '%Y%m') = date_format(#{occureT}, '%Y%m')</if>
+            <if test="receiveNumB != null  and receiveNumB != ''"> and a.RECEIVE_NUM &gt;= #{receiveNumB}</if>
+            <if test="receiveNumE != null  and receiveNumE != ''"> and a.RECEIVE_NUM &lt;= #{receiveNumE}</if>
+            <if test="actualNumB != null  and actualNumB != ''"> and a.ACTUAL_NUM &gt;= #{actualNumB}</if>
+            <if test="actualNumE != null  and actualNumE != ''"> and a.ACTUAL_NUM &lt;= #{actualNumE}</if>
+            <if test="remark != null  and remark != ''"> and a.REMARK like concat('%', #{remark}, '%')</if>
+
+        </where>
+        order by a.update_time desc
+    </select>
+
+
+
+    <select id="beforeBreak" parameterType="PmsRevenueNum" resultType="String">
+        SELECT
+        SUM( ACTUAL_NUM )
+        FROM
+        pms_revenue_num
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and COMP_CODE = #{compCode}
+            and date_format(OCCURE_TIME, '%Y%m') = date_format(#{occureTime}, '%Y%m')
+            AND REVENUE_TYPE = #{revenueType}
+            AND REVENUE_KIND = #{revenueKind}
+            <if test="settleMark != null  and settleMark != ''"> and SETTLE_MARK = #{settleMark}</if>
+        </where>
+    </select>
+
+
+
+    <select id="selectPmsForApp" parameterType="PmsRevenueNum" resultMap="PmsRevenueNumResult">
+        SELECT DISTINCT REVENUE_CODE FROM pms_revenue_num
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="occureT != null "> and date_format(OCCURE_TIME, '%Y%m') = date_format(#{occureT}, '%Y%m')</if>
+        </where>
+
+    </select>
+    
+    <select id="selectPmsRevenueNumById" parameterType="Long" resultMap="PmsRevenueNumResult">
+        <include refid="selectPmsRevenueNumVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsRevenueNum" parameterType="PmsRevenueNum" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_revenue_num
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="revenueCode != null">REVENUE_CODE,</if>
+            <if test="receiveNum != null">RECEIVE_NUM,</if>
+            <if test="actualNum != null">ACTUAL_NUM,</if>
+            <if test="billDept != null">BILL_DEPT,</if>
+            <if test="execDept != null">EXEC_DEPT,</if>
+            <if test="careDept != null">CARE_DEPT,</if>
+            <if test="billDoc != null">BILL_DOC,</if>
+            <if test="occureTime != null">OCCURE_TIME,</if>
+            <if test="revenueType != null">REVENUE_TYPE,</if>
+            <if test="settleMark != null">SETTLE_MARK,</if>
+            <if test="revenueKind != null">REVENUE_KIND,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="revenueCode != null">#{revenueCode},</if>
+            <if test="receiveNum != null">#{receiveNum},</if>
+            <if test="actualNum != null">#{actualNum},</if>
+            <if test="billDept != null">#{billDept},</if>
+            <if test="execDept != null">#{execDept},</if>
+            <if test="careDept != null">#{careDept},</if>
+            <if test="billDoc != null">#{billDoc},</if>
+            <if test="occureTime != null">#{occureTime},</if>
+            <if test="revenueType != null">#{revenueType},</if>
+            <if test="settleMark != null">#{settleMark},</if>
+            <if test="revenueKind != null">#{revenueKind},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsRevenueNum" parameterType="PmsRevenueNum">
+        update pms_revenue_num
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="revenueCode != null">REVENUE_CODE = #{revenueCode},</if>
+            <if test="receiveNum != null">RECEIVE_NUM = #{receiveNum},</if>
+            <if test="actualNum != null">ACTUAL_NUM = #{actualNum},</if>
+            <if test="billDept != null">BILL_DEPT = #{billDept},</if>
+            <if test="execDept != null">EXEC_DEPT = #{execDept},</if>
+            <if test="careDept != null">CARE_DEPT = #{careDept},</if>
+            <if test="billDoc != null">BILL_DOC = #{billDoc},</if>
+            <if test="occureTime != null">OCCURE_TIME = #{occureTime},</if>
+            <if test="revenueType != null">REVENUE_TYPE = #{revenueType},</if>
+            <if test="settleMark != null">SETTLE_MARK = #{settleMark},</if>
+            <if test="revenueKind != null">REVENUE_KIND = #{revenueKind},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsRevenueNumById" parameterType="Long">
+        update pms_revenue_num set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+
+
+    <delete id="deletePmsRevenueNumByIds" parameterType="String">
+        update pms_revenue_num set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByFlag" >
+        delete from pms_revenue_num where del_flag = '2'
+    </delete>
+    <update id="updateByFlag" >
+        update pms_revenue_num set del_flag='0' where del_flag = '2'
+    </update>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.revenue.mapper.PmsRevenueDeptMapper">
+    
+    <resultMap type="PmsRevenueDept" id="PmsRevenueDeptResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="revenueCode"    column="REVENUE_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="deptType"    column="DEPT_TYPE"    />
+        <result property="ratio"    column="RATIO"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="deptName"    column="dept_room_name"    />
+    </resultMap>
+
+    <sql id="selectPmsRevenueDeptVo">
+       SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.REVENUE_CODE,
+	a.DEPT_CODE,
+	a.RATIO,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK ,
+	b.clinic_type as DEPT_TYPE,
+	b.dept_room_name
+FROM
+	pms_revenue_dept a
+	left join sys_dept_room b on a.DEPT_CODE =b.dept_room_id and b.del_flag =0</sql>
+
+    <select id="selectPmsRevenueDeptList" parameterType="PmsRevenueDept" resultMap="PmsRevenueDeptResult">
+        <include refid="selectPmsRevenueDeptVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="revenueCode != null  and revenueCode != ''"> and a.REVENUE_CODE = #{revenueCode}</if>
+            <if test="deptCode != null "> and a.DEPT_CODE = #{deptCode}</if>
+            <if test="deptType != null "> and b.clinic_type = #{deptType}</if>
+            <if test="ratio != null  and ratio != ''"> and a.RATIO = #{ratio}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectPmsRevenueDeptById" parameterType="Long" resultMap="PmsRevenueDeptResult">
+        <include refid="selectPmsRevenueDeptVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsRevenueDept" parameterType="PmsRevenueDept" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_revenue_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="revenueCode != null">REVENUE_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="ratio != null">RATIO,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="revenueCode != null">#{revenueCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsRevenueDept" parameterType="PmsRevenueDept">
+        update pms_revenue_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="revenueCode != null">REVENUE_CODE = #{revenueCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="ratio != null">RATIO = #{ratio},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsRevenueDeptById" parameterType="Long">
+        update pms_revenue_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="delByRevCODE">
+        delete from pms_revenue_dept  where REVENUE_CODE = #{revenueCode}
+    </delete>
+
+    <delete id="deletePmsRevenueDeptByIds" parameterType="String">
+        update pms_revenue_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

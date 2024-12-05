@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsBonusEnterMapper">
+    <insert id="insertPmsBonusEnterLists" parameterType="java.util.ArrayList">
+        INSERT INTO `pms`.`pms_bonus_enter` ( `enter_date`, `dept_code`, `dept_name`, `achievement`,
+                                             `creat_by`, `creat_time`, `update_by`, `update_time`, `del_flag`,
+                                             `user_name`, `remark` )
+        VALUES
+        <foreach item="PmsBonusEnter" collection="pmsBonusEnterList"  separator="," >
+        (
+        #{PmsBonusEnter.enterTime,jdbcType=DATE},
+        #{PmsBonusEnter.deptCode,jdbcType=VARCHAR},
+        #{PmsBonusEnter.deptName,jdbcType=VARCHAR},
+        #{PmsBonusEnter.achievement,jdbcType=VARCHAR},
+        #{PmsBonusEnter.createBy,jdbcType=VARCHAR},
+        #{PmsBonusEnter.createTime,jdbcType=VARCHAR},
+        #{PmsBonusEnter.updateBy,jdbcType=VARCHAR},
+        #{PmsBonusEnter.updateTime,jdbcType=VARCHAR},
+        ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL},
+        #{PmsBonusEnter.userName,jdbcType=VARCHAR},
+        #{PmsBonusEnter.remark,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
+    <update id="updatePmsBonusEnter" parameterType="PmsBonusEnter">
+        update pms_bonus_enter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enterTime != null">enter_date = #{enterTime},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="achievement != null">achievement = #{achievement},</if>
+            <if test="userName != null ">user_name = #{userName},</if>
+
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+    <delete id="deletePmsBonusEnterByIds" parameterType="Long">
+        update pms_bonus_enter set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} ,
+        UPDATE_BY = #{updateBy} , UPDATE_TIME = #{deleteTime} where ID in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPmsBonusEnterList" resultType="com.zjry.pms.bonus.domain.PmsBonusEnter">
+        SELECT
+            id as id,
+            dept_code as deptCode,
+            dept_name as deptName,
+            user_name as userName,
+            remark as remark,
+            achievement  as achievement
+        FROM
+            pms_bonus_enter
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and dept_code  in
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+            <if test="pmsBonusEnter.enterDate != null  "> and date_format(enter_date,'%Y-%m') = #{pmsBonusEnter.enterDate}</if>
+        </where>
+        order by enter_date desc
+    </select>
+    <select id="selectPmsBonusEnterById" resultType="com.zjry.pms.bonus.domain.PmsBonusEnter">
+        SELECT
+            id as id,
+            date_format(enter_date,'%Y-%m') as enterDate,
+            dept_code as deptCode,
+            dept_name as deptName,
+            user_name as userName,
+            remark as remark,
+            achievement  as achievement
+        FROM
+            pms_bonus_enter
+        where ID = #{id} and  del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+    <select id="selectMesByDateAndCode" resultType="com.zjry.pms.bonus.domain.PmsBonusEnter">
+        SELECT
+            id as id,
+            date_format(enter_date,'%Y-%m') as enterDate,
+            dept_code as deptCode,
+            dept_name as deptName,
+            user_name as userName,
+            remark as remark,
+            achievement  as achievement
+        FROM
+            pms_bonus_enter
+        where   del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+           and dept_code = #{deptCode} and date_format(enter_date,'%Y-%m') = #{enterDate}
+    </select>
+</mapper>

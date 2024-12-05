@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataUserMapper">
+
+    <resultMap type="com.zjry.pms.basic.domain.basicData.BasicdataUser" id="BasicdataUserResult">
+        <result property="userId" column="user_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptRoomId" column="dept_room_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="deptRoomName" column="dept_room_name"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="userType" column="user_type"/>
+        <result property="email" column="email"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="sex" column="sex"/>
+        <result property="avatar" column="avatar"/>
+        <result property="password" column="password"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="loginDate" column="login_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="docCode" column="doc_code"/>
+        <result property="empName" column="emp_name"/>
+        <association property="dept"    column="dept_id" javaType="com.zjry.pms.basic.domain.basicData.BasicdataDept" resultMap="deptResult" />
+        <collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
+        <collection  property="accountSetList"   javaType="java.util.List"        resultMap="AccountSetResult" />
+    </resultMap>
+    <resultMap id="deptResult" type="com.zjry.pms.basic.domain.basicData.BasicdataDept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"      />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+
+    <resultMap id="RoleResult" type="com.zjry.pms.basic.domain.basicData.BasicdataRole">
+        <id     property="roleId"       column="role_id"        />
+        <result property="roleName"     column="role_name"      />
+        <result property="roleKey"      column="role_key"       />
+        <result property="roleSort"     column="role_sort"      />
+        <result property="dataScope"     column="data_scope"    />
+        <result property="status"       column="role_status"    />
+    </resultMap>
+
+    <resultMap id="AccountSetResult" type="com.zjry.pms.basic.domain.basicData.AccountSet">
+        <id     property="id"               column="id"        />
+        <result property="code"             column="code"      />
+        <result property="name"             column="name"       />
+        <result property="deptId"           column="dept_id"      />
+        <result property="deptName"         column="dept_name"    />
+        <result property="startYear"        column="start_year"    />
+        <result property="startMonth"       column="start_month"    />
+        <result property="endDate"          column="end_date"    />
+        <result property="status"           column="status"    />
+        <result property="useFlag"           column="use_flag"    />
+    </resultMap>
+    <sql id="selectBasicdataUserVo">
+        select u.user_id, u.dept_id, u.dept_room_id, u.user_name, u.dept_room_name, u.dept_name, u.nick_name, u.user_type,
+            u.email, u.phonenumber, u.sex, u.avatar, u.password, u.status, u.del_flag, u.login_ip, u.login_date,
+            u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
+            d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+            r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status,e.emp_code,e.emp_name,
+            acc.id, acc.code, acc.name, acc.dept_id, acc.dept_name, acc.start_year, acc.start_year, acc.start_month, acc.end_date, acc.status, uar.use_flag AS use_flag
+        from comm.sys_user_ry u
+		    left join sys_dept d on u.dept_id = d.dept_id
+		    left join sys_user_role ur on u.user_id = ur.user_id
+		    left join sys_role r on r.role_id = ur.role_id
+			left join hr_sys_emp e on e.emp_code = u.doc_code
+			left join comm.user_account_relation_ry uar on u.user_id = uar.user_id
+			left join comm.account_set_ry acc on acc.id = uar.account_id
+    </sql>
+
+
+    <select id="selectBasicdataUserByIdForOne" parameterType="Long" resultMap="BasicdataUserResult">
+        select u.user_id, u.dept_id, u.dept_room_id, u.user_name, u.dept_room_name, u.dept_name, u.nick_name, u.user_type,
+            u.email, u.phonenumber, u.sex, u.avatar, u.password, u.status, u.del_flag, u.login_ip, u.login_date,
+            u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
+            acc.id, acc.code, acc.name, acc.dept_id, acc.dept_name, acc.start_year, acc.start_year, acc.start_month, acc.end_date, acc.status, uar.use_flag AS use_flag
+        from comm.sys_user_ry u
+            left join comm.user_account_relation_ry uar on u.user_id = uar.user_id
+			left join comm.account_set_ry acc on acc.id = uar.account_id
+        where u.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND u.user_id = #{userId}
+    </select>
+
+    <select id="selectBasicdataUserById" parameterType="Long" resultMap="BasicdataUserResult">
+        <include refid="selectBasicdataUserVo"/>
+        where u.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND u.user_id = #{userId}
+    </select>
+
+</mapper>

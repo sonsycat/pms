@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.average.mapper.PmsAveragePersonMapper">
+    
+    <resultMap type="PmsAveragePerson" id="PmsAveragePersonResult">
+        <result property="id"    column="ID"    />
+        <result property="setDate"    column="SET_DATE"    />
+        <result property="setTime"    column="SET_TIME"    />
+        <result property="setPerson"    column="SET_PERSON"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="code"    column="CODE"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+    </resultMap>
+
+    <sql id="selectPmsAveragePersonVo">
+        select ID, SET_DATE, SET_TIME, SET_PERSON, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK, CODE, COMP_CODE, ACCOUNT_CODE from pms_average_person
+    </sql>
+
+    <select id="selectPmsAveragePersonList" parameterType="PmsAveragePerson" resultMap="PmsAveragePersonResult">
+        <include refid="selectPmsAveragePersonVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="setDate != null "> and SET_DATE = #{setDate}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectPmsAveragePersonById" parameterType="Long" resultMap="PmsAveragePersonResult">
+        <include refid="selectPmsAveragePersonVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertPmsAveragePerson" parameterType="PmsAveragePerson" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_average_person
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="setDate != null">SET_DATE,</if>
+            <if test="setTime != null">SET_TIME,</if>
+            <if test="setPerson != null and setPerson != ''">SET_PERSON,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="code != null">CODE,</if>
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="setDate != null">#{setDate},</if>
+            <if test="setTime != null">#{setTime},</if>
+            <if test="setPerson != null and setPerson != ''">#{setPerson},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="code != null">#{code},</if>
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsAveragePerson" parameterType="PmsAveragePerson">
+        update pms_average_person
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="setDate != null">SET_DATE = #{setDate},</if>
+            <if test="setTime != null">SET_TIME = #{setTime},</if>
+            <if test="setPerson != null and setPerson != ''">SET_PERSON = #{setPerson},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="code != null">CODE = #{code},</if>
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsAveragePersonById" parameterType="Long">
+        update pms_average_person set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsAveragePersonByIds" parameterType="String">
+        update pms_average_person set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAveragePersonNewDate" resultMap="PmsAveragePersonResult">
+        <include refid="selectPmsAveragePersonVo"/>
+        where del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        order by set_date desc LIMIT 1
+    </select>
+
+    <select id="selectPmsAveragePersonByDate" parameterType="PmsAveragePerson" resultMap="PmsAveragePersonResult">
+        <include refid="selectPmsAveragePersonVo"/>
+        <where>
+            DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="setDate != null "> and SET_DATE = #{setDate}</if>
+        </where>
+    </select>
+
+    <insert id="copyData" parameterType="PmsAveragePerson">
+        INSERT INTO pms_average_person(SET_DATE, SET_TIME, SET_PERSON, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK, CODE, COMP_CODE, ACCOUNT_CODE)
+        SELECT #{copyDate}, #{setTime}, SET_PERSON, DEL_FLAG, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, REMARK, #{code}, COMP_CODE, ACCOUNT_CODE FROM pms_average_person
+        WHERE date_format(SET_DATE, '%Y-%m') = date_format(#{setDate}, '%Y-%m') AND DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </insert>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.subsidy.mapper.PmsSubsidyRewardInputMapper">
+    
+    <resultMap type="PmsSubsidyRewardInput" id="PmsSubsidyRewardInputResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="rewardCode"    column="REWARD_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="amount"    column="AMOUNT"    />
+        <result property="rewardTime"    column="REWARD_TIME"    />
+        <result property="rewardType"    column="REWARD_TYPE"    />
+        <result property="rewardReason"    column="REWARD_REASON"    />
+        <result property="isEnable"    column="IS_ENABLE"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSubsidyRewardInputVo">
+        select ID, COMP_CODE, ACCOUNT_CODE, REWARD_CODE, DEPT_CODE, AMOUNT, REWARD_TIME, REWARD_TYPE, REWARD_REASON, IS_ENABLE, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from pms_subsidy_reward_input
+    </sql>
+
+    <select id="selectPmsSubsidyRewardInputList" parameterType="PmsSubsidyRewardInput" resultMap="PmsSubsidyRewardInputResult">
+        <include refid="selectPmsSubsidyRewardInputVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="rewardCode != null  and rewardCode != ''"> and REWARD_CODE = #{rewardCode}</if>
+            <if test="deptCode != null  and deptCode != ''"> and DEPT_CODE = #{deptCode}</if>
+            <if test="amount != null "> and AMOUNT = #{amount}</if>
+            <if test="amountMin != null "> and AMOUNT+0 >= #{amountMin}+0</if>
+            <if test="amountMax != null "> and AMOUNT+0 <![CDATA[ <= ]]> #{amountMax}+0</if>
+            <if test="rewardTime != null "> and REWARD_TIME = #{rewardTime}</if>
+            <if test="rewardMonth != null "> and date_format(REWARD_TIME, '%Y%m') = date_format(#{rewardMonth}, '%Y%m')</if>
+            <if test="rewardType != null  and rewardType != ''"> and REWARD_TYPE = #{rewardType}</if>
+            <if test="rewardReason != null  and rewardReason != ''"> and REWARD_REASON = #{rewardReason}</if>
+            <if test="isEnable != null  and isEnable != ''"> and IS_ENABLE = #{isEnable}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectPmsSubsidyRewardInputById" parameterType="Long" resultMap="PmsSubsidyRewardInputResult">
+        <include refid="selectPmsSubsidyRewardInputVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertPmsSubsidyRewardInput" parameterType="PmsSubsidyRewardInput" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_subsidy_reward_input
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="rewardCode != null and rewardCode != ''">REWARD_CODE,</if>
+            <if test="deptCode != null and deptCode != ''">DEPT_CODE,</if>
+            <if test="amount != null">AMOUNT,</if>
+            <if test="rewardTime != null">REWARD_TIME,</if>
+            <if test="rewardType != null">REWARD_TYPE,</if>
+            <if test="rewardReason != null">REWARD_REASON,</if>
+            <if test="isEnable != null">IS_ENABLE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="rewardCode != null and rewardCode != ''">#{rewardCode},</if>
+            <if test="deptCode != null and deptCode != ''">#{deptCode},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="rewardTime != null">#{rewardTime},</if>
+            <if test="rewardType != null">#{rewardType},</if>
+            <if test="rewardReason != null">#{rewardReason},</if>
+            <if test="isEnable != null">#{isEnable},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSubsidyRewardInput" parameterType="PmsSubsidyRewardInput">
+        update pms_subsidy_reward_input
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="rewardCode != null and rewardCode != ''">REWARD_CODE = #{rewardCode},</if>
+            <if test="deptCode != null and deptCode != ''">DEPT_CODE = #{deptCode},</if>
+            <if test="amount != null">AMOUNT = #{amount},</if>
+            <if test="rewardTime != null">REWARD_TIME = #{rewardTime},</if>
+            <if test="rewardType != null">REWARD_TYPE = #{rewardType},</if>
+            <if test="rewardReason != null">REWARD_REASON = #{rewardReason},</if>
+            <if test="isEnable != null">IS_ENABLE = #{isEnable},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSubsidyRewardInputById" parameterType="Long">
+        update pms_subsidy_reward_input set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSubsidyRewardInputByIds" parameterType="String">
+        update pms_subsidy_reward_input set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

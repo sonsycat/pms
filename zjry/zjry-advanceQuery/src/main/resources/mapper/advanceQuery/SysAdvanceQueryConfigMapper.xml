@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.advanceQuery.mapper.SysAdvanceQueryConfigMapper">
+    
+    <resultMap type="SysAdvanceQueryConfig" id="SysAdvanceQueryConfigResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="menuId"    column="menu_id"    />
+        <result property="menuName"    column="menu_name"    />
+        <result property="sqlId"    column="sql_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap id="SysAdvanceQueryConfigSysAdvanceQueryConfigDetailResult" type="SysAdvanceQueryConfig" extends="SysAdvanceQueryConfigResult">
+        <collection property="sysAdvanceQueryConfigDetailList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysAdvanceQueryConfigDetailResult" />
+    </resultMap>
+
+    <resultMap type="SysAdvanceQueryConfigDetail" id="SysAdvanceQueryConfigDetailResult">
+        <result property="id"    column="sub_id"    />
+        <result property="configId"    column="sub_config_id"    />
+        <result property="fieldName"    column="sub_field_name"    />
+        <result property="fieldDesc"    column="sub_field_desc"    />
+        <result property="fieldOpTyoe"    column="sub_field_op_tyoe"    />
+        <result property="fieldLabelType"    column="sub_field_label_type"    />
+        <result property="fieldDictType"    column="sub_field_dict_type"    />
+        <result property="delFlag"    column="sub_del_flag"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="updateTime"    column="sub_update_time"    />
+    </resultMap>
+
+    <sql id="selectSysAdvanceQueryConfigVo">
+        select id, name, menu_id, menu_name, sql_id, create_time, update_time, del_flag from sys_advance_query_config
+    </sql>
+
+    <select id="selectSysAdvanceQueryConfigList" parameterType="SysAdvanceQueryConfig" resultMap="SysAdvanceQueryConfigResult">
+        <include refid="selectSysAdvanceQueryConfigVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="menuId != null "> and menu_id = #{menuId}</if>
+            <if test="menuName != null  and menuName != ''"> and menu_name like concat('%', #{menuName}, '%')</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectSysAdvanceQueryConfigById" parameterType="Long" resultMap="SysAdvanceQueryConfigSysAdvanceQueryConfigDetailResult">
+        select a.id, a.name, a.menu_id, a.menu_name, a.sql_id, a.create_time, a.update_time, a.del_flag,
+            b.id as sub_id, b.config_id as sub_config_id, b.field_name as sub_field_name, b.field_desc as sub_field_desc, b.field_op_tyoe as sub_field_op_tyoe, b.field_label_type as sub_field_label_type, b.field_dict_type as sub_field_dict_type, b.del_flag as sub_del_flag, b.create_time as sub_create_time, b.update_time as sub_update_time
+        from sys_advance_query_config a
+        left join sys_advance_query_config_detail b on b.config_id = a.id
+        where a.id = #{id}
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+    </select>
+    
+    <select id="selectConfigByRouteId" parameterType="string" resultMap="SysAdvanceQueryConfigResult">
+        <include refid="selectSysAdvanceQueryConfigVo"/>
+        where menu_id = #{routeId}
+    </select>
+    
+    <select id="selectDetailByRouteId" parameterType="string" resultType="map">
+        SELECT a.field_name fieldName, a.field_desc fieldDesc, 
+        a.field_label_type fieldLabelType, a.field_dict_type fieldDictType
+		FROM sys_advance_query_config_detail a
+		LEFT JOIN sys_advance_query_config b
+		ON a.config_id = b.id
+        where b.menu_id = #{routeId}
+    </select>
+        
+    <insert id="insertSysAdvanceQueryConfig" parameterType="SysAdvanceQueryConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_advance_query_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="menuId != null">menu_id,</if>
+            <if test="menuName != null">menu_name,</if>
+            <if test="sqlId != null">sql_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="menuId != null">#{menuId},</if>
+            <if test="menuName != null">#{menuName},</if>
+            <if test="sqlId != null">#{sqlId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAdvanceQueryConfig" parameterType="SysAdvanceQueryConfig">
+        update sys_advance_query_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="menuId != null">menu_id = #{menuId},</if>
+            <if test="menuName != null">menu_name = #{menuName},</if>
+            <if test="sqlId != null">sql_id = #{sqlId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAdvanceQueryConfigById" parameterType="Long">
+        delete from sys_advance_query_config where id = #{id}
+    </delete>
+
+	<delete id="deleteSysAdvanceQueryConfigByIds" parameterType="String">
+        delete from sys_advance_query_config
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteSysAdvanceQueryConfigDetailByConfigIds" parameterType="String">
+        update sys_advance_query_config_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where config_id in 
+        <foreach item="configId" collection="array" open="(" separator="," close=")">
+            #{configId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSysAdvanceQueryConfigDetailByConfigId" parameterType="Long">
+        delete from sys_advance_query_config_detail where config_id = #{configId}
+    </delete>
+
+    <insert id="batchSysAdvanceQueryConfigDetail">
+        insert into sys_advance_query_config_detail( id, config_id, field_name, field_desc, field_op_tyoe, field_label_type, field_dict_type, del_flag, create_time, update_time) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.configId}, #{item.fieldName}, #{item.fieldDesc}, #{item.fieldOpTyoe}, #{item.fieldLabelType}, #{item.fieldDictType}, #{item.delFlag}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+    
+    <select id="selectDbTableList" resultType="java.util.Map">
+		select table_name tableName, table_comment tableComment
+		from information_schema.tables
+		where table_schema = (select database())
+		AND table_name NOT LIKE 'qrtz_%' 
+		AND table_name NOT LIKE 'gen_%' 
+		AND table_name NOT LIKE 'dynamic_%'
+		AND table_name NOT LIKE 'form_design%'
+		AND table_name NOT LIKE 'sys_advance_query%'
+	</select>
+	
+	<select id="selectTableByName" parameterType="String" resultType="java.util.Map">
+		select table_name tableName, table_comment tableComment
+		from information_schema.tables
+		where table_schema = (select database())
+		and table_name = #{tableName}
+	</select>
+	
+	<select id="selectTableFields" parameterType="String" resultType="java.util.Map">
+		SELECT DISTINCT COLUMN_NAME as fieldName, DATA_TYPE as fieldType, COLUMN_COMMENT as fieldLabel
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE table_name = #{tableName}
+	</select>
+	
+	<select id="selectMenuPath" resultType="map">
+		SELECT path, menu_name 
+		FROM sys_menu
+		WHERE path IS NOT NULL
+		AND path != '#'
+		AND path != ''
+	</select>
+</mapper>

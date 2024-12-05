@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsBonusPersonnelMapper">
+    <insert id="insertPmsBonusPersonnelLists" parameterType="java.util.ArrayList">
+        INSERT INTO `pms`.`pms_bonus_personnel` ( `personnel_date`,  `dept_name`, `personnel_id`,
+                                             `creat_by`, `creat_time`, `update_by`, `update_time`, `del_flag`,
+                                             `personnel_name`, `remark` )
+        VALUES
+        <foreach item="PmsBonusPersonnel" collection="pmsBonusPersonnelList"  separator="," >
+        (
+        #{PmsBonusPersonnel.personnelTime,jdbcType=DATE},
+        #{PmsBonusPersonnel.deptName,jdbcType=VARCHAR},
+        #{PmsBonusPersonnel.personnelId,jdbcType=VARCHAR},
+        #{PmsBonusPersonnel.createBy,jdbcType=VARCHAR},
+        #{PmsBonusPersonnel.createTime,jdbcType=VARCHAR},
+        #{PmsBonusPersonnel.updateBy,jdbcType=VARCHAR},
+        #{PmsBonusPersonnel.updateTime,jdbcType=VARCHAR},
+        ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL},
+        #{PmsBonusPersonnel.personnelName,jdbcType=VARCHAR},
+        #{PmsBonusPersonnel.remark,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
+    <update id="updatePmsBonusPersonnel" parameterType="PmsBonusPersonnel">
+        update pms_bonus_personnel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personnelTime != null">personnel_date = #{personnelTime},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="personnelId != null">personnel_id = #{personnelId},</if>
+            <if test="personnelName != null ">personnel_name = #{personnelName},</if>
+
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+    <delete id="deletePmsBonusPersonnelByIds" parameterType="Long">
+        update pms_bonus_personnel set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} ,
+        UPDATE_BY = #{updateBy} , UPDATE_TIME = #{deleteTime} where ID in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPmsBonusPersonnelList" resultType="com.zjry.pms.bonus.domain.PmsBonusPersonnel">
+        SELECT
+            id as id,
+            dept_name as deptName,
+            personnel_name as personnelName,
+            personnel_id as personnelId,
+            remark as remark
+        FROM
+            pms_bonus_personnel
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="personnelDate != null  "> and date_format(personnel_date,'%Y-%m') = #{personnelDate}</if>
+        </where>
+        order by personnel_date desc
+    </select>
+    <select id="selectPmsBonusPersonnelById" resultType="com.zjry.pms.bonus.domain.PmsBonusPersonnel">
+        SELECT
+            id as id,
+            date_format(personnel_date,'%Y-%m') as personnelDate,
+            dept_name as deptName,
+            personnel_name as personnelName,
+            personnel_id as personnelId,
+            remark as remark
+        FROM
+            pms_bonus_personnel
+        where ID = #{id} and  del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+</mapper>

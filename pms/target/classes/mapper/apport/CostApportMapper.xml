@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.apport.mapper.CostApportMapper">
+    
+    <resultMap type="CostApport" id="CostApportResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="apportCode"    column="APPORT_CODE"    />
+        <result property="nowDate"    column="NOW_DATE"    />
+        <result property="apportType"    column="APPORT_TYPE"    />
+        <result property="forward"    column="FORWARD"    />
+        <result property="back"    column="BACk"    />
+        <result property="apportTime"    column="APPORT_TIME"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectCostApportVo">
+        select ID, COMP_CODE, ACCOUNT_CODE, APPORT_CODE, NOW_DATE, APPORT_TYPE, FORWARD, BACk, APPORT_TIME, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from cost_apport
+    </sql>
+
+    <select id="selectCostApportList" parameterType="CostApport" resultMap="CostApportResult">
+        <include refid="selectCostApportVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="apportCode != null  and apportCode != ''"> and APPORT_CODE = #{apportCode}</if>
+            <if test="nowDate != null "> and NOW_DATE = #{nowDate}</if>
+            <if test="startDate != null "> and NOW_DATE &gt;= #{startDate}</if>
+            <if test="endDate != null "> and NOW_DATE &lt;= #{endDate}</if>
+            <if test="apportType != null  and apportType != ''"> and APPORT_TYPE = #{apportType}</if>
+            <if test="forward != null  and forward != ''"> and FORWARD = #{forward}</if>
+            <if test="back != null  and back != ''"> and BACk = #{back}</if>
+            <if test="apportTime != null "> and APPORT_TIME = #{apportTime}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectCostApportListOrderByNowDate" parameterType="PmsTableOpcQuery" resultMap="CostApportResult">
+        <include refid="selectCostApportVo"/>
+        <where>
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="apportCode != null  and apportCode != ''"> and APPORT_CODE = #{apportCode}</if>
+            <if test="nowDate != null "> and NOW_DATE = #{nowDate}</if>
+            <if test="startDate != null "> and NOW_DATE &gt;= #{startDate}</if>
+            <if test="endDate != null "> and NOW_DATE &lt;= #{endDate}</if>
+            <if test="apportType != null  and apportType != ''"> and APPORT_TYPE = #{apportType}</if>
+            <if test="forward != null  and forward != ''"> and FORWARD = #{forward}</if>
+            <if test="back != null  and back != ''"> and BACk = #{back}</if>
+            <if test="apportTime != null "> and APPORT_TIME = #{apportTime}</if>
+        </where>
+        order by NOW_DATE desc
+    </select>
+
+    <select id="selectCostApportById" parameterType="Long" resultMap="CostApportResult">
+        <include refid="selectCostApportVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertCostApport" parameterType="PmsTableOpcQuery" useGeneratedKeys="true" keyProperty="id">
+        insert into cost_apport
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="apportCode != null">APPORT_CODE,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="apportType != null">APPORT_TYPE,</if>
+            <if test="forward != null">FORWARD,</if>
+            <if test="back != null">BACk,</if>
+            <if test="apportTime != null">APPORT_TIME,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="apportCode != null">#{apportCode},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="apportType != null">#{apportType},</if>
+            <if test="forward != null">#{forward},</if>
+            <if test="back != null">#{back},</if>
+            <if test="apportTime != null">#{apportTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCostApport" parameterType="CostApport">
+        update cost_apport
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="apportCode != null">APPORT_CODE = #{apportCode},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="apportType != null">APPORT_TYPE = #{apportType},</if>
+            <if test="forward != null">FORWARD = #{forward},</if>
+            <if test="back != null">BACk = #{back},</if>
+            <if test="apportTime != null">APPORT_TIME = #{apportTime},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteCostApportById" parameterType="Long">
+        update cost_apport set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteCostApportByIds" parameterType="String">
+        update cost_apport set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

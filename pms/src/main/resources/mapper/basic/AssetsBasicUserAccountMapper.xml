@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.AssetsBasicUserAccountMapper">
+
+    <resultMap type="AssetsBasicUserAccount" id="AssetsBasicUserAccountResult">
+        <result property="accountId"    column="account_id"    />
+        <result property="useFlag"    column="use_flag"    />
+        <result property="userId"    column="user_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAssetsBasicUserAccountVo">
+        select account_id, use_flag, user_id, del_flag, create_by, create_time, update_by, update_time from comm.user_account_relation_ry
+    </sql>
+
+    <select id="selectAssetsBasicUserAccountList" parameterType="AssetsBasicUserAccount" resultMap="AssetsBasicUserAccountResult">
+        <include refid="selectAssetsBasicUserAccountVo"/>
+        <where>
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="useFlag != null  and useFlag != ''"> and use_flag = #{useFlag}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectAssetsBasicUserAccountById" parameterType="Long" resultMap="AssetsBasicUserAccountResult">
+        <include refid="selectAssetsBasicUserAccountVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND account_id = #{accountId}
+    </select>
+
+    <insert id="insertAssetsBasicUserAccount" parameterType="AssetsBasicUserAccount">
+        insert into comm.user_account_relation_ry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="useFlag != null">use_flag,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="useFlag != null">#{useFlag},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssetsBasicUserAccount" parameterType="AssetsBasicUserAccount">
+        update comm.user_account_relation_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="useFlag != null">use_flag = #{useFlag},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where account_id = #{accountId}
+    </update>
+
+    <delete id="deleteAssetsBasicUserAccountById" parameterType="Long">
+        update comm.user_account_relation_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where account_id = #{accountId}
+    </delete>
+
+    <delete id="deleteAssetsBasicUserAccountByUserId" parameterType="Long">
+        delete from comm.user_account_relation_ry where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteAssetsBasicUserAccountByIds" parameterType="String">
+        update comm.user_account_relation_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where account_id in
+        <foreach item="accountId" collection="array" open="(" separator="," close=")">
+            #{accountId}
+        </foreach>
+    </delete>
+</mapper>

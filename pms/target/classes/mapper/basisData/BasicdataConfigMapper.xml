@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataConfigMapper">
+
+    <resultMap type="com.zjry.pms.basic.domain.basicData.BasicdataConfig" id="BasicdataConfigResult">
+        <result property="configId"    column="config_id"    />
+        <result property="configName"    column="config_name"    />
+        <result property="configKey"    column="config_key"    />
+        <result property="configValue"    column="config_value"    />
+        <result property="configType"    column="config_type"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="systemFlag"    column="system_flag"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBasicdataConfigVo">
+        select config_id, config_name, config_key, config_value, config_type, del_flag, create_by, create_time, update_by, update_time, system_flag, remark from comm.sys_config_ry
+    </sql>
+
+    <select id="checkConfigKeyUnique" parameterType="String" resultMap="BasicdataConfigResult">
+        <include refid="selectBasicdataConfigVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND config_key = #{configKey}
+    </select>
+</mapper>

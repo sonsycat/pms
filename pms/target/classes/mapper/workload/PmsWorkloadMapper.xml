@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.workload.mapper.PmsWorkloadMapper">
+
+    <resultMap type="PmsWorkload" id="PmsWorkloadResult">
+        <result property="id" column="ID"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="projectCode" column="PROJECT_CODE"/>
+        <result property="projectName" column="PROJECT_NAME"/>
+        <result property="type" column="TYPE"/>
+        <result property="spell" column="SPELL"/>
+        <result property="hospitalPoints" column="HOSPITAL_POINTS"/>
+        <result property="outpatientPoints" column="OUTPATIENT_POINTS"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="workloadDate" column="WORKLOAD_DATE"/>
+    </resultMap>
+
+    <sql id="selectPmsWorkloadVo">
+        select a.ID,
+               a.COMP_CODE,
+               a.ACCOUNT_CODE,
+               a.PROJECT_CODE,
+               a.PROJECT_NAME,
+               a.TYPE,
+               a.SPELL,
+               a.HOSPITAL_POINTS,
+               a.OUTPATIENT_POINTS,
+               a.DEL_FLAG,
+               a.CREATE_BY,
+               a.CREATE_TIME,
+               a.UPDATE_BY,
+               a.UPDATE_TIME,
+               a.REMARK,
+               a.WORKLOAD_DATE,
+               pwt.TYPE_NAME
+        from pms_workload a
+                 left join pms_workload_type pwt on a.TYPE = pwt.TYPE_CODE
+    </sql>
+
+    <select id="selectPmsWorkloadList" parameterType="PmsWorkload" resultMap="PmsWorkloadResult">
+        <include refid="selectPmsWorkloadVo"/>
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null ">and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''">and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="projectCode != null  and projectCode != ''">and a.PROJECT_CODE = #{projectCode}</if>
+            <if test="projectName != null  and projectName != ''">and a.PROJECT_NAME like concat('%',
+                #{projectName},'%')
+            </if>
+            <if test="type != null  and type != ''">and a.TYPE = #{type}</if>
+            <if test="spell != null  and spell != ''">and a.SPELL = #{spell}</if>
+            <if test="hospitalPoints != null ">and a.HOSPITAL_POINTS = #{hospitalPoints}</if>
+            <if test="outpatientPoints != null ">and a.OUTPATIENT_POINTS = #{outpatientPoints}</if>
+            <if test="delFlag != null  and delFlag != ''">and a.DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and a.CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and a.CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and a.UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and a.UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and a.REMARK = #{remark}</if>
+            <if test="workloadDate != null ">and a.WORKLOAD_DATE = #{workloadDate}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsWorkloadById" parameterType="Long" resultMap="PmsWorkloadResult">
+        <include refid="selectPmsWorkloadVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+
+    <insert id="insertPmsWorkload" parameterType="PmsWorkload" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_workload
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="projectCode != null">PROJECT_CODE,</if>
+            <if test="projectName != null">PROJECT_NAME,</if>
+            <if test="type != null">TYPE,</if>
+            <if test="spell != null">SPELL,</if>
+            <if test="hospitalPoints != null">HOSPITAL_POINTS,</if>
+            <if test="outpatientPoints != null">OUTPATIENT_POINTS,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="workloadDate != null">WORKLOAD_DATE,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="spell != null">#{spell},</if>
+            <if test="hospitalPoints != null">#{hospitalPoints},</if>
+            <if test="outpatientPoints != null">#{outpatientPoints},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="workloadDate != null">#{workloadDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsWorkload" parameterType="PmsWorkload">
+        update pms_workload
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="projectName != null">PROJECT_NAME = #{projectName},</if>
+            <if test="type != null">TYPE = #{type},</if>
+            <if test="spell != null">SPELL = #{spell},</if>
+            <if test="hospitalPoints != null">HOSPITAL_POINTS = #{hospitalPoints},</if>
+            <if test="outpatientPoints != null">OUTPATIENT_POINTS = #{outpatientPoints},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="workloadDate != null">WORKLOAD_DATE = #{workloadDate},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsWorkloadById" parameterType="Long">
+        update pms_workload
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsWorkloadByIds" parameterType="String">
+        update pms_workload set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="realDelete">
+        delete
+        from pms_workload
+        where WORKLOAD_DATE = #{copyDate}
+    </delete>
+
+    <insert id="saveBatch">
+
+        <foreach collection="list" item="item" separator=";" close=";">
+            insert into pms_workload
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">COMP_CODE,</if>
+                <if test="item.accountCode != null">ACCOUNT_CODE,</if>
+                <if test="item.projectCode != null">PROJECT_CODE,</if>
+                <if test="item.projectName != null">PROJECT_NAME,</if>
+                <if test="item.type != null">TYPE,</if>
+                <if test="item.spell != null">SPELL,</if>
+                <if test="item.hospitalPoints != null">HOSPITAL_POINTS,</if>
+                <if test="item.outpatientPoints != null">OUTPATIENT_POINTS,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+                <if test="item.workloadDate != null">WORKLOAD_DATE,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.compCode != null">#{item.compCode},</if>
+                <if test="item.accountCode != null">#{item.accountCode},</if>
+                <if test="item.projectCode != null">#{item.projectCode},</if>
+                <if test="item.projectName != null">#{item.projectName},</if>
+                <if test="item.type != null">#{item.type},</if>
+                <if test="item.spell != null">#{item.spell},</if>
+                <if test="item.hospitalPoints != null">#{item.hospitalPoints},</if>
+                <if test="item.outpatientPoints != null">#{item.outpatientPoints},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+                <if test="item.workloadDate != null">#{item.workloadDate},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+</mapper>

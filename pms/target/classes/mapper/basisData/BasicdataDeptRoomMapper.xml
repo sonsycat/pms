@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataDeptRoomMapper">
+
+    <resultMap type="BasicdataDeptRoom" id="BasicdataDeptRoomResult">
+        <result property="deptRoomId"    column="dept_room_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName"    column="parent_name"    />
+        <result property="deptRoomName"    column="dept_room_name"    />
+        <result property="deptRoomCode"    column="dept_room_code"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="type"    column="type"    />
+        <result property="sort"    column="sort"    />
+        <result property="grade"    column="grade"    />
+        <result property="dutyOfficer"    column="duty_officer"    />
+        <result property="phone"    column="phone"    />
+        <result property="depAddress"    column="dep_address"    />
+        <result property="version"    column="version"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="pym"    column="pym"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="clinicType"    column="clinic_type"    />
+        <result property="isAccounting"    column="is_accounting"    />
+        <result property="isIndependentAccounting"    column="is_independent_accounting"    />
+        <result property="inlinePhone"    column="inline_phone"    />
+        <result property="isService"    column="is_service"    />
+        <result property="isLeaf"    column="is_leaf"    />
+        <result property="isPurchase"    column="is_purchase"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+    <resultMap type="BasicdataDeptRoomVo" id="BasicdataDeptRoomVoResult">
+        <result property="deptRoomId"    column="dept_room_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName"    column="parent_name"    />
+        <result property="deptRoomName"    column="dept_room_name"    />
+        <result property="deptRoomCode"    column="dept_room_code"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="type"    column="type"    />
+        <result property="sort"    column="sort"    />
+        <result property="grade"    column="grade"    />
+        <result property="dutyOfficer"    column="duty_officer"    />
+        <result property="phone"    column="phone"    />
+        <result property="depAddress"    column="dep_address"    />
+        <result property="version"    column="version"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="pym"    column="pym"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="accountSetName"    column="account_set_name"    />
+        <result property="accountSetId"    column="account_set_id"    />
+        <result property="clinicType"    column="clinic_type"    />
+        <result property="isAccounting"    column="is_accounting"    />
+        <result property="isIndependentAccounting"    column="is_independent_accounting"    />
+        <result property="inlinePhone"    column="inline_phone"    />
+        <result property="isService"    column="is_service"    />
+        <result property="isLeaf"    column="is_leaf"    />
+        <result property="isPurchase"    column="is_purchase"    />
+        <result property="description"    column="description"    />
+
+    </resultMap>
+
+    <sql id="selectBasicdataDeptRoom">
+        select   dept_room_id, parent_id, parent_name, dept_room_name, dept_room_code, dept_id, dept_name, type, sort, grade, duty_officer, phone, dep_address, version, status, del_flag, pym, create_by, create_time, update_by, update_time, remark, clinic_type, is_accounting, is_independent_accounting, inline_phone, is_service, is_leaf, is_purchase, description from comm.sys_dept_room_ry
+    </sql>
+    <sql id="selectBasicdataDeptRoomVo">
+        select b.name as accountName,  dept_room_id, parent_id, dept_room_name, dept_room_code, dept_id, dept_name, type, sort, grade, duty_officer, phone, dep_address, version, status, del_flag, pym, create_by, create_time, update_by, update_time, remark, clinic_type, is_accounting, is_independent_accounting, inline_phone, is_service, is_leaf, is_purchase, description from comm.sys_dept_room_ry a
+        left join comm.account_set_ry b on account_set_id = b.id
+
+    </sql>
+
+    <select id="selectBasicdataDeptRoomList" parameterType="BasicdataDeptRoom" resultMap="BasicdataDeptRoomResult">
+        <include refid="selectBasicdataDeptRoom"/>
+        <where>
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptRoomName != null  and deptRoomName != ''"> and dept_room_name like '%'|| #{deptRoomName}|| '%'</if>
+            <if test="deptRoomCode != null  and deptRoomCode != ''"> and dept_room_code = #{deptRoomCode}</if>
+            <if test="parentId != null  and parentId != ''"> and parent_id = #{parentId}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id in(select dept_id from comm.sys_dept_ry where INSTR(ancestors, #{deptId})>0 or dept_id= #{deptId})</if>
+            <if test="deptName != null ">and dept_name like '%'|| #{deptName}|| '%'</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectBasicdataDeptRoomListForNotice" parameterType="BasicdataDeptRoom" resultMap="BasicdataDeptRoomResult">
+        <include refid="selectBasicdataDeptRoom"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptId != null  and deptId != ''"> and dept_id= #{deptId}</if>
+            <if test="deptRoomName != null  and deptRoomName != ''"> and dept_room_name like '%'|| #{deptRoomName}|| '%'</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectBasicdataDeptRoomById" parameterType="Long" resultMap="BasicdataDeptRoomResult">
+        <include refid="selectBasicdataDeptRoom"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND dept_room_id = #{deptRoomId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectDeptRoomListByIds" resultMap="BasicdataDeptRoomResult">
+        <include refid="selectBasicdataDeptRoom"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        <if test="deptId != null  and deptId != ''">AND dept_id in(select dept_id from comm.sys_dept_ry where INSTR(ancestors, #{deptId}) or dept_id= #{deptId})</if>
+        <if test="deptRoomIds != null and deptRoomIds.size()!=0 ">
+            AND dept_room_id in
+            <foreach item="deptRoomId" collection="deptRoomIds" open="(" separator="," close=")">
+                #{deptRoomId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getSize" resultType="Integer">
+        select count(1) from comm.sys_dept_room_ry  WHERE dept_id = #{deptId} and del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+    <select id="selectDeptRoomList" parameterType="BasicdataDeptRoomVo" resultMap="BasicdataDeptRoomVoResult">
+        select d.dept_room_id, d.parent_id, d.dept_room_name, d.dept_room_code, d.del_flag,
+        IF((select count(1) from comm.sys_dept_room_ry tbl where tbl.parent_id = d.dept_room_id ) > 0,1,0) hasChildren
+        from comm.sys_dept_room_ry d
+        where d.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="deptId != null">
+            AND dept_id = #{deptId}
+        </if>
+        <if test="deptRoomName != null and deptRoomName != ''">
+            AND dept_room_name like '%'|| #{deptRoomName}|| '%'
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by d.parent_id
+    </select>
+    <select id="selectRootParentId" resultType="Long">
+		select distinct parent_id from comm.sys_dept_room_ry t1 where not exists(select dept_room_id from comm.sys_dept_room_ry t2 where t2.dept_room_id=t1.parent_id);
+    </select>
+    <select id="checkDeptRoomNameUnique" resultType="com.zjry.pms.basic.domain.basicData.BasicdataDeptRoom">
+        <include refid="selectBasicdataDeptRoom"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptRoomName != null  and deptRoomName != ''"> and dept_room_name  = #{deptRoomName}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    <select id="hasChildBydeptRoomId" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM (SELECT 1 FROM comm.sys_dept_room_ry
+              WHERE del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+                and parent_id = #{deptRoomId}
+                AND ROWNUM = 1)
+    </select>
+    <select id="checkDeptExistUser" resultType="java.lang.Integer">
+        select count(1) from comm.sys_doctor_ry where dep_code = #{deptRoomId} and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+
+    <insert id="insertBasicdataDeptRoom" parameterType="BasicdataDeptRoom" >
+        insert into comm.sys_dept_room_ry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptRoomId != null">dept_room_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="parentName != null">parent_name,</if>
+            <if test="deptRoomName != null">dept_room_name,</if>
+            <if test="deptRoomCode != null">dept_room_code,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="type != null">type,</if>
+            <if test="sort != null">sort,</if>
+            <if test="grade != null">grade,</if>
+            <if test="dutyOfficer != null">duty_officer,</if>
+            <if test="phone != null">phone,</if>
+            <if test="depAddress != null">dep_address,</if>
+            <if test="version != null">version,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="pym != null">pym,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="clinicType != null">clinic_type,</if>
+            <if test="isAccounting != null">is_accounting,</if>
+            <if test="isIndependentAccounting != null">is_independent_accounting,</if>
+            <if test="inlinePhone != null">inline_phone,</if>
+            <if test="isService != null">is_service,</if>
+            <if test="isLeaf != null">is_leaf,</if>
+            <if test="isPurchase != null">is_purchase,</if>
+            <if test="description != null">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptRoomId != null">#{deptRoomId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="parentName != null">#{parentName},</if>
+            <if test="deptRoomName != null">#{deptRoomName},</if>
+            <if test="deptRoomCode != null">#{deptRoomCode},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName,jdbcType=VARCHAR},</if>
+            <if test="type != null">#{type},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="grade != null">#{grade},</if>
+            <if test="dutyOfficer != null">#{dutyOfficer},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="depAddress != null">#{depAddress},</if>
+            <if test="version != null">#{version},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="pym != null">#{pym},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="clinicType != null">#{clinicType},</if>
+            <if test="isAccounting != null">#{isAccounting},</if>
+            <if test="isIndependentAccounting != null">#{isIndependentAccounting},</if>
+            <if test="inlinePhone != null">#{inlinePhone},</if>
+            <if test="isService != null">#{isService},</if>
+            <if test="isLeaf != null">#{isLeaf},</if>
+            <if test="isPurchase != null">#{isPurchase},</if>
+            <if test="description != null">#{description},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataDeptRoom" parameterType="BasicdataDeptRoom">
+        update comm.sys_dept_room_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="parentName != null">parent_name =#{parentName},</if>
+            <if test="deptRoomName != null">dept_room_name = #{deptRoomName},</if>
+            <if test="deptRoomCode != null">dept_room_code = #{deptRoomCode},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="grade != null">grade = #{grade},</if>
+            <if test="dutyOfficer != null">duty_officer = #{dutyOfficer},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="depAddress != null">dep_address = #{depAddress},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="pym != null">pym = #{pym},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="clinicType != null">clinic_type = #{clinicType},</if>
+            <if test="isAccounting != null">is_accounting = #{isAccounting},</if>
+            <if test="isIndependentAccounting != null">is_independent_accounting = #{isIndependentAccounting},</if>
+            <if test="inlinePhone != null">inline_phone = #{inlinePhone},</if>
+            <if test="isService != null">is_service = #{isService},</if>
+            <if test="isLeaf != null">is_leaf = #{isLeaf},</if>
+            <if test="isPurchase != null">is_purchase = #{isPurchase},</if>
+            <if test="description != null">description = #{description},</if>
+        </trim>
+        where dept_room_id = #{deptRoomId}
+    </update>
+
+    <delete id="deleteBasicdataDeptRoomById" parameterType="Long">
+        update comm.sys_dept_room_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where dept_room_id = #{deptRoomId}
+    </delete>
+
+    <delete id="deleteBasicdataDeptRoomByIds" parameterType="String">
+        update comm.sys_dept_room_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where dept_room_id in
+        <foreach item="deptRoomId" collection="array" open="(" separator="," close=")">
+            #{deptRoomId}
+        </foreach>
+    </delete>
+
+</mapper>

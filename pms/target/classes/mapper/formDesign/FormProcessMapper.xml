@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.formDesign.mapper.FormProcessMapper">
+    
+    <select id="findList" resultType="java.util.Map">
+        SELECT 
+			*
+		FROM ${tableName}
+        <where>  
+        del_flag = '0'
+		<foreach collection="params.entrySet()" index="key" item="value">
+			<if test="value != null and value != ''">
+				<choose>
+					<when test="key.split('~')[1] == 'like'">
+					and ${key.split('~')[0]} like concat('%', #{value}, '%')
+					</when>
+					<when test="key.split('~')[1] == 'eq'">
+					and ${key.split('~')[0]} = #{value}
+					</when>
+					<when test="key.split('~')[1] == 'noeq'">
+					and ${key.split('~')[0]} != #{value}
+					</when>
+					<when test="key.split('~')[1] == 'gt'">
+					and ${key.split('~')[0]} <![CDATA[ > ]]> #{value}
+					</when>
+					<when test="key.split('~')[1] == 'gteq'">
+					and ${key.split('~')[0]} <![CDATA[ >= ]]> #{value}
+					</when>
+					<when test="key.split('~')[1] == 'lt'">
+					and ${key.split('~')[0]} <![CDATA[ < ]]> #{value}
+					</when>
+					<when test="key.split('~')[1] == 'lteq'">
+					and ${key.split('~')[0]} <![CDATA[ <= ]]> #{value}
+					</when>
+					<when test="(key.split('~')[1] == 'between') and (value.split(',').length==2)">
+						and ${key.split('~')[0]} <![CDATA[ <= ]]>  '${value.split(',')[1]}'
+						and ${key.split('~')[0]} <![CDATA[ >= ]]> '${value.split(',')[0]}'
+					</when>
+					<otherwise>
+					and ${key.split('~')[0]} like concat('%', #{value}, '%')
+					</otherwise>
+				</choose>
+			</if>
+		</foreach>
+        </where>
+		<if test="orders != null and orders != ''">
+		  	${orders}
+		</if>
+    </select>
+
+
+
+
+
+	<select id="selectForDetails" resultType="java.util.Map">
+		SELECT
+		*
+		FROM ${tableName}
+		<where>
+			del_flag = '0'
+			and cs_dept = #{deptCode}
+			and date_format(cs_date, '%Y%m') = date_format(#{qDate}, '%Y%m')
+		</where>
+	</select>
+    
+    <select id="findById" resultType="java.util.Map">
+		SELECT 
+			*
+		FROM ${tableName} a
+		<where>
+			id = #{id} and a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+		</where>
+	</select>
+    
+    <insert id="insert">
+        insert into ${tableName}
+        <foreach collection="tableData.entrySet()" index="key" item="value" separator="," open="(" close=")">
+        	<if test="value != null and value != ''">
+            ${key}
+            </if>
+         </foreach>
+        values 
+        <foreach collection="tableData.entrySet()" index="key" item="value" separator="," open="(" close=")">
+            <if test="value != null and value != ''">
+            #{value}
+            </if>
+        </foreach>
+    </insert>
+
+    <insert id="update">
+        update ${tableName} set
+        <foreach collection="tableData.entrySet()" index="key" item="value" separator=",">
+        	<if test="value != null">
+            ${key} = #{value}
+            </if>
+         </foreach>
+        where id = #{id}
+	</insert>
+
+    <delete id="deleteById" parameterType="String">
+        update ${tableName} set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <update id="updateFormJson">
+		UPDATE FORM_DESIGN SET 	
+			form_json = #{formJson},
+			form_html = #{formHtml},
+			GEN_TABLE_NAME = #{genTableName},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateFormData">
+		UPDATE FORM_DESIGN SET 	
+			form_data = #{formData}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="checkTableExists" resultType="Integer">
+		SELECT count(0) 
+		FROM information_schema.TABLES 
+		WHERE table_name = #{tableName}
+	</select>
+	
+	<select id="checkColumnExists" resultType="Integer">
+		select count(0)
+		from information_schema.columns 
+		where TABLE_NAME = #{tableName}
+		AND COLUMN_NAME = #{columnName}
+	</select>
+	
+	<update id="addColumn" parameterType="map">
+		alter table ${tableName} add column ${columnName} ${dbType}
+	</update>
+	
+	<update id="modifyColumn" parameterType="map">
+		alter table ${tableName} modify ${columnName} ${dbType}
+	</update>
+	
+	<select id="checkFormCodeUnique" resultType="Integer">
+		SELECT count(0)
+		FROM form_design a
+		WHERE a.form_code = #{formCode}
+		AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+	</select>
+	
+	<update id="createTable" parameterType="map">
+		CREATE TABLE ${tableName}
+		(
+			`ID` VARCHAR(64) PRIMARY KEY,
+			<foreach collection="configs" item="cf">
+				`${cf.fieldName}` ${cf.dbType} ${cf.nullVal},
+			</foreach>
+			`CREATE_BY` VARCHAR(64), 
+			`CREATE_DATE` datetime, 
+			`UPDATE_BY` VARCHAR(64), 
+			`UPDATE_DATE` datetime, 
+			`REMARKS` VARCHAR(255), 
+			`DEL_FLAG` CHAR(1) NOT NULL,
+			`proc_ins_id` varchar(32)
+		)
+	</update>
+</mapper>

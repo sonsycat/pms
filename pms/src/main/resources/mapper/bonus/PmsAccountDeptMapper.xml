@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsAccountDeptMapper">
+    
+    <resultMap type="PmsAccountDept" id="PmsAccountDeptResult">
+        <result property="id"    column="ID"    />
+        <result property="parentCode"    column="PARENT_CODE"    />
+        <result property="deptRoomCode"    column="DEPT_ROOM_CODE"    />
+        <result property="deptRoomName"    column="DEPT_ROOM_NAME"    />
+        <result property="isAccount"    column="IS_ACCOUNT"    />
+        <result property="nowDate"    column="NOW_DATE"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="pym"    column="PYM"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsAccountDeptVo">
+        select ID, PARENT_CODE, DEPT_ROOM_CODE, DEPT_ROOM_NAME, IS_ACCOUNT, NOW_DATE, COMP_CODE, ACCOUNT_CODE, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from pms_account_dept
+    </sql>
+
+    <select id="selectPmsAccountDeptList" parameterType="PmsAccountDept" resultMap="PmsAccountDeptResult">
+        SELECT ad.ID,dr.DEPT_ROOM_CODE,dr.DEPT_ROOM_NAME,dr.PYM,ad.PARENT_CODE,ad.IS_ACCOUNT,#{nowDate} AS NOW_DATE
+        FROM sys_dept_room AS dr
+        LEFT JOIN (SELECT ID,PARENT_CODE,DEPT_ROOM_CODE,DEPT_ROOM_NAME,IS_ACCOUNT,NOW_DATE FROM pms_account_dept WHERE NOW_DATE = date_format(#{nowDate}, '%Y-%m-01') AND COMP_CODE = #{compCode}) AS ad ON dr.DEPT_ROOM_CODE = ad.DEPT_ROOM_CODE
+        <where>  
+            AND dr.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            AND dr.DEPT_ID = #{compCode}
+            <if test="deptRoomName != null  and deptRoomName != ''"> AND dr.DEPT_ROOM_NAME LIKE CONCAT('%', #{deptRoomName}, '%')</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="queryList" parameterType="PmsAccountDept" resultMap="PmsAccountDeptResult">
+        <include refid="selectPmsAccountDeptVo"/>
+        <where>
+            DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="nowDate != null "> and NOW_DATE = #{nowDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmsAccountDeptById" parameterType="Long" resultMap="PmsAccountDeptResult">
+        <include refid="selectPmsAccountDeptVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertPmsAccountDept" parameterType="PmsAccountDept" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_account_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentCode != null">PARENT_CODE,</if>
+            <if test="deptRoomCode != null">DEPT_ROOM_CODE,</if>
+            <if test="deptRoomName != null">DEPT_ROOM_NAME,</if>
+            <if test="isAccount != null">IS_ACCOUNT,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentCode != null">#{parentCode},</if>
+            <if test="deptRoomCode != null">#{deptRoomCode},</if>
+            <if test="deptRoomName != null">#{deptRoomName},</if>
+            <if test="isAccount != null">#{isAccount},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsAccountDept" parameterType="PmsAccountDept">
+        update pms_account_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentCode != null">PARENT_CODE = #{parentCode},</if>
+            <if test="deptRoomCode != null">DEPT_ROOM_CODE = #{deptRoomCode},</if>
+            <if test="deptRoomName != null">DEPT_ROOM_NAME = #{deptRoomName},</if>
+            <if test="isAccount != null">IS_ACCOUNT = #{isAccount},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsAccountDeptById" parameterType="Long">
+        update pms_account_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsAccountDeptByIds" parameterType="String">
+        DELETE FROM pms_account_dept WHERE ID IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="copyData" parameterType="PmsAccountDept">
+        INSERT INTO pms_account_dept(DEPT_ROOM_CODE, PARENT_CODE, IS_ACCOUNT, COMP_CODE, ACCOUNT_CODE, NOW_DATE, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK)
+        SELECT DEPT_ROOM_CODE, PARENT_CODE, IS_ACCOUNT, #{compCode}, #{accountCode}, #{copyDate}, DEL_FLAG, #{createBy}, NOW(), #{updateBy}, NOW(), REMARK FROM pms_account_dept
+        WHERE NOW_DATE = date_format(#{nowDate}, '%Y-%m-01') AND DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </insert>
+
+    <delete id="deleteByIds">
+        DELETE FROM pms_account_dept WHERE NOW_DATE = #{nowDate} AND ID IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSelfAndSub">
+        DELETE FROM pms_account_dept WHERE NOW_DATE = #{nowDate} AND (DEPT_ROOM_CODE = #{deptRoomCode} OR PARENT_CODE = #{deptRoomCode})
+    </delete>
+</mapper>

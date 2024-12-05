@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.apportionment.mapper.CostApportionmentDictionaryMapper">
+    
+    <resultMap type="CostApportionmentDictionary" id="CostApportionmentDictionaryResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="ratioCode"    column="RATIO_CODE"    />
+        <result property="ratioName"    column="RATIO_NAME"    />
+        <result property="ratioType"    column="RATIO_TYPE"    />
+        <result property="coonectCode"    column="COONECT_CODE"    />
+        <result property="countSql"    column="COUNT_SQl"    />
+        <result property="firstLevelSql"    column="FIRST_LEVEL_SQl"    />
+        <result property="secondLevelSql"    column="SECOND_LEVEL_SQl"    />
+        <result property="thirdLevelSql"    column="THIRD_LEVEL_SQl"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectCostApportionmentDictionaryVo">
+        select ID, COMP_CODE, ACCOUNT_CODE, RATIO_CODE, RATIO_NAME, RATIO_TYPE, COONECT_CODE, COUNT_SQl, FIRST_LEVEL_SQl, SECOND_LEVEL_SQl, THIRD_LEVEL_SQl, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from cost_apportionment_dictionary
+    </sql>
+
+    <select id="selectCostApportionmentDictionaryList" parameterType="CostApportionmentDictionary" resultMap="CostApportionmentDictionaryResult">
+        <include refid="selectCostApportionmentDictionaryVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+        	<if test="id != null "> and ID != #{id}</if>
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="ratioCode != null  and ratioCode != ''"> and RATIO_CODE = #{ratioCode}</if>
+            <if test="ratioName != null  and ratioName != ''"> and RATIO_NAME like concat('%', #{ratioName}, '%')</if>
+            <if test="ratioType != null  and ratioType != ''"> and RATIO_TYPE = #{ratioType}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectCostApportionmentDictionaryListByName" parameterType="CostApportionmentDictionary" resultMap="CostApportionmentDictionaryResult">
+        <include refid="selectCostApportionmentDictionaryVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+        	<if test="id != null "> and ID != #{id}</if>
+            <if test="ratioName != null  and ratioName != ''"> and RATIO_NAME = #{ratioName}</if>
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectCostApportionmentDictionaryById" parameterType="Long" resultMap="CostApportionmentDictionaryResult">
+        <include refid="selectCostApportionmentDictionaryVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertCostApportionmentDictionary" parameterType="CostApportionmentDictionary" useGeneratedKeys="true" keyProperty="id">
+        insert into cost_apportionment_dictionary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="ratioCode != null">RATIO_CODE,</if>
+            <if test="ratioName != null">RATIO_NAME,</if>
+            <if test="ratioType != null">RATIO_TYPE,</if>
+            <if test="coonectCode != null">COONECT_CODE,</if>
+            <if test="countSql != null">COUNT_SQl,</if>
+            <if test="firstLevelSql != null">FIRST_LEVEL_SQl,</if>
+            <if test="secondLevelSql != null">SECOND_LEVEL_SQl,</if>
+            <if test="thirdLevelSql != null">THIRD_LEVEL_SQl,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="ratioCode != null">#{ratioCode},</if>
+            <if test="ratioName != null">#{ratioName},</if>
+            <if test="ratioType != null">#{ratioType},</if>
+            <if test="coonectCode != null">#{coonectCode},</if>
+            <if test="countSql != null">#{countSql},</if>
+            <if test="firstLevelSql != null">#{firstLevelSql},</if>
+            <if test="secondLevelSql != null">#{secondLevelSql},</if>
+            <if test="thirdLevelSql != null">#{thirdLevelSql},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCostApportionmentDictionary" parameterType="CostApportionmentDictionary">
+        update cost_apportionment_dictionary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="ratioCode != null">RATIO_CODE = #{ratioCode},</if>
+            <if test="ratioName != null">RATIO_NAME = #{ratioName},</if>
+            <if test="ratioType != null">RATIO_TYPE = #{ratioType},</if>
+            COONECT_CODE = #{coonectCode},
+            COUNT_SQl = #{countSql},
+            FIRST_LEVEL_SQl = #{firstLevelSql},
+            SECOND_LEVEL_SQl = #{secondLevelSql},
+            THIRD_LEVEL_SQl = #{thirdLevelSql},
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteCostApportionmentDictionaryById" parameterType="Long">
+        update cost_apportionment_dictionary set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteCostApportionmentDictionaryByIds" parameterType="String">
+        update cost_apportionment_dictionary set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

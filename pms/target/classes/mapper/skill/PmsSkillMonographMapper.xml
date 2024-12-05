@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.skill.mapper.PmsSkillMonographMapper">
+
+    <resultMap type="PmsSkillMonograph" id="PmsSkillMonographResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="monographCode"    column="MONOGRAPH_CODE"    />
+        <result property="monographName"    column="MONOGRAPH_NAME"    />
+        <result property="monographType"    column="MONOGRAPH_TYPE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="publish"    column="PUBLISH"    />
+        <result property="publisTime"    column="PUBLIS_TIME"    />
+        <result property="issn"    column="ISSN"    />
+        <result property="magazine"    column="MAGAZINE"    />
+        <result property="wordNum"    column="WORD_NUM"    />
+        <result property="author"    column="AUTHOR"    />
+        <result property="bookNumber"    column="BOOK_NUMBER"    />
+        <result property="folio"    column="FOLIO"    />
+        <result property="priteNum"    column="PRITE_NUM"    />
+        <result property="position"    column="POSITION"    />
+        <result property="meetName"    column="MEET_NAME"    />
+        <result property="meetTime"    column="MEET_TIME"    />
+        <result property="annex"    column="ANNEX"    />
+        <result property="auditState"    column="AUDIT_STATE"    />
+        <result property="procedureId"    column="PROCEDURE_ID"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSkillMonographVo">
+        select
+            pms_skill_monograph.ID,
+            pms_skill_monograph.COMP_CODE,
+            pms_skill_monograph.ACCOUNT_CODE,
+            pms_skill_monograph.MONOGRAPH_CODE,
+            pms_skill_monograph.MONOGRAPH_NAME,
+            pms_skill_monograph.MONOGRAPH_TYPE,
+            pms_skill_monograph.DEPT_CODE,
+            pms_skill_monograph.PUBLISH,
+            pms_skill_monograph.PUBLIS_TIME,
+            pms_skill_monograph.ISSN,
+            pms_skill_monograph.MAGAZINE,
+            pms_skill_monograph.WORD_NUM,
+            pms_skill_monograph.AUTHOR,
+            pms_skill_monograph.BOOK_NUMBER,
+            pms_skill_monograph.FOLIO,
+            pms_skill_monograph.PRITE_NUM,
+            pms_skill_monograph.POSITION,
+            pms_skill_monograph.MEET_NAME,
+            pms_skill_monograph.MEET_TIME,
+            pms_skill_monograph.ANNEX,
+            pms_skill_monograph.AUDIT_STATE,
+            pms_skill_monograph.PROCEDURE_ID,
+            pms_skill_monograph.DEL_FLAG,
+            pms_skill_monograph.CREATE_BY,
+            pms_skill_monograph.CREATE_TIME,
+            pms_skill_monograph.UPDATE_BY,
+            pms_skill_monograph.UPDATE_TIME,
+            pms_skill_monograph.REMARK,
+            sys_dept_room.dept_room_name as deptName
+        from pms_skill_monograph
+        left join sys_dept_room on pms_skill_monograph.dept_code = sys_dept_room.dept_room_id
+    </sql>
+
+    <select id="selectPmsSkillMonographList" parameterType="PmsSkillMonograph" resultMap="PmsSkillMonographResult">
+        <include refid="selectPmsSkillMonographVo"/>
+        <where>
+        AND pms_skill_monograph.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and pms_skill_monograph.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and pms_skill_monograph.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="monographCode != null  and monographCode != ''"> and pms_skill_monograph.MONOGRAPH_CODE = #{monographCode}</if>
+            <if test="monographName != null  and monographName != ''"> and pms_skill_monograph.MONOGRAPH_NAME like concat('%', #{monographName}, '%')</if>
+            <if test="monographType != null  and monographType != ''"> and pms_skill_monograph.MONOGRAPH_TYPE = #{monographType}</if>
+            <if test="deptCode != null "> and pms_skill_monograph.DEPT_CODE = #{deptCode}</if>
+            <if test="publish != null  and publish != ''"> and pms_skill_monograph.PUBLISH like concat('%',#{publish},'%')</if>
+            <if test="publisTime != null "> and pms_skill_monograph.PUBLIS_TIME = #{publisTime}</if>
+            <if test="issn != null  and issn != ''"> and pms_skill_monograph.ISSN = #{issn}</if>
+            <if test="magazine != null  and magazine != ''"> and pms_skill_monograph.MAGAZINE = #{magazine}</if>
+            <if test="wordNum != null  and wordNum != ''"> and pms_skill_monograph.WORD_NUM = #{wordNum}</if>
+            <if test="author != null  and author != ''"> and pms_skill_monograph.AUTHOR like concat('%',#{author},'%')</if>
+            <if test="bookNumber != null  and bookNumber != ''"> and pms_skill_monograph.BOOK_NUMBER = #{bookNumber}</if>
+            <if test="folio != null  and folio != ''"> and pms_skill_monograph.FOLIO = #{folio}</if>
+            <if test="priteNum != null  and priteNum != ''"> and pms_skill_monograph.PRITE_NUM = #{priteNum}</if>
+            <if test="position != null  and position != ''"> and pms_skill_monograph.POSITION = #{position}</if>
+            <if test="meetName != null  and meetName != ''"> and pms_skill_monograph.MEET_NAME like concat('%', #{meetName}, '%')</if>
+            <if test="meetTime != null "> and pms_skill_monograph.MEET_TIME = #{meetTime}</if>
+            <if test="annex != null  and annex != ''"> and pms_skill_monograph.ANNEX = #{annex}</if>
+            <if test="auditState != null  and auditState != ''"> and pms_skill_monograph.AUDIT_STATE = #{auditState}</if>
+            <if test="procedureId != null  and procedureId != ''"> and pms_skill_monograph.PROCEDURE_ID = #{procedureId}</if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                and (pms_skill_monograph.PUBLIS_TIME between #{params.beginTime} and #{params.endTime})
+            </if>
+        </where>
+        order by pms_skill_monograph.update_time desc
+    </select>
+
+    <select id="selectPmsSkillMonographListByName" parameterType="PmsSkillMonograph" resultMap="PmsSkillMonographResult">
+        <include refid="selectPmsSkillMonographVo"/>
+        <where>
+        AND pms_skill_monograph.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="id != null "> and pms_skill_monograph.ID != #{id}</if>
+            <if test="compCode != null "> and pms_skill_monograph.COMP_CODE = #{compCode}</if>
+            <if test="monographName != null  and monographName != ''"> and pms_skill_monograph.MONOGRAPH_NAME like concat('%', #{monographName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectPmsSkillMonographById" parameterType="Long" resultMap="PmsSkillMonographResult">
+        <include refid="selectPmsSkillMonographVo"/>
+        where pms_skill_monograph.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND pms_skill_monograph.ID = #{id}
+    </select>
+
+    <insert id="insertPmsSkillMonograph" parameterType="PmsSkillMonograph" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_skill_monograph
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="monographCode != null and monographCode != ''">MONOGRAPH_CODE,</if>
+            <if test="monographName != null and monographName != ''">MONOGRAPH_NAME,</if>
+            <if test="monographType != null and monographType != ''">MONOGRAPH_TYPE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="publish != null and publish != ''">PUBLISH,</if>
+            <if test="publisTime != null">PUBLIS_TIME,</if>
+            <if test="issn != null and issn != ''">ISSN,</if>
+            <if test="magazine != null and magazine != ''">MAGAZINE,</if>
+            <if test="wordNum != null and wordNum != ''">WORD_NUM,</if>
+            <if test="author != null and author != ''">AUTHOR,</if>
+            <if test="bookNumber != null and bookNumber != ''">BOOK_NUMBER,</if>
+            <if test="folio != null and folio != ''">FOLIO,</if>
+            <if test="priteNum != null and priteNum != ''">PRITE_NUM,</if>
+            <if test="position != null and position != ''">POSITION,</if>
+            <if test="meetName != null and meetName != ''">MEET_NAME,</if>
+            <if test="meetTime != null">MEET_TIME,</if>
+            <if test="annex != null and annex != ''">ANNEX,</if>
+            <if test="auditState != null">AUDIT_STATE,</if>
+            <if test="procedureId != null">PROCEDURE_ID,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="monographCode != null and monographCode != ''">#{monographCode},</if>
+            <if test="monographName != null and monographName != ''">#{monographName},</if>
+            <if test="monographType != null and monographType != ''">#{monographType},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="publish != null and publish != ''">#{publish},</if>
+            <if test="publisTime != null">#{publisTime},</if>
+            <if test="issn != null and issn != ''">#{issn},</if>
+            <if test="magazine != null and magazine != ''">#{magazine},</if>
+            <if test="wordNum != null and wordNum != ''">#{wordNum},</if>
+            <if test="author != null and author != ''">#{author},</if>
+            <if test="bookNumber != null and bookNumber != ''">#{bookNumber},</if>
+            <if test="folio != null and folio != ''">#{folio},</if>
+            <if test="priteNum != null and priteNum != ''">#{priteNum},</if>
+            <if test="position != null and position != ''">#{position},</if>
+            <if test="meetName != null and meetName != ''">#{meetName},</if>
+            <if test="meetTime != null">#{meetTime},</if>
+            <if test="annex != null and annex != ''">#{annex},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="procedureId != null">#{procedureId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSkillMonograph" parameterType="PmsSkillMonograph">
+        update pms_skill_monograph
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="monographCode != null and monographCode != ''">MONOGRAPH_CODE = #{monographCode},</if>
+            <if test="monographName != null and monographName != ''">MONOGRAPH_NAME = #{monographName},</if>
+            <if test="monographType != null and monographType != ''">MONOGRAPH_TYPE = #{monographType},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="publish != null and publish != ''">PUBLISH = #{publish},</if>
+            <if test="publisTime != null">PUBLIS_TIME = #{publisTime},</if>
+            <if test="issn != null and issn != ''">ISSN = #{issn},</if>
+            <if test="magazine != null and magazine != ''">MAGAZINE = #{magazine},</if>
+            <if test="wordNum != null and wordNum != ''">WORD_NUM = #{wordNum},</if>
+            <if test="author != null and author != ''">AUTHOR = #{author},</if>
+            <if test="bookNumber != null and bookNumber != ''">BOOK_NUMBER = #{bookNumber},</if>
+            <if test="folio != null and folio != ''">FOLIO = #{folio},</if>
+            <if test="priteNum != null and priteNum != ''">PRITE_NUM = #{priteNum},</if>
+            <if test="position != null and position != ''">POSITION = #{position},</if>
+            <if test="meetName != null and meetName != ''">MEET_NAME = #{meetName},</if>
+            <if test="meetTime != null">MEET_TIME = #{meetTime},</if>
+            <if test="annex != null and annex != ''">ANNEX = #{annex},</if>
+            <if test="auditState != null">AUDIT_STATE = #{auditState},</if>
+            <if test="procedureId != null">PROCEDURE_ID = #{procedureId},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSkillMonographById" parameterType="Long">
+        update pms_skill_monograph set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSkillMonographByIds" parameterType="String">
+        update pms_skill_monograph set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

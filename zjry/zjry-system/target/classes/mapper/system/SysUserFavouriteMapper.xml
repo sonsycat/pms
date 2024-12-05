@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.system.mapper.SysUserFavouriteMapper">
+    
+    <resultMap type="SysUserFavourite" id="SysUserFavouriteResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="path"    column="path"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysUserFavouriteVo">
+        select id, user_id, path, create_time from sys_user_favourite
+    </sql>
+
+    <select id="selectSysUserFavouriteList" parameterType="SysUserFavourite" resultMap="SysUserFavouriteResult">
+        <include refid="selectSysUserFavouriteVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectSysUserFavouriteById" parameterType="Long" resultMap="SysUserFavouriteResult">
+        <include refid="selectSysUserFavouriteVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysUserFavourite" parameterType="SysUserFavourite" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_favourite
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="path != null">path,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="path != null">#{path},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUserFavourite" parameterType="SysUserFavourite">
+        update sys_user_favourite
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="path != null">path = #{path},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserFavouriteById" parameterType="Long">
+        delete from sys_user_favourite where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUserFavouriteByIds" parameterType="String">
+        delete from sys_user_favourite where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

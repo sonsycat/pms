@@ -1,0 +1,13 @@
+com\zjry\generator\controller\GenController.class
+com\zjry\generator\domain\GenTableColumn.class
+com\zjry\generator\mapper\GenTableColumnMapper.class
+com\zjry\generator\service\IGenTableService.class
+com\zjry\generator\config\GenConfig.class
+com\zjry\generator\mapper\GenTableMapper.class
+com\zjry\generator\util\VelocityUtils.class
+com\zjry\generator\service\IGenTableColumnService.class
+com\zjry\generator\service\GenTableServiceImpl.class
+com\zjry\generator\util\VelocityInitializer.class
+com\zjry\generator\service\GenTableColumnServiceImpl.class
+com\zjry\generator\util\GenUtils.class
+com\zjry\generator\domain\GenTable.class

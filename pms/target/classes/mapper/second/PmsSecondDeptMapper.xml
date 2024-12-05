@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.second.mapper.PmsSecondDeptMapper">
+    
+    <resultMap type="PmsSecondDept" id="PmsSecondDeptResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="disCode"    column="DIS_CODE"    />
+        <result property="nowDate"    column="NOW_DATE"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSecondDeptVo">
+        select
+            pms_second_dept.ID,
+            pms_second_dept.COMP_CODE,
+            pms_second_dept.ACCOUNT_CODE,
+            pms_second_dept.DEPT_CODE,
+            pms_second_dept.DIS_CODE,
+            pms_second_dept.NOW_DATE,
+            pms_second_dept.DEL_FLAG,
+            pms_second_dept.CREATE_BY,
+            pms_second_dept.CREATE_TIME,
+            pms_second_dept.UPDATE_BY,
+            pms_second_dept.UPDATE_TIME,
+            pms_second_dept.REMARK,
+            sys_dept_room.dept_room_name as deptName
+        from pms_second_dept
+        left join sys_dept_room on sys_dept_room.dept_room_id = pms_second_dept.DEPT_CODE
+    </sql>
+
+    <select id="selectPmsSecondDeptList" parameterType="PmsSecondDept" resultMap="PmsSecondDeptResult">
+        <include refid="selectPmsSecondDeptVo"/>
+        <where>  
+        AND pms_second_dept.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and pms_second_dept.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and pms_second_dept.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="deptCode != null  and deptCode != ''"> and pms_second_dept.DEPT_CODE = #{deptCode}</if>
+            <if test="disCode != null  and disCode != ''"> and pms_second_dept.DIS_CODE = #{disCode}</if>
+            <if test="nowDate != null"> and date_format(pms_second_dept.NOW_DATE, '%Y%m') = date_format(#{nowDate}, '%Y%m')</if>
+        </where>
+        order by pms_second_dept.update_time desc
+    </select>
+
+    <select id="selectPmsSecondDeptListByCompCode" parameterType="PmsSecondDept" resultMap="PmsSecondDeptResult">
+        select
+            sys_dept_room.dept_room_id as DEPT_CODE,
+            sys_dept_room.dept_room_name as deptName,
+            b.DIS_CODE
+        from sys_dept_room
+        left join (select DEPT_CODE,DIS_CODE from pms_second_dept where date_format(NOW_DATE, '%Y%m') = date_format(#{nowDate}, '%Y%m')) b on
+        b.DEPT_CODE = sys_dept_room.DEPT_ROOM_ID
+        where
+            sys_dept_room.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and sys_dept_room.dept_id  = #{compCode}
+        order by sys_dept_room.update_time desc
+    </select>
+
+    <select id="selectPmsSecondDeptById" parameterType="Long" resultMap="PmsSecondDeptResult">
+        <include refid="selectPmsSecondDeptVo"/>
+        where pms_second_dept.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND pms_second_dept.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsSecondDept" parameterType="PmsSecondDept" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_second_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="disCode != null">DIS_CODE,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="disCode != null">#{disCode},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSecondDept" parameterType="PmsSecondDept">
+        update pms_second_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="disCode != null">DIS_CODE = #{disCode},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSecondDeptById" parameterType="Long">
+        update pms_second_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSecondDeptByNowDate" parameterType="PmsSecondDept">
+        delete from pms_second_dept where COMP_CODE=#{compCode} and date_format(NOW_DATE, '%Y%m') = date_format(#{nowDate}, '%Y%m')
+    </delete>
+
+    <delete id="deletePmsSecondDeptByIds" parameterType="String">
+        update pms_second_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

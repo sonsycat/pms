@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.AssetsBasicAccountMapper">
+
+    <resultMap type="AssetsBasicAccount" id="AssetsBasicAccountResult">
+        <result property="id"    column="id"    />
+        <result property="accountCode"    column="code"    />
+        <result property="accountName"    column="name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="startYear"    column="start_year"    />
+        <result property="startMonth"    column="start_month"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAssetsBasicAccountVo">
+        select
+            comm.account_set_ry.id,
+            comm.account_set_ry.code,
+            comm.account_set_ry.name,
+            comm.account_set_ry.dept_id,
+            comm.account_set_ry.dept_name,
+            comm.account_set_ry.start_year,
+            comm.account_set_ry.start_month,
+            comm.account_set_ry.end_date,
+            comm.account_set_ry.status,
+            comm.account_set_ry.create_by,
+            comm.account_set_ry.create_time,
+            comm.account_set_ry.update_by,
+            comm.account_set_ry.update_time,
+            comm.account_set_ry.remark,
+            comm.account_set_ry.del_flag
+        from comm.account_set_ry
+    </sql>
+
+    <select id="selectAssetsBasicAccountList" parameterType="AssetsBasicAccount" resultMap="AssetsBasicAccountResult">
+        <include refid="selectAssetsBasicAccountVo"/>
+        <where>
+        AND comm.account_set_ry.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptId != null "> and comm.account_set_ry.dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and comm.account_set_ry.dept_name like concat('%', #{deptName}, '%')</if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="selectAssetsBasicAccountListByUserCode" parameterType="AssetsBasicAccount" resultMap="AssetsBasicAccountResult">
+        <include refid="selectAssetsBasicAccountVo"/>
+        <where>
+            AND comm.account_set_ry.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="userId != null  and userId != ''">
+                <if test="isUser != null  and isUser != '' and isUser=='1'.toString()">
+                    and comm.account_set_ry.id in (select account_id from user_account_relation where user_id = #{userId} and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} )
+                </if>
+                <if test="isUser != null  and isUser != '' and isUser=='2'.toString()">
+                    and comm.account_set_ry.id not in (select account_id from user_account_relation where user_id = #{userId} and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} )
+                </if>
+
+            </if>
+
+            <if test="queryCode != null  and queryCode != ''">
+                AND   (comm.account_set_ry.id LIKE CONCAT('%',#{queryCode},'%') or comm.account_set_ry.code LIKE CONCAT('%',#{queryCode},'%') or  comm.account_set_ry.name
+                LIKE CONCAT('%',#{queryCode},'%')  )
+
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectAssetsBasicAccountById" parameterType="Long" resultMap="AssetsBasicAccountResult">
+        <include refid="selectAssetsBasicAccountVo"/>
+        where comm.account_set_ry.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND comm.account_set_ry.id = #{id}
+    </select>
+
+    <insert id="insertAssetsBasicAccount" parameterType="AssetsBasicAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into comm.account_set_ry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountCode != null">code,</if>
+            <if test="accountName != null">name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="startYear != null">start_year,</if>
+            <if test="startMonth != null">start_month,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="accountName != null">#{accountName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="startYear != null">#{startYear},</if>
+            <if test="startMonth != null">#{startMonth},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssetsBasicAccount" parameterType="AssetsBasicAccount">
+        update comm.account_set_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountCode != null">code = #{accountCode},</if>
+            <if test="accountName != null">name = #{accountName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="startYear != null">start_year = #{startYear},</if>
+            <if test="startMonth != null">start_month = #{startMonth},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssetsBasicAccountById" parameterType="Long">
+        update comm.account_set_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where id = #{id}
+    </delete>
+
+    <delete id="deleteAssetsBasicAccountByIds" parameterType="String">
+        update comm.account_set_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectUserAccountRelationByAccountCode" parameterType="String" resultType="java.lang.Integer">
+        select count(1)
+        from user_account_relation
+        where del_flag = 0
+        and account_id = #{accountCode}
+    </select>
+
+    <select id="selectAccountSetListByCompCode" parameterType="Long"  resultType="AssetsBasicAccount">
+        select code as accountCode ,name as accountName  from comm.account_set_ry
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="queryTypeByDept"  resultType="String">
+        select type  from sys_dept_room
+       where
+             del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+             and dept_id = #{comeCode}
+            and dept_room_id = #{dept}
+    </select>
+
+
+
+</mapper>

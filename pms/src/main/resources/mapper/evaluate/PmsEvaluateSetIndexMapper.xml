@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsEvaluateSetIndexMapper">
+    
+    <resultMap type="PmsEvaluateSetIndex" id="PmsEvaluateSetIndexResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="setCode"    column="SET_CODE"    />
+        <result property="indexName"    column="INDEX_NAME"    />
+        <result property="indexCode"    column="INDEX_CODE"    />
+        <result property="weight"    column="WEIGHT"    />
+        <result property="weightRatio"    column="WEIGHT_RATIO"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="bscOneCode"    column="BSC_ONE_CODE"    />
+    </resultMap>
+
+    <sql id="selectPmsEvaluateSetIndexVo">
+       SELECT
+            a.ID,
+            a.COMP_CODE,
+            a.ACCOUNT_CODE,
+            a.SET_CODE,
+            a.INDEX_CODE,
+            a.WEIGHT,
+            a.WEIGHT_RATIO,
+            a.DEL_FLAG,
+            a.CREATE_BY,
+            a.CREATE_TIME,
+            a.UPDATE_BY,
+            a.UPDATE_TIME,
+            a.REMARK,
+            b.BSC_ONE_CODE,
+            b.INDEX_NAME
+        FROM
+            pms_evaluate_set_index a
+        left join pms_evaluate_index b on a.INDEX_CODE = b.INDEX_CODE and b.DEL_FLAG =0
+	</sql>
+
+    <select id="selectPmsEvaluateSetIndexList" parameterType="PmsEvaluateSetIndex" resultMap="PmsEvaluateSetIndexResult">
+        <include refid="selectPmsEvaluateSetIndexVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="setCode != null  and setCode != ''"> and a.SET_CODE = #{setCode}</if>
+            <if test="indexCode != null  and indexCode != ''"> and a.INDEX_CODE = #{indexCode}</if>
+            <if test="weight != null  and weight != ''"> and a.WEIGHT = #{weight}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectPmsEvaluateSetIndexById" parameterType="Long" resultMap="PmsEvaluateSetIndexResult">
+        <include refid="selectPmsEvaluateSetIndexVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsEvaluateSetIndex" parameterType="PmsEvaluateSetIndex" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_evaluate_set_index
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="setCode != null">SET_CODE,</if>
+            <if test="indexCode != null">INDEX_CODE,</if>
+            <if test="weight != null">WEIGHT,</if>
+            <if test="weightRatio != null">WEIGHT_RATIO,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="setCode != null">#{setCode},</if>
+            <if test="indexCode != null">#{indexCode},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="weightRatio != null">#{weightRatio},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateSetIndex" parameterType="PmsEvaluateSetIndex">
+        update pms_evaluate_set_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="setCode != null">SET_CODE = #{setCode},</if>
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="weight != null">WEIGHT = #{weight},</if>
+            <if test="weightRatio != null">WEIGHT_RATIO = #{weightRatio},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsEvaluateSetIndexById" parameterType="Long">
+        update pms_evaluate_set_index set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteByCompCodeAndsetCode" >
+        delete from pms_evaluate_set_index  where SET_CODE = #{setCode} and COMP_CODE = #{compCode}
+    </delete>
+    <delete id="deletePmsEvaluateSetIndexByIds" parameterType="String">
+        update pms_evaluate_set_index set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.system.mapper.SysAreaMapper">
+
+    <resultMap type="SysArea" id="SysAreaResult">
+        <result property="id"    column="id"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="areaInfo"    column="area_info"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="hasChildren"    column="hasChildren"    />
+    </resultMap>
+
+    <sql id="selectSysAreaVo">
+        select id, area_id, parent_id, area_name, area_info, create_by, create_time, update_by, update_time, remark from comm.sys_area_ry
+    </sql>
+
+    <select id="selectSysAreaList" parameterType="SysArea" resultMap="SysAreaResult">
+<!--        <include refid="selectSysAreaVo"/>-->
+        select a.id, a.area_id, a.parent_id, a.area_name, a.area_info, a.create_by, a.create_time, a.update_by, a.update_time, a.remark,
+        IF((select count(1) from comm.sys_area_ry tbl where tbl.parent_id = a.area_id ) > 0,1,0) hasChildren
+        from comm.sys_area_ry a
+        <where>
+            <if test="areaId != null  and areaId != ''"> and area_id = #{areaId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="areaName != null  and areaName != ''"> and area_name like concat('%', #{areaName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSysAreaById" parameterType="Long" resultMap="SysAreaResult">
+        <include refid="selectSysAreaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysArea" parameterType="SysArea" useGeneratedKeys="true" keyProperty="id">
+        insert into comm.sys_area_ry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null and areaId != ''">area_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="areaName != null and areaName != ''">area_name,</if>
+            <if test="areaInfo != null">area_info,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null and areaId != ''">#{areaId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="areaName != null and areaName != ''">#{areaName},</if>
+            <if test="areaInfo != null">#{areaInfo},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysArea" parameterType="SysArea">
+        update comm.sys_area_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaId != null and areaId != ''">area_id = #{areaId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="areaName != null and areaName != ''">area_name = #{areaName},</if>
+            <if test="areaInfo != null">area_info = #{areaInfo},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAreaById" parameterType="Long">
+        delete from comm.sys_area_ry where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAreaByIds" parameterType="String">
+        delete from comm.sys_area_ry where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

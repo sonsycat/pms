@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsBonusCalculationNewMapper">
+    <insert id="insertHis">
+        insert into pms_bonus_calculation_his
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="procedureId != null and procedureId != ''">PROCEDURE_ID,</if>
+            <if test="calculationId != null and calculationId != ''">calculation_id,</if>
+            <if test="commitId != null">commit_id,</if>
+            <if test="commitDate != null ">commit_date,</if>
+            <if test="auditId != null ">audit_id,</if>
+            <if test="auditDate != null">audit_date,</if>
+            <if test="archiveId != null">archive_id,</if>
+            <if test="archiveDate != null">archive_date,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="creatDate != null">creat_date,</if>
+            <if test="hisState != null">his_state,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="procedureId != null and procedureId != ''">#{procedureId},</if>
+            <if test="calculationId != null and calculationId != ''">#{calculationId},</if>
+            <if test="commitId != null">#{commitId},</if>
+            <if test="commitDate != null ">#{commitDate},</if>
+            <if test="auditId != null ">#{auditId},</if>
+            <if test="auditDate != null">#{auditDate},</if>
+            <if test="archiveId != null">#{archiveId},</if>
+            <if test="archiveDate != null">#{archiveDate},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="creatDate != null">#{creatDate},</if>
+            <if test="hisState != null">#{hisState},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteBatch" parameterType="PmsEvaluateData">
+        DELETE FROM pms_evaluate_data
+        WHERE  COMP_CODE = #{compCode} AND ACT_DATE = date_format(#{actDate}, '%Y-%m-01')
+
+    </delete>
+    <select id="selectAccountDeptByDate" resultType="com.zjry.pms.bonus.domain.PmsAccountDeptNew">
+        SELECT
+            id as id,
+            DEPT_ROOM_CODE as deptRoomCode,
+            DEPT_ROOM_NAME as deptRoomName,
+            NOW_DATE as nowDate,
+            ACCOUNT_TYPE as accountType,
+            COMP_CODE as compCode
+        FROM
+            pms_account_dept_new
+        WHERE
+            DEL_FLAG = 0
+          AND COMP_CODE = #{compCode}
+          AND date_format(NOW_DATE, '%Y-%m-01') = #{actDate}
+    </select>
+    <select id="selectEvaluateBonusByRoomType" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateIndexBonus">
+        SELECT
+            id as id,
+            COMP_CODE as compCode,
+            DEPT_ROOM_TYPE as deptRoomType,
+            INDEX_CODE as indexCode
+        FROM
+            pms_evaluate_index_bonus
+        WHERE
+            DEL_FLAG = 0
+          AND COMP_CODE = #{compCode}
+          AND DEPT_ROOM_TYPE in
+        <foreach collection="accountTypes" index="index" item="accountType" open="(" separator="," close=")">
+            #{accountType}
+        </foreach>
+    </select>
+    <select id="selectEvaluateIndexById" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateIndex">
+        SELECT
+            id,
+            INDEX_CODE,
+            IS_EXPRESS,
+            INDEX_SQL,
+            FORMULA_CODE,
+            DB_CODE,
+            ORG_TYPE
+        FROM
+            pms_evaluate_index
+        WHERE
+            DEL_FLAG = 0
+          and INDEX_CODE in
+        <foreach collection="indexCodes" index="index" item="indexCode" open="(" separator="," close=")">
+            #{indexCode}
+        </foreach>
+    </select>
+    <select id="selectBonusList" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateData">
+        SELECT
+            d.dept_code AS deptCode,
+            d.unit_code AS unitCode,
+            d.guide_value_result AS guideValueResult,
+            r.ACCOUNT_TYPE AS deptType
+        FROM
+            ( SELECT dept_code, unit_code, guide_value_result FROM pms_evaluate_data WHERE comp_code = #{compCode} AND act_date = date_format( #{actDate}, '%Y-%m-01' ) ) AS d
+                LEFT JOIN pms_account_dept_new AS r ON d.dept_code = r.DEPT_ROOM_CODE and date_format( r.NOW_DATE, '%Y-%m-01' ) = date_format( #{actDate}, '%Y-%m-01' ) and r.comp_code = #{compCode}
+        WHERE
+            r.del_flag = 0
+
+
+    </select>
+    <select id="selectAccountDeptEvaluateDataList"
+            resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT a.DEPT_ROOM_CODE       AS deptRoomId,
+               a.dept_room_code     AS deptRoomCode,
+               a.dept_room_name     AS deptRoomName,
+               d.GUIDE_CODE         AS guideCode,
+               d.GUIDE_VALUE        AS guideValue,
+               d.GUIDE_VALUE_RESULT AS guideValueResult,
+               d.ACT_DATE           AS actDate,
+               e.INDEX_NAME         AS indexName
+        FROM pms_account_dept_new a LEFT JOIN pms_evaluate_data d ON d.DEL_FLAG = '0'
+            AND d.GUIDE_TYPE = 'K'
+            AND a.DEPT_ROOM_CODE = d.UNIT_CODE
+
+                                    LEFT JOIN pms_evaluate_index e ON e.INDEX_CODE = d.GUIDE_CODE
+        WHERE a.DEL_FLAG = '0'
+          AND a.COMP_CODE = #{compCode}
+          AND a.ACCOUNT_TYPE = #{deptType}
+          AND d.ACT_DATE = #{actDate}
+        and a.NOW_DATE = #{actDate}
+    </select>
+    <select id="selectAccountDeptIndex" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateDataAccountDept">
+        SELECT DISTINCT
+            a.GUIDE_CODE AS "guideCode",
+            e.INDEX_NAME AS "indexName",
+            a.update_time AS "updateTime"
+        FROM
+            pms_evaluate_data a
+                LEFT JOIN pms_account_dept_new d ON d.DEPT_ROOM_CODE = a.UNIT_CODE
+                AND d.DEL_FLAG = 0
+                LEFT JOIN pms_evaluate_index e ON e.INDEX_CODE = a.GUIDE_CODE
+                AND e.DEL_FLAG = 0
+        WHERE
+            a.COMP_CODE = #{compCode}
+          AND d.ACCOUNT_TYPE = #{deptType}
+          AND a.ACT_DATE = #{actDate}
+          and d.NOW_DATE = #{actDate}
+    </select>
+</mapper>

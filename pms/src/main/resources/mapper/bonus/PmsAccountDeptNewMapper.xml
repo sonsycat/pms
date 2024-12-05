@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsAccountDeptNewMapper">
+    <insert id="insertData">
+        INSERT INTO pms_account_dept_new(DEPT_ROOM_CODE, DEPT_ROOM_NAME, NOW_DATE, ACCOUNT_TYPE, COMP_CODE, DEL_FLAG)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deptRoomCode},#{item.deptRoomName},#{item.nowDate},#{item.accountType},#{item.compCode},0)
+        </foreach>
+    </insert>
+
+    <update id="updateData">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE pms_account_dept_new
+            SET
+            ACCOUNT_TYPE = #{item.accountType}
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
+
+
+    <select id="selectPmsAccountDeptList" resultType="com.zjry.pms.bonus.domain.PmsAccountDeptNew">
+        SELECT
+            d.id as id,
+            r.dept_room_code as deptRoomCode,
+            r.dept_room_name as deptRoomName,
+            d.account_type as accountType
+        FROM
+            sys_dept_room r
+        LEFT JOIN pms_account_dept_new d ON r.dept_room_code = d.DEPT_ROOM_CODE
+        AND d.DEL_FLAG = 0 and NOW_DATE = date_format(#{nowDate}, '%Y-%m-01') AND COMP_CODE = #{compCode}
+        WHERE
+            r.del_flag = 0
+          AND r.is_accounting = 0
+          AND r.DEPT_ID = #{compCode}
+        <if test="deptRoomName != null  and deptRoomName != ''"> AND r.DEPT_ROOM_NAME LIKE CONCAT('%', #{deptRoomName}, '%')</if>
+
+    </select>
+    <select id="queryList" resultType="com.zjry.pms.bonus.domain.PmsAccountDeptNew">
+        select id as id ,account_type as accountType ,dept_room_code as deptRoomCode,dept_room_name as deptRoomName,COMP_CODE as compCode
+               from  pms_account_dept_new where DEL_FLAG = 0
+         and NOW_DATE = date_format(#{nowDate}, '%Y-%m-01')  and COMP_CODE = #{compCode}
+    </select>
+</mapper>

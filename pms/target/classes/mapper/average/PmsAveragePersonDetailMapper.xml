@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.average.mapper.PmsAveragePersonDetailMapper">
+    
+    <resultMap type="PmsAveragePersonDetail" id="PmsAveragePersonDetailResult">
+        <result property="id"    column="ID"    />
+        <result property="avgCode"    column="AVG_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="deptName"    column="DEPT_NAME"    />
+        <result property="docCode"    column="DOC_CODE"    />
+        <result property="docName"    column="DOC_NAME"    />
+        <result property="isReward"    column="IS_REWARD"    />
+        <result property="workDays"    column="WORK_DAYS"    />
+        <result property="postRatio"    column="POST_RATIO"    />
+        <result property="dutyRewardRatio"    column="DUTY_REWARD_RATIO"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="depCode"   column="DEPT_ROOM_CODE"/>
+        <result property="depName"   column="DEPT_ROOM_NAME"/>
+    </resultMap>
+
+    <sql id="selectPmsAveragePersonDetailVo">
+        select ID, AVG_CODE, DEPT_CODE, DEPT_NAME, DOC_CODE, DOC_NAME, IS_REWARD, WORK_DAYS, POST_RATIO, DUTY_REWARD_RATIO, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from pms_average_person_detail
+    </sql>
+
+    <select id="selectPmsAveragePersonDetailList" parameterType="PmsAveragePersonDetail" resultMap="PmsAveragePersonDetailResult">
+        SELECT
+        d.AVG_CODE ,
+        c.dept_room_code ,
+        c.dept_room_name ,
+        a.DOC_CODE ,
+        a.DOC_NAME ,
+        d.IS_REWARD ,
+        d.WORK_DAYS ,
+        d.POST_RATIO ,
+        d.DUTY_REWARD_RATIO ,
+        d.update_time
+        FROM
+        sys_doctor a
+        LEFT JOIN sys_dept_room c ON c.dept_room_id = a.dep_code
+        AND c.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        LEFT JOIN pms_dept_sort s ON s.DEPT_ROOM_CODE = c.DEPT_ROOM_CODE
+        AND s.SORT_CODE = '0001'
+        AND s.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        LEFT JOIN pms_average_person p ON p.CODE = #{avgCode}
+        AND p.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        LEFT JOIN pms_average_person_detail d ON d.AVG_CODE = p.CODE AND a.DOC_CODE = d.DOC_CODE
+        AND d.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        WHERE
+        c.is_accounting = '0'
+        AND a.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        order by c.dept_room_code,a.doc_code
+    </select>
+    
+    <select id="selectPmsAveragePersonDetailById" parameterType="Long" resultMap="PmsAveragePersonDetailResult">
+        <include refid="selectPmsAveragePersonDetailVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertPmsAveragePersonDetail" parameterType="PmsAveragePersonDetail">
+        insert into pms_average_person_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="avgCode != null">AVG_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="deptName != null">DEPT_NAME,</if>
+            <if test="docCode != null">DOC_CODE,</if>
+            <if test="docName != null">DOC_NAME,</if>
+            <if test="isReward != null">IS_REWARD,</if>
+            <if test="workDays != null">WORK_DAYS,</if>
+            <if test="postRatio != null">POST_RATIO,</if>
+            <if test="dutyRewardRatio != null">DUTY_REWARD_RATIO,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="avgCode != null">#{avgCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="docCode != null">#{docCode},</if>
+            <if test="docName != null">#{docName},</if>
+            <if test="isReward != null">#{isReward},</if>
+            <if test="workDays != null">#{workDays},</if>
+            <if test="postRatio != null">#{postRatio},</if>
+            <if test="dutyRewardRatio != null">#{dutyRewardRatio},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsAveragePersonDetail" parameterType="PmsAveragePersonDetail">
+        update pms_average_person_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="avgCode != null">AVG_CODE = #{avgCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="deptName != null">DEPT_NAME = #{deptName},</if>
+            <if test="docCode != null">DOC_CODE = #{docCode},</if>
+            <if test="docName != null">DOC_NAME = #{docName},</if>
+            <if test="isReward != null">IS_REWARD = #{isReward},</if>
+            <if test="workDays != null">WORK_DAYS = #{workDays},</if>
+            <if test="postRatio != null">POST_RATIO = #{postRatio},</if>
+            <if test="dutyRewardRatio != null">DUTY_REWARD_RATIO = #{dutyRewardRatio},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsAveragePersonDetailById" parameterType="Long">
+        update pms_average_person_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsAveragePersonDetailByIds" parameterType="String">
+        update pms_average_person_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByAvgCode" parameterType="PmsAveragePersonDetail">
+        DELETE FROM pms_average_person_detail WHERE avg_code = #{avgCode}
+    </delete>
+
+    <insert id="insertBatch" parameterType="list">
+        INSERT INTO pms_average_person_detail(AVG_CODE, DEPT_CODE, DEPT_NAME, DOC_CODE, DOC_NAME, IS_REWARD, WORK_DAYS, POST_RATIO, DUTY_REWARD_RATIO, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.avgCode},#{item.deptCode},#{item.deptName},#{item.docCode},#{item.docName},#{item.isReward},#{item.workDays},#{item.postRatio},#{item.dutyRewardRatio},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.remark})
+        </foreach>
+    </insert>
+
+    <insert id="copyData" parameterType="PmsAveragePersonDetail">
+        INSERT INTO pms_average_person_detail(AVG_CODE, DEPT_CODE, DEPT_NAME, DOC_CODE, DOC_NAME, IS_REWARD, WORK_DAYS, POST_RATIO, DUTY_REWARD_RATIO, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK)
+        SELECT #{avgCode}, DEPT_CODE, DEPT_NAME, DOC_CODE, DOC_NAME, IS_REWARD, WORK_DAYS, POST_RATIO, DUTY_REWARD_RATIO, DEL_FLAG, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, REMARK FROM pms_average_person_detail
+        WHERE AVG_CODE = #{copyCode} AND DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </insert>
+</mapper>

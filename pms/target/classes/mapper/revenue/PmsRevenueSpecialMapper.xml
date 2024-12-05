@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.revenue.mapper.PmsRevenueSpecialMapper">
+    
+    <resultMap type="PmsRevenueSpecial" id="PmsRevenueSpecialResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="specialCode"    column="SPECIAL_CODE"    />
+        <result property="revenueCode"    column="REVENUE_CODE"    />
+        <result property="revenueName"    column="REVENUE_NAME"    />
+        <result property="billDept"    column="BILL_DEPT"    />
+        <result property="execDept"    column="EXEC_DEPT"    />
+        <result property="inpBill"    column="INP_BILL"    />
+        <result property="inpExec"    column="INP_EXEC"    />
+        <result property="inpCare"    column="INP_CARE"    />
+        <result property="outpBill"    column="OUTP_BILL"    />
+        <result property="outpExec"    column="OUTP_EXEC"    />
+        <result property="outpCare"    column="OUTP_CARE"    />
+        <result property="coopMed"    column="COOP_MED"    />
+        <result property="accountType"    column="ACCOUNT_TYPE"    />
+        <result property="convRatio"    column="CONV_RATIO"    />
+        <result property="fixConv"    column="FIX_CONV"    />
+        <result property="projectCode"    column="PROJECT_CODE"    />
+        <result property="hisRevenumTypede"    column="HIS_REVENUM_TYPEDE"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsRevenueSpecialVo">
+        select ID, COMP_CODE, ACCOUNT_CODE, SPECIAL_CODE, REVENUE_CODE, REVENUE_NAME, BILL_DEPT, EXEC_DEPT, INP_BILL, INP_EXEC, INP_CARE, OUTP_BILL, OUTP_EXEC, OUTP_CARE, COOP_MED, ACCOUNT_TYPE, CONV_RATIO, FIX_CONV, PROJECT_CODE, HIS_REVENUM_TYPEDE, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from pms_revenue_special
+    </sql>
+
+    <select id="selectPmsRevenueSpecialList" parameterType="PmsRevenueSpecial" resultMap="PmsRevenueSpecialResult">
+        <include refid="selectPmsRevenueSpecialVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="specialCode != null  and specialCode != ''"> and SPECIAL_CODE = #{specialCode}</if>
+            <if test="revenueCode != null  and revenueCode != ''"> and REVENUE_CODE = #{revenueCode}</if>
+            <if test="revenueName != null  and revenueName != ''"> and REVENUE_NAME like concat('%', #{revenueName}, '%')</if>
+            <if test="billDept != null "> and BILL_DEPT = #{billDept}</if>
+            <if test="execDept != null "> and EXEC_DEPT = #{execDept}</if>
+            <if test="billDeptIsNull != null "> and BILL_DEPT is Null</if>
+            <if test="execDeptIsNull != null "> and EXEC_DEPT is Null </if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsRevenueSpecialListByNotSpecialCode" parameterType="PmsRevenueSpecial" resultMap="PmsRevenueSpecialResult">
+        <include refid="selectPmsRevenueSpecialVo"/>
+        <where>
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="specialCode != null  and specialCode != ''"> and SPECIAL_CODE != #{specialCode}</if>
+            <if test="revenueCode != null  and revenueCode != ''"> and REVENUE_CODE = #{revenueCode}</if>
+            <if test="revenueName != null  and revenueName != ''"> and REVENUE_NAME like concat('%', #{revenueName}, '%')</if>
+            <if test="billDept != null "> and BILL_DEPT = #{billDept}</if>
+            <if test="execDept != null "> and EXEC_DEPT = #{execDept}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsRevenueSpecialById" parameterType="Long" resultMap="PmsRevenueSpecialResult">
+        <include refid="selectPmsRevenueSpecialVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertPmsRevenueSpecial" parameterType="PmsRevenueSpecial" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_revenue_special
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="specialCode != null">SPECIAL_CODE,</if>
+            <if test="revenueCode != null">REVENUE_CODE,</if>
+            <if test="revenueName != null">REVENUE_NAME,</if>
+            <if test="billDept != null">BILL_DEPT,</if>
+            <if test="execDept != null">EXEC_DEPT,</if>
+            <if test="inpBill != null">INP_BILL,</if>
+            <if test="inpExec != null">INP_EXEC,</if>
+            <if test="inpCare != null">INP_CARE,</if>
+            <if test="outpBill != null">OUTP_BILL,</if>
+            <if test="outpExec != null">OUTP_EXEC,</if>
+            <if test="outpCare != null">OUTP_CARE,</if>
+            <if test="coopMed != null">COOP_MED,</if>
+            <if test="accountType != null">ACCOUNT_TYPE,</if>
+            <if test="convRatio != null">CONV_RATIO,</if>
+            <if test="fixConv != null">FIX_CONV,</if>
+            <if test="projectCode != null">PROJECT_CODE,</if>
+            <if test="hisRevenumTypede != null">HIS_REVENUM_TYPEDE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="specialCode != null">#{specialCode},</if>
+            <if test="revenueCode != null">#{revenueCode},</if>
+            <if test="revenueName != null">#{revenueName},</if>
+            <if test="billDept != null">#{billDept},</if>
+            <if test="execDept != null">#{execDept},</if>
+            <if test="inpBill != null">#{inpBill},</if>
+            <if test="inpExec != null">#{inpExec},</if>
+            <if test="inpCare != null">#{inpCare},</if>
+            <if test="outpBill != null">#{outpBill},</if>
+            <if test="outpExec != null">#{outpExec},</if>
+            <if test="outpCare != null">#{outpCare},</if>
+            <if test="coopMed != null">#{coopMed},</if>
+            <if test="accountType != null">#{accountType},</if>
+            <if test="convRatio != null">#{convRatio},</if>
+            <if test="fixConv != null">#{fixConv},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="hisRevenumTypede != null">#{hisRevenumTypede},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsRevenueSpecial" parameterType="PmsRevenueSpecial">
+        update pms_revenue_special
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="specialCode != null">SPECIAL_CODE = #{specialCode},</if>
+            <if test="revenueCode != null">REVENUE_CODE = #{revenueCode},</if>
+            <if test="revenueName != null">REVENUE_NAME = #{revenueName},</if>
+            <if test="billDept != null">BILL_DEPT = #{billDept},</if>
+            <if test="execDept != null">EXEC_DEPT = #{execDept},</if>
+            <if test="inpBill != null">INP_BILL = #{inpBill},</if>
+            <if test="inpExec != null">INP_EXEC = #{inpExec},</if>
+            <if test="inpCare != null">INP_CARE = #{inpCare},</if>
+            <if test="outpBill != null">OUTP_BILL = #{outpBill},</if>
+            <if test="outpExec != null">OUTP_EXEC = #{outpExec},</if>
+            <if test="outpCare != null">OUTP_CARE = #{outpCare},</if>
+            <if test="coopMed != null">COOP_MED = #{coopMed},</if>
+            <if test="accountType != null">ACCOUNT_TYPE = #{accountType},</if>
+            <if test="convRatio != null">CONV_RATIO = #{convRatio},</if>
+            <if test="fixConv != null">FIX_CONV = #{fixConv},</if>
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="hisRevenumTypede != null">HIS_REVENUM_TYPEDE = #{hisRevenumTypede},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <update id="updatePmsRevenueSpecialBySpecialCode" parameterType="PmsRevenueSpecial">
+        update pms_revenue_special
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="specialCode != null">SPECIAL_CODE = #{specialCode},</if>
+            <if test="revenueCode != null">REVENUE_CODE = #{revenueCode},</if>
+            <if test="revenueName != null">REVENUE_NAME = #{revenueName},</if>
+            <if test="billDept != null">BILL_DEPT = #{billDept},</if>
+            <if test="execDept != null">EXEC_DEPT = #{execDept},</if>
+            <if test="inpBill != null">INP_BILL = #{inpBill},</if>
+            <if test="inpExec != null">INP_EXEC = #{inpExec},</if>
+            <if test="inpCare != null">INP_CARE = #{inpCare},</if>
+            <if test="outpBill != null">OUTP_BILL = #{outpBill},</if>
+            <if test="outpExec != null">OUTP_EXEC = #{outpExec},</if>
+            <if test="outpCare != null">OUTP_CARE = #{outpCare},</if>
+            <if test="coopMed != null">COOP_MED = #{coopMed},</if>
+            <if test="accountType != null">ACCOUNT_TYPE = #{accountType},</if>
+            <if test="convRatio != null">CONV_RATIO = #{convRatio},</if>
+            <if test="fixConv != null">FIX_CONV = #{fixConv},</if>
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="hisRevenumTypede != null">HIS_REVENUM_TYPEDE = #{hisRevenumTypede},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where SPECIAL_CODE = #{specialCode}
+    </update>
+
+    <update id="deletePmsRevenueSpecialBySpecialCode" parameterType="PmsRevenueSpecial">
+        update pms_revenue_special set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where SPECIAL_CODE = #{specialCode}
+    </update>
+
+    <delete id="deletePmsRevenueSpecialById" parameterType="Long">
+        update pms_revenue_special set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsRevenueSpecialByIds" parameterType="String">
+        update pms_revenue_special set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

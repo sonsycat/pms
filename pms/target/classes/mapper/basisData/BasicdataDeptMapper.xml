@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataDeptMapper">
+    
+    <resultMap type="BasicdataDept" id="BasicdataDeptResult">
+        <result property="deptId"    column="dept_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="deptCode"    column="dept_code"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="leader"    column="leader"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="pym"    column="pym"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="address"    column="address"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="taxNumber"    column="tax_number"    />
+        <result property="chiefAccountant"    column="chief_accountant"    />
+        <result property="isLeaf"    column="is_leaf"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+    <resultMap type="BasicdataDeptVo" id="BasicdataDeptVoResult">
+        <result property="deptId"    column="dept_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="deptCode"    column="dept_code"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="leader"    column="leader"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="pym"    column="pym"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="address"    column="address"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="taxNumber"    column="tax_number"    />
+        <result property="chiefAccountant"    column="chief_accountant"    />
+        <result property="isLeaf"    column="is_leaf"    />
+        <result property="remark"    column="remark"    />
+        <result property="parentDeptName"    column="parentDeptName"    />
+
+    </resultMap>
+
+    <sql id="selectBasicdataDept">
+        select dept_id, parent_id, ancestors, dept_name, dept_code, order_num, leader, phone, email, status, del_flag, create_by, create_time, update_by, update_time, pym, province, city, address, contact_person, tax_number, chief_accountant, is_leaf, remark from comm.sys_dept_ry
+    </sql>
+    <sql id="selectBasicdataDeptVo">
+        select b.dept_name as parentDeptName, a.dept_id, a.parent_id, a.ancestors, a.dept_name, a.dept_code, a.order_num, a.leader, a.phone, a.email, a.status, a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.pym, a.province, a.city, a.address, a.contact_person, a.tax_number, a.chief_accountant, a.is_leaf, a.remark from comm.sys_dept_ry a
+        left join comm.sys_dept_ry b on a.parent_id = b.dept_id
+    </sql>
+
+    <select id="selectBasicdataDeptList" parameterType="BasicdataDeptVo" resultMap="BasicdataDeptVoResult">
+        <include refid="selectBasicdataDeptVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptName != null  and deptName != ''"> and( a.dept_name like '%'|| #{deptName}|| '%' or lower(a.pym) like '%'|| lower(#{deptName}) ||'%' ) </if>
+            <if test="deptCode != null  and deptCode != ''"> and a.dept_code = #{deptCode}</if>
+            <if test="deptId != null  and deptId != ''"> and a.dept_id in(select dept_id from comm.sys_dept_ry where INSTR(ancestors, #{deptId}) or dept_id= #{deptId})</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+    <select id="selectDeptListByRoleId" resultType="Long">
+        select d.dept_id
+        from comm.sys_dept_ry d
+        left join sys_role_dept rd on d.dept_id = rd.dept_id
+        where rd.role_id = #{roleId}
+        <if test="deptCheckStrictly">
+            and d.dept_id not in (select d.parent_id from comm.sys_dept_ry d inner join sys_role_dept rd on d.dept_id = rd.dept_id and rd.role_id = #{roleId})
+        </if>
+        order by d.parent_id, d.order_num
+    </select>
+
+    <select id="selectBasicdataDeptById" parameterType="Long" resultMap="BasicdataDeptVoResult">
+        <include refid="selectBasicdataDeptVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.dept_id = #{deptId}
+    </select>
+
+    <insert id="insertBasicdataDept" parameterType="BasicdataDept" useGeneratedKeys="true" keyProperty="deptId">
+        insert into comm.sys_dept_ry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="deptCode != null">dept_code,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="leader != null">leader,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="pym != null">pym,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="address != null">address,</if>
+            <if test="contactPerson != null">contact_person,</if>
+            <if test="taxNumber != null">tax_number,</if>
+            <if test="chiefAccountant != null">chief_accountant,</if>
+            <if test="isLeaf != null">is_leaf,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="leader != null">#{leader},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="pym != null">#{pym},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="address != null">#{address},</if>
+            <if test="contactPerson != null">#{contactPerson},</if>
+            <if test="taxNumber != null">#{taxNumber},</if>
+            <if test="chiefAccountant != null">#{chiefAccountant},</if>
+            <if test="isLeaf != null">#{isLeaf},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataDept" parameterType="BasicdataDept">
+        update comm.sys_dept_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="pym != null">pym = #{pym},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="contactPerson != null">contact_person = #{contactPerson},</if>
+            <if test="taxNumber != null">tax_number = #{taxNumber},</if>
+            <if test="chiefAccountant != null">chief_accountant = #{chiefAccountant},</if>
+            <if test="isLeaf != null">is_leaf = #{isLeaf},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where dept_id = #{deptId}
+    </update>
+
+    <delete id="deleteBasicdataDeptById" parameterType="Long">
+        update comm.sys_dept_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where dept_id = #{deptId}
+    </delete>
+
+    <delete id="deleteBasicdataDeptByIds" parameterType="String">
+        update comm.sys_dept_ry set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where dept_id in
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </delete>
+
+    <select id="getListByDeptId" parameterType="BasicdataDeptVo" resultMap="BasicdataDeptVoResult">
+        select b.dept_name as parentDeptName, a.dept_id, a.parent_id, a.dept_name, a.dept_code, a.order_num, a.leader, a.phone, a.email, a.status,  a.pym, a.province, a.city, a.address, a.contact_person, a.tax_number, a.chief_accountant, a.is_leaf, a.remark from comm.sys_dept_ry a
+        left join comm.sys_dept_ry b on a.parent_id = b.dept_id
+        where a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        <if test="deptName != null  and deptName != ''"> and a.dept_name like '%'|| #{deptName}|| '%'</if>
+        <if test="deptCode != null  and deptCode != ''"> and a.dept_code = #{deptCode}</if>
+        <if test="deptId != null and deptId != 0">
+            AND (a.dept_id = #{deptId} OR a.dept_id IN ( SELECT t.dept_id FROM comm.sys_dept_ry t WHERE find_in_set(#{deptId}, ancestors) ))
+        </if>
+        order by a.dept_id
+    </select>
+    <select id="getSize" resultType="java.lang.Integer">
+        		select count(1) from comm.sys_dept_ry  WHERE parent_id = #{parentId}
+    </select>
+    <select id="selectDeptList" parameterType="BasicdataDeptVo" resultMap="BasicdataDeptVoResult">
+        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time,
+        IF((select count(1) from comm.sys_dept_ry tbl where tbl.parent_id = d.dept_id ) > 0,1,0) hasChildren
+        from comm.sys_dept_ry d
+        where d.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            AND dept_name like '%'|| #{deptName}|| '%'
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            AND dept_id = #{deptId} or parent_id = #{deptId}
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by d.parent_id, d.order_num
+    </select>
+    <select id="selectRootDeptParentId" resultType="Long">
+		select distinct parent_id from comm.sys_dept_ry t1 where not exists(select dept_id from comm.sys_dept_ry t2 where t2.dept_id=t1.parent_id);
+	</select>
+
+    <select id="checkDeptNameUnique" resultType="com.zjry.pms.basic.domain.basicData.BasicdataDept">
+        <include refid="selectBasicdataDept"/>
+        where del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} and dept_name=#{deptName} and parent_id = #{parentId} and rownum=1
+    </select>
+    <select id="selectNormalChildrenDeptById" parameterType="Long" resultType="int">
+		select count(*) from comm.sys_dept_ry where status = 0 and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} and find_in_set(#{deptId}, ancestors)
+	</select>
+    <select id="checkDeptExistUser" parameterType="Long" resultType="int">
+		select count(1) from sys_user where dept_id = #{deptId} and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+	</select>
+
+    <select id="hasChildByDeptId" parameterType="Long" resultType="int">
+		select count(1) from comm.sys_dept_ry
+		where del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} and parent_id = #{deptId} and rownum=1
+	</select>
+
+    <delete id="deleteDeptById" parameterType="Long">
+		update comm.sys_dept_ry set del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where dept_id = #{deptId}
+	</delete>
+
+
+</mapper>

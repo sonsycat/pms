@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.UserAccountRelationMapper">
+
+    <resultMap type="com.zjry.pms.basic.domain.basicData.UserAccountRelation" id="UserAccountRelationResult">
+        <result property="accountId"    column="account_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="useFlag"    column="use_flag"    />
+    </resultMap>
+
+    <sql id="selectUserAccountRelationVo">
+        select account_id, user_id, del_flag, create_by, create_time, update_by, update_time,use_flag from comm.user_account_relation_ry
+    </sql>
+
+    <select id="selectUserAccountRelationList" parameterType="com.zjry.pms.basic.domain.basicData.UserAccountRelation" resultMap="UserAccountRelationResult">
+        <include refid="selectUserAccountRelationVo"/>
+        <where>
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="useFlag != null and useFlag != '' "> and use_flag = #{useFlag}</if>
+        </where>
+    </select>
+
+
+    <update id="updateUserAccountRelationUseFlag" parameterType="com.zjry.pms.basic.domain.basicData.UserAccountRelation">
+        update comm.user_account_relation_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="useFlag != null">use_flag = #{useFlag},</if>
+        </trim>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and user_id = #{userId}
+            <if test="accountId != null">and account_id = #{accountId}</if>
+    </update>
+
+
+</mapper>

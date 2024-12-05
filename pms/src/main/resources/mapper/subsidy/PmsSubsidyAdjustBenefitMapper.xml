@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.subsidy.mapper.PmsSubsidyAdjustBenefitMapper">
+    
+    <resultMap type="PmsSubsidyAdjustBenefit" id="PmsSubsidyAdjustBenefitResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="adjustTime"    column="ADJUST_TIME"    />
+        <result property="adjustType"    column="ADJUST_TYPE"    />
+        <result property="adjustAmount"    column="ADJUST_AMOUNT"    />
+        <result property="adjustReason"    column="ADJUST_REASON"    />
+        <result property="adjustDirection"    column="ADJUST_DIRECTION"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSubsidyAdjustBenefitVo">
+        select
+            pms_subsidy_adjust_benefit.ID,
+            pms_subsidy_adjust_benefit.COMP_CODE,
+            pms_subsidy_adjust_benefit.ACCOUNT_CODE,
+            pms_subsidy_adjust_benefit.DEPT_CODE,
+            pms_subsidy_adjust_benefit.ADJUST_TIME,
+            pms_subsidy_adjust_benefit.ADJUST_TYPE,
+            pms_subsidy_adjust_benefit.ADJUST_AMOUNT,
+            pms_subsidy_adjust_benefit.ADJUST_REASON,
+            pms_subsidy_adjust_benefit.ADJUST_DIRECTION,
+            pms_subsidy_adjust_benefit.DEL_FLAG,
+            pms_subsidy_adjust_benefit.CREATE_BY,
+            pms_subsidy_adjust_benefit.CREATE_TIME,
+            pms_subsidy_adjust_benefit.UPDATE_BY,
+            pms_subsidy_adjust_benefit.UPDATE_TIME,
+            pms_subsidy_adjust_benefit.REMARK,
+            sys_user.nick_name as adjustName
+        from pms_subsidy_adjust_benefit
+        left join sys_user on sys_user.user_id = pms_subsidy_adjust_benefit.CREATE_BY
+    </sql>
+
+    <select id="selectPmsSubsidyAdjustBenefitList" parameterType="PmsSubsidyAdjustBenefit" resultMap="PmsSubsidyAdjustBenefitResult">
+        <include refid="selectPmsSubsidyAdjustBenefitVo"/>
+        <where>  
+        AND pms_subsidy_adjust_benefit.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and pms_subsidy_adjust_benefit.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and pms_subsidy_adjust_benefit.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="deptCode != null  and deptCode != ''"> and pms_subsidy_adjust_benefit.DEPT_CODE = #{deptCode}</if>
+            <if test="adjustTime != null "> and pms_subsidy_adjust_benefit.ADJUST_TIME = #{adjustTime}</if>
+            <if test="adjustMonth != null "> and date_format(pms_subsidy_adjust_benefit.ADJUST_TIME, '%Y%m') = date_format(#{adjustMonth}, '%Y%m')</if>
+            <if test="adjustType != null  and adjustType != ''"> and pms_subsidy_adjust_benefit.ADJUST_TYPE = #{adjustType}</if>
+            <if test="adjustAmount != null "> and pms_subsidy_adjust_benefit.ADJUST_AMOUNT = #{adjustAmount}</if>
+            <if test="adjustAmountMin != null "> and pms_subsidy_adjust_benefit.ADJUST_AMOUNT+0 >= #{adjustAmountMin}+0</if>
+            <if test="adjustAmountMax != null "> and pms_subsidy_adjust_benefit.ADJUST_AMOUNT+0 <![CDATA[ <= ]]> #{adjustAmountMax}+0</if>
+            <if test="adjustReason != null  and adjustReason != ''"> and pms_subsidy_adjust_benefit.ADJUST_REASON = #{adjustReason}</if>
+            <if test="adjustDirection != null  and adjustDirection != ''"> and pms_subsidy_adjust_benefit.ADJUST_DIRECTION = #{adjustDirection}</if>
+            <if test="adjustName != null  and adjustName != ''"> and sys_user.nick_name like concat('%', #{adjustName}, '%') </if>
+        </where>
+        order by pms_subsidy_adjust_benefit.update_time desc
+    </select>
+    
+    <select id="selectPmsSubsidyAdjustBenefitById" parameterType="Long" resultMap="PmsSubsidyAdjustBenefitResult">
+        <include refid="selectPmsSubsidyAdjustBenefitVo"/>
+        where pms_subsidy_adjust_benefit.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND pms_subsidy_adjust_benefit.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsSubsidyAdjustBenefit" parameterType="PmsSubsidyAdjustBenefit" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_subsidy_adjust_benefit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="adjustTime != null">ADJUST_TIME,</if>
+            <if test="adjustType != null">ADJUST_TYPE,</if>
+            <if test="adjustAmount != null">ADJUST_AMOUNT,</if>
+            <if test="adjustReason != null">ADJUST_REASON,</if>
+            <if test="adjustDirection != null">ADJUST_DIRECTION,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="adjustTime != null">#{adjustTime},</if>
+            <if test="adjustType != null">#{adjustType},</if>
+            <if test="adjustAmount != null">#{adjustAmount},</if>
+            <if test="adjustReason != null">#{adjustReason},</if>
+            <if test="adjustDirection != null">#{adjustDirection},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSubsidyAdjustBenefit" parameterType="PmsSubsidyAdjustBenefit">
+        update pms_subsidy_adjust_benefit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="adjustTime != null">ADJUST_TIME = #{adjustTime},</if>
+            <if test="adjustType != null">ADJUST_TYPE = #{adjustType},</if>
+            <if test="adjustAmount != null">ADJUST_AMOUNT = #{adjustAmount},</if>
+            <if test="adjustReason != null">ADJUST_REASON = #{adjustReason},</if>
+            <if test="adjustDirection != null">ADJUST_DIRECTION = #{adjustDirection},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSubsidyAdjustBenefitById" parameterType="Long">
+        update pms_subsidy_adjust_benefit set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSubsidyAdjustBenefitByIds" parameterType="String">
+        update pms_subsidy_adjust_benefit set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

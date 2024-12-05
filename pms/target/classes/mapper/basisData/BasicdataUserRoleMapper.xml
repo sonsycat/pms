@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataUserRoleMapper">
+
+    <resultMap type="com.zjry.pms.basic.domain.basicData.BasicdataUserRole" id="BasicdataUserRoleResult">
+        <result property="userId"    column="user_id"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="useFlag"    column="use_flag"    />
+    </resultMap>
+
+    <sql id="selectBasicdataUserRoleVo">
+        select user_id, role_id, use_flag from comm.sys_user_role_ry
+    </sql>
+
+    <select id="selectBasicdataUserRoleList" parameterType="com.zjry.pms.basic.domain.basicData.BasicdataUserRole" resultMap="BasicdataUserRoleResult">
+        <include refid="selectBasicdataUserRoleVo"/>
+        <where>
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+            <if test="roleId != null and roleId != ''">
+                AND role_id = #{roleId}
+            </if>
+            <if test="useFlag != null and useFlag != ''">
+                AND use_flag = #{useFlag}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updateBasicdataUserRoleUseFlag" parameterType="com.zjry.pms.basic.domain.basicData.BasicdataUserRole">
+        update comm.sys_user_role_ry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="useFlag != null">use_flag = #{useFlag},</if>
+        </trim>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        and user_id = #{userId}
+        <if test="roleId != null">and role_id = #{roleId}</if>
+    </update>
+
+
+</mapper>

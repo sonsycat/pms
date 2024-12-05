@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataFlowCodeMapper">
+    
+    <resultMap type="SysFlowCode" id="SysFlowCodeResult">
+        <result property="flowId"    column="flow_id"    />
+        <result property="ruleId"    column="rule_id"    />
+        <result property="flowName"    column="flow_name"    />
+        <result property="status"    column="status"    />
+        <result property="flowCode"    column="flow_code"    />
+        <result property="flowCurVal"    column="flow_cur_val"    />
+        <result property="flowLen"    column="flow_len"    />
+        <result property="prefix"    column="prefix"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysFlowCodeVo">
+        select flow_id, rule_id, flow_name, status, flow_code, flow_cur_val, flow_len, prefix, create_by, create_time, update_by, update_time, remark, del_flag from sys_flow_code
+    </sql>
+
+    <select id="getFlowCodeByCode" resultType="com.zjry.pms.basic.domain.basicData.BasicdataFlowCode">
+        <include refid="selectSysFlowCodeVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="ruleId != null  and ruleId != ''"> and rule_Id = #{ruleId}</if>
+            and (flow_code is null or flow_code = '')
+        </where>
+    </select>
+    <select id="getStructCode" resultType="com.zjry.pms.basic.domain.basicData.BasicdataFlowCode">
+        <include refid="selectSysFlowCodeVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="ruleId != null  and ruleId != ''"> and rule_Id = #{ruleId}</if>
+            <if test="flowCode != null  and flowCode != ''"> and flow_code = #{flowCode}</if>
+        </where>
+    </select>
+    <select id="getJxFlowcodeByHRCode" resultType="com.zjry.pms.basic.domain.basicData.BasicdataFlowCode">
+        <include refid="selectSysFlowCodeVo"/>
+        WHERE  flow_code = #{flowCode}
+    </select>
+
+    <insert id="insertSysFlowCode" parameterType="SysFlowCode">
+        insert into sys_flow_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="flowId != null">flow_id,</if>
+            <if test="ruleId != null">rule_id,</if>
+            <if test="flowName != null">flow_name,</if>
+            <if test="status != null">status,</if>
+            <if test="flowCode != null">flow_code,</if>
+            <if test="flowCurVal != null">flow_cur_val,</if>
+            <if test="flowLen != null">flow_len,</if>
+            <if test="prefix != null">prefix,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="flowId != null">#{flowId},</if>
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="flowName != null">#{flowName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="flowCode != null">#{flowCode},</if>
+            <if test="flowCurVal != null">#{flowCurVal},</if>
+            <if test="flowLen != null">#{flowLen},</if>
+            <if test="prefix != null">#{prefix},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysFlowCode" parameterType="SysFlowCode">
+        update sys_flow_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleId != null">rule_id = #{ruleId},</if>
+            <if test="flowName != null">flow_name = #{flowName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="flowCode != null">flow_code = #{flowCode},</if>
+            <if test="flowCurVal != null">flow_cur_val = #{flowCurVal},</if>
+            <if test="flowLen != null">flow_len = #{flowLen},</if>
+            <if test="prefix != null">prefix = #{prefix},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where flow_id = #{flowId}
+    </update>
+
+</mapper>

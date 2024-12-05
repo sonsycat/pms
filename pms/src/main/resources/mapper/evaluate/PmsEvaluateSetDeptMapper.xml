@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsEvaluateSetDeptMapper">
+
+    <resultMap type="PmsEvaluateSetDept" id="PmsEvaluateSetDeptResult">
+        <result property="id" column="ID"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="setDeptCode" column="SET_DEPT_CODE"/>
+        <result property="setCode" column="SET_CODE"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="internalScore" column="INTERNAL_SCORE"/>
+        <result property="financeScore" column="FINANCE_SCORE"/>
+        <result property="serviceScore" column="SERVICE_SCORE"/>
+        <result property="efficientScore" column="EFFICIENT_SCORE"/>
+        <result property="nowDate" column="NOW_DATE"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="deptName" column="deptName"/>
+        <result property="setName" column="SET_NAME"/>
+    </resultMap>
+
+    <sql id="selectPmsEvaluateSetDeptVo">
+     SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.SET_DEPT_CODE,
+	a.SET_CODE,
+	a.DEPT_CODE,
+	b.dept_room_name as deptName,
+	a.INTERNAL_SCORE,
+	a.FINANCE_SCORE,
+	a.SERVICE_SCORE,
+	a.EFFICIENT_SCORE,
+	a.NOW_DATE,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK,
+	d.SET_NAME
+FROM
+	pms_evaluate_set_dept a
+	left join sys_dept_room b on a.DEPT_CODE = b.dept_room_id
+	left join pms_evaluate_set_index c on a.SET_CODE = c.SET_CODE and c.DEL_FLAG =0
+	left join pms_evaluate_set d on a.SET_CODE =d.SET_CODE and d.DEL_FLAG =0
+	</sql>
+
+
+    <sql id="pmsEvaluateSetDeptVo">
+     SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.SET_DEPT_CODE,
+	a.SET_CODE,
+	a.DEPT_CODE,
+	b.dept_room_name as deptName,
+	a.INTERNAL_SCORE,
+	a.FINANCE_SCORE,
+	a.SERVICE_SCORE,
+	a.EFFICIENT_SCORE,
+	a.NOW_DATE,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK,
+	d.SET_NAME
+FROM
+	pms_evaluate_set_dept a
+	left join sys_dept_room b on a.DEPT_CODE = b.dept_room_id
+	left join pms_evaluate_set d on a.SET_CODE =d.SET_CODE and d.DEL_FLAG =0
+	</sql>
+
+
+    <select id="selectPmsSetDeptList" parameterType="PmsEvaluateSetDept" resultMap="PmsEvaluateSetDeptResult">
+        <include refid="pmsEvaluateSetDeptVo"/>
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null ">and a.COMP_CODE = #{compCode}</if>
+            <if test="deptType != null ">and b.type = #{deptType}</if>
+            <if test="accountCode != null  and accountCode != ''">and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="setDeptCode != null  and setDeptCode != ''">and a.SET_DEPT_CODE = #{setDeptCode}</if>
+            <if test="setCode != null  and setCode != ''">and a.SET_CODE = #{setCode}</if>
+            <if test="deptCode != null  and deptCode != ''">and a.DEPT_CODE = #{deptCode}</if>
+            <if test="internalScore != null  and internalScore != ''">and a.INTERNAL_SCORE = #{internalScore}</if>
+            <if test="financeScore != null  and financeScore != ''">and a.FINANCE_SCORE = #{financeScore}</if>
+            <if test="serviceScore != null  and serviceScore != ''">and a.SERVICE_SCORE = #{serviceScore}</if>
+            <if test="efficientScore != null  and efficientScore != ''">and a.EFFICIENT_SCORE = #{efficientScore}</if>
+            <if test="nowDate != null ">and a.NOW_DATE = #{nowDate}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+
+    <select id="selectPmsEvaluateSetDeptList" parameterType="PmsEvaluateSetDept" resultMap="PmsEvaluateSetDeptResult">
+        <include refid="selectPmsEvaluateSetDeptVo"/>
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null ">and a.COMP_CODE = #{compCode}</if>
+            <if test="deptType != null ">and b.type = #{deptType}</if>
+            <if test="accountCode != null  and accountCode != ''">and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="setDeptCode != null  and setDeptCode != ''">and a.SET_DEPT_CODE = #{setDeptCode}</if>
+            <if test="setCode != null  and setCode != ''">and a.SET_CODE = #{setCode}</if>
+            <if test="deptCode != null  and deptCode != ''">and a.DEPT_CODE = #{deptCode}</if>
+            <if test="internalScore != null  and internalScore != ''">and a.INTERNAL_SCORE = #{internalScore}</if>
+            <if test="financeScore != null  and financeScore != ''">and a.FINANCE_SCORE = #{financeScore}</if>
+            <if test="serviceScore != null  and serviceScore != ''">and a.SERVICE_SCORE = #{serviceScore}</if>
+            <if test="efficientScore != null  and efficientScore != ''">and a.EFFICIENT_SCORE = #{efficientScore}</if>
+            <if test="indexCode != null ">and c.INDEX_CODE = #{indexCode}</if>
+            <if test="nowDate != null ">and a.NOW_DATE = #{nowDate}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+
+    <select id="selectPmsEvaluateSetDeptById" parameterType="Long" resultMap="PmsEvaluateSetDeptResult">
+        <include refid="pmsEvaluateSetDeptVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+
+    <insert id="insertPmsEvaluateSetDept" parameterType="PmsEvaluateSetDept" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_evaluate_set_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="setDeptCode != null">SET_DEPT_CODE,</if>
+            <if test="setCode != null">SET_CODE,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="internalScore != null">INTERNAL_SCORE,</if>
+            <if test="financeScore != null">FINANCE_SCORE,</if>
+            <if test="serviceScore != null">SERVICE_SCORE,</if>
+            <if test="efficientScore != null">EFFICIENT_SCORE,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="setDeptCode != null">#{setDeptCode},</if>
+            <if test="setCode != null">#{setCode},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="internalScore != null">#{internalScore},</if>
+            <if test="financeScore != null">#{financeScore},</if>
+            <if test="serviceScore != null">#{serviceScore},</if>
+            <if test="efficientScore != null">#{efficientScore},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateSetDept" parameterType="PmsEvaluateSetDept">
+        update pms_evaluate_set_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="setDeptCode != null">SET_DEPT_CODE = #{setDeptCode},</if>
+            <if test="setCode != null">SET_CODE = #{setCode},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="internalScore != null">INTERNAL_SCORE = #{internalScore},</if>
+            <if test="financeScore != null">FINANCE_SCORE = #{financeScore},</if>
+            <if test="serviceScore != null">SERVICE_SCORE = #{serviceScore},</if>
+            <if test="efficientScore != null">EFFICIENT_SCORE = #{efficientScore},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsEvaluateSetDeptById" parameterType="Long">
+        update pms_evaluate_set_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsEvaluateSetDeptByIds" parameterType="String">
+        update pms_evaluate_set_dept set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectBscSort" parameterType="String" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateBscSort">
+        SELECT
+            DISTINCT a.BSC_CODE AS bscCode,
+                     a.BSC_NAME AS bscName
+        FROM
+            pms_evaluate_bsc a
+                LEFT JOIN pms_evaluate_index b ON b.BSC_ONE_CODE = a.BSC_CODE AND b.DEL_FLAG = '0'
+                LEFT JOIN pms_evaluate_set_index c ON c.INDEX_CODE = b.INDEX_CODE AND c.DEL_FLAG = '0'
+        WHERE
+            c.SET_CODE = #{setCode}
+          AND a.DEL_FLAG = '0'
+    </select>
+
+</mapper>

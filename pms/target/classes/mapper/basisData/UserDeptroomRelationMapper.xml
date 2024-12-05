@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.UserDeptroomRelationMapper">
+    
+    <resultMap type="com.zjry.pms.basic.domain.basicData.UserDeptroomRelation" id="UserDeptroomRelationResult">
+        <result property="deptroomId"    column="deptroom_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="fromOrg"    column="from_org"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="roleId"    column="role_id"    />
+    </resultMap>
+
+    <sql id="selectUserDeptroomRelationVo">
+        select deptroom_id, user_id, from_org, del_flag, create_by, create_time, update_by, update_time, role_id from user_deptroom_relation
+    </sql>
+
+
+    <select id="selectUserDeptroomRelationByUserIdAndRoleId" parameterType="com.zjry.pms.basic.domain.basicData.UserDeptroomRelation" resultMap="UserDeptroomRelationResult">
+        <include refid="selectUserDeptroomRelationVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND user_id = #{userId}
+        <if test="roleId != null "> and role_id = #{roleId}</if>
+    </select>
+
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.quality.mapper.PmsQualityIndexDetailMapper">
+    
+    <resultMap type="PmsQualityIndexDetail" id="PmsQualityIndexDetailResult">
+        <result property="id"    column="ID"    />
+        <result property="indexCode"    column="INDEX_CODE"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="deptName"    column="DEPT_NAME"    />
+        <result property="indexName"    column="INDEX_NAME"    />
+        <result property="indexScore"    column="INDEX_SCORE"    />
+        <result property="evaCont"    column="EVA_CONT"    />
+        <result property="evaCriteria"    column="EVA_CRITERIA"    />
+        <result property="evaMethod"    column="EVA_METHOD"    />
+        <result property="isKpi"    column="IS_KPI"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsQualityIndexDetailVo">
+        select a.ID, a.INDEX_CODE, a.EVA_CONT, a.EVA_CRITERIA, a.EVA_METHOD, a.IS_KPI, c.DEPT_ROOM_NAME as DEPT_NAME, b.DEPT_CODE, b.INDEX_NAME, b.INDEX_SCORE,
+        a.DEL_FLAG, a.CREATE_BY, a.CREATE_TIME, a.UPDATE_BY, a.UPDATE_TIME, a.REMARK from pms_quality_index_detail a
+        LEFT JOIN pms_quality_index b on a.INDEX_CODE = b.INDEX_CODE 
+        LEFT JOIN sys_dept_room c ON b.DEPT_CODE = c.dept_room_id
+    </sql>
+
+    <select id="selectPmsQualityIndexDetailList" parameterType="PmsQualityIndexDetail" resultMap="PmsQualityIndexDetailResult">
+        <include refid="selectPmsQualityIndexDetailVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="indexCode != null  and indexCode != ''"> and a.INDEX_CODE = #{indexCode}</if>
+            <if test="evaCont != null  and evaCont != ''"> and a.EVA_CONT = #{evaCont}</if>
+            <if test="evaCriteria != null  and evaCriteria != ''"> and a.EVA_CRITERIA = #{evaCriteria}</if>
+            <if test="evaMethod != null  and evaMethod != ''"> and a.EVA_METHOD = #{evaMethod}</if>
+            <if test="isKpi != null  and isKpi != ''"> and a.IS_KPI = #{isKpi}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectPmsQualityIndexDetailById" parameterType="Long" resultMap="PmsQualityIndexDetailResult">
+        <include refid="selectPmsQualityIndexDetailVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsQualityIndexDetail" parameterType="PmsQualityIndexDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_quality_index_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="indexCode != null">INDEX_CODE,</if>
+            <if test="evaCont != null">EVA_CONT,</if>
+            <if test="evaCriteria != null">EVA_CRITERIA,</if>
+            <if test="evaMethod != null">EVA_METHOD,</if>
+            <if test="isKpi != null">IS_KPI,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="indexCode != null">#{indexCode},</if>
+            <if test="evaCont != null">#{evaCont},</if>
+            <if test="evaCriteria != null">#{evaCriteria},</if>
+            <if test="evaMethod != null">#{evaMethod},</if>
+            <if test="isKpi != null">#{isKpi},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsQualityIndexDetail" parameterType="PmsQualityIndexDetail">
+        update pms_quality_index_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="evaCont != null">EVA_CONT = #{evaCont},</if>
+            <if test="evaCriteria != null">EVA_CRITERIA = #{evaCriteria},</if>
+            <if test="evaMethod != null">EVA_METHOD = #{evaMethod},</if>
+            <if test="isKpi != null">IS_KPI = #{isKpi},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsQualityIndexDetailById" parameterType="Long">
+        update pms_quality_index_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsQualityIndexDetailByIds" parameterType="String">
+        update pms_quality_index_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

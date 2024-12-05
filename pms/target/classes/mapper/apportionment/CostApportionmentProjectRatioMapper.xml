@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.apportionment.mapper.CostApportionmentProjectRatioMapper">
+    
+    <resultMap type="CostApportionmentProjectRatio" id="CostApportionmentProjectRatioResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="projectCode"    column="PROJECT_CODE"    />
+        <result property="ratioCode"    column="RATIO_CODE"    />
+        <result property="ratioName"    column="RATIO_NAME"    />
+        <result property="ratio"    column="RATIO"    />
+        <result property="firstRatio"    column="FIRST_RATIO"    />
+        <result property="secondRatio"    column="SECOND_RATIO"    />
+        <result property="thirdRatio"    column="THIRD_RATIO"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectCostApportionmentProjectRatioVo">
+        select
+            cost_apportionment_project_ratio.ID,
+            cost_apportionment_project_ratio.COMP_CODE,
+            cost_apportionment_project_ratio.ACCOUNT_CODE,
+            cost_apportionment_project_ratio.PROJECT_CODE,
+            cost_apportionment_project_ratio.RATIO_CODE,
+            cost_apportionment_dictionary.RATIO_NAME,
+            cost_apportionment_project_ratio.RATIO,
+            cost_apportionment_project_ratio.FIRST_RATIO,
+            cost_apportionment_project_ratio.SECOND_RATIO,
+            cost_apportionment_project_ratio.THIRD_RATIO,
+            cost_apportionment_project_ratio.DEL_FLAG,
+            cost_apportionment_project_ratio.CREATE_BY,
+            cost_apportionment_project_ratio.CREATE_TIME,
+            cost_apportionment_project_ratio.UPDATE_BY,
+            cost_apportionment_project_ratio.UPDATE_TIME,
+            cost_apportionment_project_ratio.REMARK
+        from cost_apportionment_project_ratio
+        left join cost_apportionment_dictionary on cost_apportionment_dictionary.RATIO_CODE = cost_apportionment_project_ratio.RATIO_CODE
+    </sql>
+
+    <select id="selectCostApportionmentProjectRatioList" parameterType="CostApportionmentProjectRatio" resultMap="CostApportionmentProjectRatioResult">
+        <include refid="selectCostApportionmentProjectRatioVo"/>
+        <where>  
+        AND cost_apportionment_project_ratio.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="projectCode != null  and projectCode != ''"> and cost_apportionment_project_ratio.PROJECT_CODE = #{projectCode}</if>
+            <if test="ratioCode != null  and ratioCode != ''"> and cost_apportionment_project_ratio.RATIO_CODE = #{ratioCode}</if>
+            <if test="ratio != null  and ratio != ''"> and cost_apportionment_project_ratio.RATIO = #{ratio}</if>
+            <if test="firstRatio != null  and firstRatio != ''"> and cost_apportionment_project_ratio.FIRST_RATIO = #{firstRatio}</if>
+            <if test="secondRatio != null  and secondRatio != ''"> and cost_apportionment_project_ratio.SECOND_RATIO = #{secondRatio}</if>
+            <if test="thirdRatio != null  and thirdRatio != ''"> and cost_apportionment_project_ratio.THIRD_RATIO = #{thirdRatio}</if>
+        </where>
+        order by cost_apportionment_project_ratio.update_time desc
+    </select>
+    
+    <select id="selectCostApportionmentProjectRatioById" parameterType="Long" resultMap="CostApportionmentProjectRatioResult">
+        <include refid="selectCostApportionmentProjectRatioVo"/>
+        where cost_apportionment_project_ratio.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND cost_apportionment_project_ratio.ID = #{id}
+    </select>
+        
+    <insert id="insertCostApportionmentProjectRatio" parameterType="CostApportionmentProjectRatio" useGeneratedKeys="true" keyProperty="id">
+        insert into cost_apportionment_project_ratio
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="projectCode != null">PROJECT_CODE,</if>
+            <if test="ratioCode != null">RATIO_CODE,</if>
+            <if test="ratio != null">RATIO,</if>
+            <if test="firstRatio != null">FIRST_RATIO,</if>
+            <if test="secondRatio != null">SECOND_RATIO,</if>
+            <if test="thirdRatio != null">THIRD_RATIO,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="ratioCode != null">#{ratioCode},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="firstRatio != null">#{firstRatio},</if>
+            <if test="secondRatio != null">#{secondRatio},</if>
+            <if test="thirdRatio != null">#{thirdRatio},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCostApportionmentProjectRatio" parameterType="CostApportionmentProjectRatio">
+        update cost_apportionment_project_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="projectCode != null">PROJECT_CODE = #{projectCode},</if>
+            <if test="ratioCode != null">RATIO_CODE = #{ratioCode},</if>
+            <if test="ratio != null">RATIO = #{ratio},</if>
+            <if test="firstRatio != null">FIRST_RATIO = #{firstRatio},</if>
+            <if test="secondRatio != null">SECOND_RATIO = #{secondRatio},</if>
+            <if test="thirdRatio != null">THIRD_RATIO = #{thirdRatio},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteCostApportionmentProjectRatioByProjectCode" parameterType="String">
+        delete from cost_apportionment_project_ratio where PROJECT_CODE = #{projectCode}
+    </delete>
+
+    <delete id="deleteCostApportionmentProjectRatioById" parameterType="Long">
+        update cost_apportionment_project_ratio set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteCostApportionmentProjectRatioByIds" parameterType="String">
+        update cost_apportionment_project_ratio set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

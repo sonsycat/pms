@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.skill.mapper.PmsSkillAchieveMapper">
+    
+    <resultMap type="PmsSkillAchieve" id="PmsSkillAchieveResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="achieveCode"    column="ACHIEVE_CODE"    />
+        <result property="achieveName"    column="ACHIEVE_NAME"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="completeUnit"    column="COMPLETE_UNIT"    />
+        <result property="personCode"    column="PERSON_CODE"    />
+        <result property="education"    column="EDUCATION"    />
+        <result property="special"    column="SPECIAL"    />
+        <result property="titleCode"    column="TITLE_CODE"    />
+        <result property="awardCategory"    column="AWARD_CATEGORY"    />
+        <result property="awardLevel"    column="AWARD_LEVEL"    />
+        <result property="isExtension"    column="IS_EXTENSION"    />
+        <result property="awardTime"    column="AWARD_TIME"    />
+        <result property="extensionIncome"    column="EXTENSION_INCOME"    />
+        <result property="approve"    column="APPROVE"    />
+        <result property="taskSource"    column="TASK_SOURCE"    />
+        <result property="extensionScope"    column="EXTENSION_SCOPE"    />
+        <result property="achieveNature"    column="ACHIEVE_NATURE"    />
+        <result property="drugApproval"    column="DRUG_APPROVAL"    />
+        <result property="patentIncome"    column="PATENT_INCOME"    />
+        <result property="patentNo"    column="PATENT_NO"    />
+        <result property="patentType"    column="PATENT_TYPE"    />
+        <result property="subjectWords"    column="SUBJECT_WORDS"    />
+        <result property="achieveAbstract"    column="ACHIEVE_ABSTRACT"    />
+        <result property="annex"    column="ANNEX"    />
+        <result property="auditState"    column="AUDIT_STATE"    />
+        <result property="procedureId"    column="PROCEDURE_ID"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSkillAchieveVo">
+        select
+            pms_skill_achieve.ID,
+            pms_skill_achieve.COMP_CODE,
+            pms_skill_achieve.ACCOUNT_CODE,
+            pms_skill_achieve.ACHIEVE_CODE,
+            pms_skill_achieve.ACHIEVE_NAME,
+            pms_skill_achieve.DEPT_CODE,
+            pms_skill_achieve.COMPLETE_UNIT,
+            pms_skill_achieve.PERSON_CODE,
+            pms_skill_achieve.EDUCATION,
+            pms_skill_achieve.SPECIAL,
+            pms_skill_achieve.TITLE_CODE,
+            pms_skill_achieve.AWARD_CATEGORY,
+            pms_skill_achieve.AWARD_LEVEL,
+            pms_skill_achieve.IS_EXTENSION,
+            pms_skill_achieve.AWARD_TIME,
+            pms_skill_achieve.EXTENSION_INCOME,
+            pms_skill_achieve.APPROVE,
+            pms_skill_achieve.TASK_SOURCE,
+            pms_skill_achieve.EXTENSION_SCOPE,
+            pms_skill_achieve.ACHIEVE_NATURE,
+            pms_skill_achieve.DRUG_APPROVAL,
+            pms_skill_achieve.PATENT_INCOME,
+            pms_skill_achieve.PATENT_NO,
+            pms_skill_achieve.PATENT_TYPE,
+            pms_skill_achieve.SUBJECT_WORDS,
+            pms_skill_achieve.ACHIEVE_ABSTRACT,
+            pms_skill_achieve.ANNEX,
+            pms_skill_achieve.AUDIT_STATE,
+            pms_skill_achieve.PROCEDURE_ID,
+            pms_skill_achieve.DEL_FLAG,
+            pms_skill_achieve.CREATE_BY,
+            pms_skill_achieve.CREATE_TIME,
+            pms_skill_achieve.UPDATE_BY,
+            pms_skill_achieve.UPDATE_TIME,
+            pms_skill_achieve.REMARK,
+            sys_dept_room.dept_room_name as deptName
+        from pms_skill_achieve
+        left join sys_dept_room on pms_skill_achieve.dept_code = sys_dept_room.dept_room_id
+    </sql>
+
+    <select id="selectPmsSkillAchieveList" parameterType="PmsSkillAchieve" resultMap="PmsSkillAchieveResult">
+        <include refid="selectPmsSkillAchieveVo"/>
+        <where>
+        AND pms_skill_achieve.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and pms_skill_achieve.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and pms_skill_achieve.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="achieveCode != null  and achieveCode != ''"> and pms_skill_achieve.ACHIEVE_CODE = #{achieveCode}</if>
+            <if test="achieveName != null  and achieveName != ''"> and pms_skill_achieve.ACHIEVE_NAME like concat('%', #{achieveName}, '%')</if>
+            <if test="deptCode != null "> and pms_skill_achieve.DEPT_CODE = #{deptCode}</if>
+            <if test="completeUnit != null  and completeUnit != ''"> and pms_skill_achieve.COMPLETE_UNIT = #{completeUnit}</if>
+            <if test="personCode != null  and personCode != ''"> and pms_skill_achieve.PERSON_CODE = #{personCode}</if>
+            <if test="education != null  and education != ''"> and pms_skill_achieve.EDUCATION = #{education}</if>
+            <if test="special != null  and special != ''"> and pms_skill_achieve.SPECIAL = #{special}</if>
+            <if test="titleCode != null  and titleCode != ''"> and pms_skill_achieve.TITLE_CODE = #{titleCode}</if>
+            <if test="awardCategory != null  and awardCategory != ''"> and pms_skill_achieve.AWARD_CATEGORY = #{awardCategory}</if>
+            <if test="awardLevel != null  and awardLevel != ''"> and pms_skill_achieve.AWARD_LEVEL = #{awardLevel}</if>
+            <if test="isExtension != null  and isExtension != ''"> and pms_skill_achieve.IS_EXTENSION = #{isExtension}</if>
+            <if test="awardTime != null "> and pms_skill_achieve.AWARD_TIME = #{awardTime}</if>
+            <if test="extensionIncome != null  and extensionIncome != ''"> and pms_skill_achieve.EXTENSION_INCOME = #{extensionIncome}</if>
+            <if test="approve != null  and approve != ''"> and pms_skill_achieve.APPROVE = #{approve}</if>
+            <if test="taskSource != null  and taskSource != ''"> and pms_skill_achieve.TASK_SOURCE = #{taskSource}</if>
+            <if test="extensionScope != null  and extensionScope != ''"> and pms_skill_achieve.EXTENSION_SCOPE = #{extensionScope}</if>
+            <if test="achieveNature != null  and achieveNature != ''"> and pms_skill_achieve.ACHIEVE_NATURE = #{achieveNature}</if>
+            <if test="drugApproval != null  and drugApproval != ''"> and pms_skill_achieve.DRUG_APPROVAL = #{drugApproval}</if>
+            <if test="patentIncome != null  and patentIncome != ''"> and pms_skill_achieve.PATENT_INCOME = #{patentIncome}</if>
+            <if test="patentNo != null  and patentNo != ''"> and pms_skill_achieve.PATENT_NO = #{patentNo}</if>
+            <if test="patentType != null  and patentType != ''"> and pms_skill_achieve.PATENT_TYPE = #{patentType}</if>
+            <if test="subjectWords != null  and subjectWords != ''"> and pms_skill_achieve.SUBJECT_WORDS = #{subjectWords}</if>
+            <if test="achieveAbstract != null  and achieveAbstract != ''"> and pms_skill_achieve.ACHIEVE_ABSTRACT = #{achieveAbstract}</if>
+            <if test="annex != null  and annex != ''"> and pms_skill_achieve.ANNEX = #{annex}</if>
+            <if test="auditState != null  and auditState != ''"> and pms_skill_achieve.AUDIT_STATE = #{auditState}</if>
+            <if test="procedureId != null  and procedureId != ''"> and pms_skill_achieve.PROCEDURE_ID = #{procedureId}</if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                and (pms_skill_achieve.AWARD_TIME between #{params.beginTime} and #{params.endTime})
+            </if>
+        </where>
+        order by pms_skill_achieve.update_time desc
+    </select>
+
+    <select id="selectPmsSkillAchieveListByName" parameterType="PmsSkillAchieve" resultMap="PmsSkillAchieveResult">
+        <include refid="selectPmsSkillAchieveVo"/>
+        <where>
+        AND pms_skill_achieve.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="id != null "> and pms_skill_achieve.ID != #{id}</if>
+            <if test="compCode != null "> and pms_skill_achieve.COMP_CODE = #{compCode}</if>
+            <if test="achieveCode != null  and achieveCode != ''"> and pms_skill_achieve.ACHIEVE_CODE = #{achieveCode}</if>
+        </where>
+    </select>
+
+    <select id="selectPmsSkillAchieveById" parameterType="Long" resultMap="PmsSkillAchieveResult">
+        <include refid="selectPmsSkillAchieveVo"/>
+        where pms_skill_achieve.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND pms_skill_achieve.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsSkillAchieve" parameterType="PmsSkillAchieve" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_skill_achieve
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="achieveCode != null">ACHIEVE_CODE,</if>
+            <if test="achieveName != null and achieveName != ''">ACHIEVE_NAME,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="completeUnit != null and completeUnit != ''">COMPLETE_UNIT,</if>
+            <if test="personCode != null and personCode != ''">PERSON_CODE,</if>
+            <if test="education != null and education != ''">EDUCATION,</if>
+            <if test="special != null and special != ''">SPECIAL,</if>
+            <if test="titleCode != null and titleCode != ''">TITLE_CODE,</if>
+            <if test="awardCategory != null and awardCategory != ''">AWARD_CATEGORY,</if>
+            <if test="awardLevel != null and awardLevel != ''">AWARD_LEVEL,</if>
+            <if test="isExtension != null and isExtension != ''">IS_EXTENSION,</if>
+            <if test="awardTime != null">AWARD_TIME,</if>
+            <if test="extensionIncome != null and extensionIncome != ''">EXTENSION_INCOME,</if>
+            <if test="approve != null and approve != ''">APPROVE,</if>
+            <if test="taskSource != null and taskSource != ''">TASK_SOURCE,</if>
+            <if test="extensionScope != null and extensionScope != ''">EXTENSION_SCOPE,</if>
+            <if test="achieveNature != null and achieveNature != ''">ACHIEVE_NATURE,</if>
+            <if test="drugApproval != null and drugApproval != ''">DRUG_APPROVAL,</if>
+            <if test="patentIncome != null and patentIncome != ''">PATENT_INCOME,</if>
+            <if test="patentNo != null and patentNo != ''">PATENT_NO,</if>
+            <if test="patentType != null and patentType != ''">PATENT_TYPE,</if>
+            <if test="subjectWords != null and subjectWords != ''">SUBJECT_WORDS,</if>
+            <if test="achieveAbstract != null and achieveAbstract != ''">ACHIEVE_ABSTRACT,</if>
+            <if test="annex != null">ANNEX,</if>
+            <if test="auditState != null">AUDIT_STATE,</if>
+            <if test="procedureId != null">PROCEDURE_ID,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="achieveCode != null">#{achieveCode},</if>
+            <if test="achieveName != null and achieveName != ''">#{achieveName},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="completeUnit != null and completeUnit != ''">#{completeUnit},</if>
+            <if test="personCode != null and personCode != ''">#{personCode},</if>
+            <if test="education != null and education != ''">#{education},</if>
+            <if test="special != null and special != ''">#{special},</if>
+            <if test="titleCode != null and titleCode != ''">#{titleCode},</if>
+            <if test="awardCategory != null and awardCategory != ''">#{awardCategory},</if>
+            <if test="awardLevel != null and awardLevel != ''">#{awardLevel},</if>
+            <if test="isExtension != null and isExtension != ''">#{isExtension},</if>
+            <if test="awardTime != null">#{awardTime},</if>
+            <if test="extensionIncome != null and extensionIncome != ''">#{extensionIncome},</if>
+            <if test="approve != null and approve != ''">#{approve},</if>
+            <if test="taskSource != null and taskSource != ''">#{taskSource},</if>
+            <if test="extensionScope != null and extensionScope != ''">#{extensionScope},</if>
+            <if test="achieveNature != null and achieveNature != ''">#{achieveNature},</if>
+            <if test="drugApproval != null and drugApproval != ''">#{drugApproval},</if>
+            <if test="patentIncome != null and patentIncome != ''">#{patentIncome},</if>
+            <if test="patentNo != null and patentNo != ''">#{patentNo},</if>
+            <if test="patentType != null and patentType != ''">#{patentType},</if>
+            <if test="subjectWords != null and subjectWords != ''">#{subjectWords},</if>
+            <if test="achieveAbstract != null and achieveAbstract != ''">#{achieveAbstract},</if>
+            <if test="annex != null">#{annex},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="procedureId != null">#{procedureId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSkillAchieve" parameterType="PmsSkillAchieve">
+        update pms_skill_achieve
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="achieveCode != null">ACHIEVE_CODE = #{achieveCode},</if>
+            <if test="achieveName != null and achieveName != ''">ACHIEVE_NAME = #{achieveName},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="completeUnit != null and completeUnit != ''">COMPLETE_UNIT = #{completeUnit},</if>
+            <if test="personCode != null and personCode != ''">PERSON_CODE = #{personCode},</if>
+            <if test="education != null and education != ''">EDUCATION = #{education},</if>
+            <if test="special != null and special != ''">SPECIAL = #{special},</if>
+            <if test="titleCode != null and titleCode != ''">TITLE_CODE = #{titleCode},</if>
+            <if test="awardCategory != null and awardCategory != ''">AWARD_CATEGORY = #{awardCategory},</if>
+            <if test="awardLevel != null and awardLevel != ''">AWARD_LEVEL = #{awardLevel},</if>
+            <if test="isExtension != null and isExtension != ''">IS_EXTENSION = #{isExtension},</if>
+            <if test="awardTime != null">AWARD_TIME = #{awardTime},</if>
+            <if test="extensionIncome != null and extensionIncome != ''">EXTENSION_INCOME = #{extensionIncome},</if>
+            <if test="approve != null and approve != ''">APPROVE = #{approve},</if>
+            <if test="taskSource != null and taskSource != ''">TASK_SOURCE = #{taskSource},</if>
+            <if test="extensionScope != null and extensionScope != ''">EXTENSION_SCOPE = #{extensionScope},</if>
+            <if test="achieveNature != null and achieveNature != ''">ACHIEVE_NATURE = #{achieveNature},</if>
+            <if test="drugApproval != null and drugApproval != ''">DRUG_APPROVAL = #{drugApproval},</if>
+            <if test="patentIncome != null and patentIncome != ''">PATENT_INCOME = #{patentIncome},</if>
+            <if test="patentNo != null and patentNo != ''">PATENT_NO = #{patentNo},</if>
+            <if test="patentType != null and patentType != ''">PATENT_TYPE = #{patentType},</if>
+            <if test="subjectWords != null and subjectWords != ''">SUBJECT_WORDS = #{subjectWords},</if>
+            <if test="achieveAbstract != null and achieveAbstract != ''">ACHIEVE_ABSTRACT = #{achieveAbstract},</if>
+            <if test="annex != null">ANNEX = #{annex},</if>
+            <if test="auditState != null">AUDIT_STATE = #{auditState},</if>
+            <if test="procedureId != null">PROCEDURE_ID = #{procedureId},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSkillAchieveById" parameterType="Long">
+        update pms_skill_achieve set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSkillAchieveByIds" parameterType="String">
+        update pms_skill_achieve set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

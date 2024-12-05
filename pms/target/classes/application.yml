@@ -1,0 +1,194 @@
+# 项目相关配置
+zjry:
+  # 名称
+  name: PMS
+  # 版本
+  version: 3.5.01
+  # 版权年份
+  copyrightYear: 2021
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/yljt/zjry/uploadPath，Linux配置 /home/yljt/zjry/uploadPath）
+  profile: D:/yljt/zjry/uploadPath
+  # 获取ip地址开关
+  addressEnabled: false
+  # 验证码类型 math 数组计算 char 字符验证
+  captchaType: char
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 5880
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    #    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+  # undertow 配置
+#  undertow:
+#    # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
+#    max-http-post-size: -1
+#    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+#    # 每块buffer的空间大小,越小的空间被利用越充分
+#    buffer-size: 512
+#    # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+#    io-threads: 8
+#    # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+#    worker-threads: 256
+#    # 是否分配的直接内存
+#    direct-buffers: true
+# 日志配置
+logging:
+  config: classpath:logback.xml
+  level:
+    com.zjry: debug
+    org.springframework: warn
+
+# Spring配置
+spring:
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  profiles:
+    active: druid
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  # 是否开启mq
+  #autoconfigure:
+    #exclude: org.apache.rocketmq.spring.autoconfigure.RocketMQAutoConfiguration
+  # redis 配置
+  redis:
+    # 地址
+    host: 8.147.235.175
+#    host: 127.0.0.1
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    #database: 14
+    # 密码
+    password: 23@we4792
+    # 连接超时时间
+    timeout: 100s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: 254a69be4437478f8408ffde6ac4eaee
+  # 令牌有效期（默认30分钟）
+  expireTime: 300000000
+  tokenKey: pms-Token
+
+# MyBatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.zjry.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+# MyBatis Plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.zjry.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+      logic-delete-field: delFlag #逻辑删除属性
+# PageHelper分页插件
+pagehelper:
+#  helperDialect: mysql
+  helperDialect: oracle
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: /zjry
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
+cas:
+  enable: true
+  server:
+    host:
+      #CAS服务地址
+      url: http://10.246.249.52:8080/SSOServer_HRP
+      #CAS服务登录地址
+      login_url: ${cas.server.host.url}/login
+      #CAS服务登出地址
+      logout_url: ${cas.server.host.url}/logout?service=http://10.246.249.52:85/index
+# 应用访问地址
+app:
+  server:
+    host:
+      url: http://10.246.249.52:5880
+  login_url: /ssologin #应用登录地址
+  logout_url: /ssologout #应用登出地址
+  web_url: http://10.246.249.52:85/index #前端登录地址
+
+ureport:
+  fileStoreDirs: D:/yljt/zjry/uploadPath/ureportFile
+
+# rocketMq配置
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: basicdata-group
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,prometheus,metrics,httptrace,threaddump,heapdump,springmetrics
+    jmx:
+      exposure:
+        include: '*'
+    shutdown:
+      enabled: false
+  metrics:
+    distribution:
+      percentiles-histogram[http.server.requests]: true

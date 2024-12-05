@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.commission.mapper.SeparateAccountSortMapper">
+    
+    <resultMap type="SeparateAccountSort" id="SeparateAccountSortResult">
+        <result property="id"    column="ID"    />
+        <result property="sortCode"    column="SORT_CODE"    />
+        <result property="sortName"    column="SORT_NAME"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectSeparateAccountSortVo">
+        select ID, SORT_CODE, SORT_NAME, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from pms_separate_account_sort
+    </sql>
+
+    <select id="selectSeparateAccountSortList" parameterType="SeparateAccountSort" resultMap="SeparateAccountSortResult">
+        <include refid="selectSeparateAccountSortVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="sortCode != null  and sortCode != ''"> and SORT_CODE = #{sortCode}</if>
+            <if test="sortName != null  and sortName != ''"> and SORT_NAME like concat('%', #{sortName}, '%')</if>
+            <if test="delFlag != null  and delFlag != ''"> and DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null "> and UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''"> and REMARK = #{remark}</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectSeparateAccountSortById" parameterType="Long" resultMap="SeparateAccountSortResult">
+        <include refid="selectSeparateAccountSortVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertSeparateAccountSort" parameterType="SeparateAccountSort" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_separate_account_sort
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sortCode != null">SORT_CODE,</if>
+            <if test="sortName != null">SORT_NAME,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sortCode != null">#{sortCode},</if>
+            <if test="sortName != null">#{sortName},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSeparateAccountSort" parameterType="SeparateAccountSort">
+        update pms_separate_account_sort
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sortCode != null">SORT_CODE = #{sortCode},</if>
+            <if test="sortName != null">SORT_NAME = #{sortName},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteSeparateAccountSortById" parameterType="Long">
+        update pms_separate_account_sort set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteSeparateAccountSortByIds" parameterType="String">
+        update pms_separate_account_sort set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

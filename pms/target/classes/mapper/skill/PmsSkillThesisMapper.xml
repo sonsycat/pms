@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.skill.mapper.PmsSkillThesisMapper">
+
+    <resultMap type="PmsSkillThesis" id="PmsSkillThesisResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="thesisCode"    column="THESIS_CODE"    />
+        <result property="thesisName"    column="THESIS_NAME"    />
+        <result property="deptCode"    column="DEPT_CODE"    />
+        <result property="year"    column="YEAR"    />
+        <result property="thesisType"    column="THESIS_TYPE"    />
+        <result property="personCode"    column="PERSON_CODE"    />
+        <result property="thesisSubject"    column="THESIS_SUBJECT"    />
+        <result property="issn"    column="ISSN"    />
+        <result property="thesisColumn"    column="THESIS_COLUMN"    />
+        <result property="thesisGrade"    column="THESIS_GRADE"    />
+        <result property="thesisYear"    column="THESIS_YEAR"    />
+        <result property="thesisStage"    column="THESIS_STAGE"    />
+        <result property="thesisVolume"    column="THESIS_VOLUME"    />
+        <result property="publish"    column="PUBLISH"    />
+        <result property="position"    column="POSITION"    />
+        <result property="isExtension"    column="IS_EXTENSION"    />
+        <result property="publisTime"    column="PUBLIS_TIME"    />
+        <result property="meetName"    column="MEET_NAME"    />
+        <result property="meetTime"    column="MEET_TIME"    />
+        <result property="annex"    column="ANNEX"    />
+        <result property="auditState"    column="AUDIT_STATE"    />
+        <result property="procedureId"    column="PROCEDURE_ID"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectPmsSkillThesisVo">
+        select
+            pms_skill_thesis.ID,
+            pms_skill_thesis.COMP_CODE,
+            pms_skill_thesis.ACCOUNT_CODE,
+            pms_skill_thesis.THESIS_CODE,
+            pms_skill_thesis.THESIS_NAME,
+            pms_skill_thesis.DEPT_CODE,
+            pms_skill_thesis.YEAR,
+            pms_skill_thesis.THESIS_TYPE,
+            pms_skill_thesis.PERSON_CODE,
+            pms_skill_thesis.THESIS_SUBJECT,
+            pms_skill_thesis.ISSN,
+            pms_skill_thesis.THESIS_COLUMN,
+            pms_skill_thesis.THESIS_GRADE,
+            pms_skill_thesis.THESIS_YEAR,
+            pms_skill_thesis.THESIS_STAGE,
+            pms_skill_thesis.THESIS_VOLUME,
+            pms_skill_thesis.PUBLISH,
+            pms_skill_thesis.POSITION,
+            pms_skill_thesis.IS_EXTENSION,
+            pms_skill_thesis.PUBLIS_TIME,
+            pms_skill_thesis.MEET_NAME,
+            pms_skill_thesis.MEET_TIME,
+            pms_skill_thesis.ANNEX,
+            pms_skill_thesis.AUDIT_STATE,
+            pms_skill_thesis.PROCEDURE_ID,
+            pms_skill_thesis.DEL_FLAG,
+            pms_skill_thesis.CREATE_BY,
+            pms_skill_thesis.CREATE_TIME,
+            pms_skill_thesis.UPDATE_BY,
+            pms_skill_thesis.UPDATE_TIME,
+            pms_skill_thesis.REMARK,
+            sys_dept_room.dept_room_name as deptName
+        from pms_skill_thesis
+        left join sys_dept_room on pms_skill_thesis.dept_code = sys_dept_room.dept_room_id
+        left join sys_user on sys_user.user_id = pms_skill_thesis.person_code
+    </sql>
+
+    <select id="selectPmsSkillThesisList" parameterType="PmsSkillThesis" resultMap="PmsSkillThesisResult">
+        <include refid="selectPmsSkillThesisVo"/>
+        <where>
+        AND pms_skill_thesis.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and pms_skill_thesis.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and pms_skill_thesis.pms_skill_thesis.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="thesisCode != null  and thesisCode != ''"> and pms_skill_thesis.THESIS_CODE = #{thesisCode}</if>
+            <if test="thesisName != null  and thesisName != ''"> and pms_skill_thesis.THESIS_NAME like concat('%', #{thesisName}, '%')</if>
+            <if test="deptCode != null "> and pms_skill_thesis.DEPT_CODE = #{deptCode}</if>
+            <if test="year != null  and year != ''"> and pms_skill_thesis.YEAR = #{year}</if>
+            <if test="thesisType != null  and thesisType != ''"> and pms_skill_thesis.THESIS_TYPE = #{thesisType}</if>
+            <if test="personCode != null  and personCode != ''"> and pms_skill_thesis.PERSON_CODE like
+                concat('%',#{personCode},'%')</if>
+            <if test="thesisSubject != null  and thesisSubject != ''"> and pms_skill_thesis.THESIS_SUBJECT like
+                concat('%',#{thesisSubject},'%')</if>
+            <if test="issn != null  and issn != ''"> and pms_skill_thesis.ISSN = #{issn}</if>
+            <if test="thesisColumn != null  and thesisColumn != ''"> and pms_skill_thesis.THESIS_COLUMN like
+                concat('%',#{thesisColumn},'%')</if>
+            <if test="thesisGrade != null  and thesisGrade != ''"> and pms_skill_thesis.THESIS_GRADE like
+                concat('%',#{thesisGrade},'%')</if>
+            <if test="thesisYear != null  and thesisYear != ''"> and pms_skill_thesis.THESIS_YEAR = #{thesisYear}</if>
+            <if test="thesisStage != null  and thesisStage != ''"> and pms_skill_thesis.THESIS_STAGE = #{thesisStage}</if>
+            <if test="thesisVolume != null  and thesisVolume != ''"> and pms_skill_thesis.THESIS_VOLUME = #{thesisVolume}</if>
+            <if test="publish != null  and publish != ''"> and pms_skill_thesis.PUBLISH = #{publish}</if>
+            <if test="position != null  and position != ''"> and pms_skill_thesis.POSITION = #{position}</if>
+            <if test="isExtension != null  and isExtension != ''"> and pms_skill_thesis.IS_EXTENSION = #{isExtension}</if>
+            <if test="publisTime != null "> and pms_skill_thesis.PUBLIS_TIME = #{publisTime}</if>
+            <if test="meetName != null  and meetName != ''"> and pms_skill_thesis.MEET_NAME = #{meetName}</if>
+            <if test="meetTime != null "> and pms_skill_thesis.MEET_TIME = #{meetTime}</if>
+            <if test="annex != null  and annex != ''"> and pms_skill_thesis.ANNEX = #{annex}</if>
+            <if test="auditState != null  and auditState != ''"> and pms_skill_thesis.AUDIT_STATE = #{auditState}</if>
+            <if test="procedureId != null  and procedureId != ''"> and pms_skill_thesis.PROCEDURE_ID = #{procedureId}</if>
+        </where>
+        order by pms_skill_thesis.update_time desc
+    </select>
+
+    <select id="selectPmsSkillThesisListByName" parameterType="PmsSkillThesis" resultMap="PmsSkillThesisResult">
+        <include refid="selectPmsSkillThesisVo"/>
+        <where>
+        AND pms_skill_thesis.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and pms_skill_thesis.COMP_CODE = #{compCode}
+            and pms_skill_thesis.THESIS_NAME = #{thesisName}
+            <if test="id != null "> and pms_skill_thesis.ID != #{id}</if>
+        </where>
+    </select>
+
+    <select id="selectPmsSkillThesisById" parameterType="Long" resultMap="PmsSkillThesisResult">
+        <include refid="selectPmsSkillThesisVo"/>
+        where pms_skill_thesis.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND pms_skill_thesis.ID = #{id}
+    </select>
+
+    <insert id="insertPmsSkillThesis" parameterType="PmsSkillThesis" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_skill_thesis
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="thesisCode != null">THESIS_CODE,</if>
+            <if test="thesisName != null and thesisName != ''">THESIS_NAME,</if>
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="year != null and year != ''">YEAR,</if>
+            <if test="thesisType != null and thesisType != ''">THESIS_TYPE,</if>
+            <if test="personCode != null and personCode != ''">PERSON_CODE,</if>
+            <if test="thesisSubject != null and thesisSubject != ''">THESIS_SUBJECT,</if>
+            <if test="issn != null and issn != ''">ISSN,</if>
+            <if test="thesisColumn != null and thesisColumn != ''">THESIS_COLUMN,</if>
+            <if test="thesisGrade != null and thesisGrade != ''">THESIS_GRADE,</if>
+            <if test="thesisYear != null and thesisYear != ''">THESIS_YEAR,</if>
+            <if test="thesisStage != null and thesisStage != ''">THESIS_STAGE,</if>
+            <if test="thesisVolume != null and thesisVolume != ''">THESIS_VOLUME,</if>
+            <if test="publish != null and publish != ''">PUBLISH,</if>
+            <if test="position != null and position != ''">POSITION,</if>
+            <if test="isExtension != null and isExtension != ''">IS_EXTENSION,</if>
+            <if test="publisTime != null">PUBLIS_TIME,</if>
+            <if test="meetName != null and meetName != ''">MEET_NAME,</if>
+            <if test="meetTime != null">MEET_TIME,</if>
+            <if test="annex != null">ANNEX,</if>
+            <if test="auditState != null">AUDIT_STATE,</if>
+            <if test="procedureId != null">PROCEDURE_ID,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="thesisCode != null">#{thesisCode},</if>
+            <if test="thesisName != null and thesisName != ''">#{thesisName},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="year != null and year != ''">#{year},</if>
+            <if test="thesisType != null and thesisType != ''">#{thesisType},</if>
+            <if test="personCode != null and personCode != ''">#{personCode},</if>
+            <if test="thesisSubject != null and thesisSubject != ''">#{thesisSubject},</if>
+            <if test="issn != null and issn != ''">#{issn},</if>
+            <if test="thesisColumn != null and thesisColumn != ''">#{thesisColumn},</if>
+            <if test="thesisGrade != null and thesisGrade != ''">#{thesisGrade},</if>
+            <if test="thesisYear != null and thesisYear != ''">#{thesisYear},</if>
+            <if test="thesisStage != null and thesisStage != ''">#{thesisStage},</if>
+            <if test="thesisVolume != null and thesisVolume != ''">#{thesisVolume},</if>
+            <if test="publish != null and publish != ''">#{publish},</if>
+            <if test="position != null and position != ''">#{position},</if>
+            <if test="isExtension != null and isExtension != ''">#{isExtension},</if>
+            <if test="publisTime != null">#{publisTime},</if>
+            <if test="meetName != null and meetName != ''">#{meetName},</if>
+            <if test="meetTime != null">#{meetTime},</if>
+            <if test="annex != null">#{annex},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="procedureId != null">#{procedureId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsSkillThesis" parameterType="PmsSkillThesis">
+        update pms_skill_thesis
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="thesisCode != null">THESIS_CODE = #{thesisCode},</if>
+            <if test="thesisName != null and thesisName != ''">THESIS_NAME = #{thesisName},</if>
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="year != null and year != ''">YEAR = #{year},</if>
+            <if test="thesisType != null and thesisType != ''">THESIS_TYPE = #{thesisType},</if>
+            <if test="personCode != null and personCode != ''">PERSON_CODE = #{personCode},</if>
+            <if test="thesisSubject != null and thesisSubject != ''">THESIS_SUBJECT = #{thesisSubject},</if>
+            <if test="issn != null and issn != ''">ISSN = #{issn},</if>
+            <if test="thesisColumn != null and thesisColumn != ''">THESIS_COLUMN = #{thesisColumn},</if>
+            <if test="thesisGrade != null and thesisGrade != ''">THESIS_GRADE = #{thesisGrade},</if>
+            <if test="thesisYear != null and thesisYear != ''">THESIS_YEAR = #{thesisYear},</if>
+            <if test="thesisStage != null and thesisStage != ''">THESIS_STAGE = #{thesisStage},</if>
+            <if test="thesisVolume != null and thesisVolume != ''">THESIS_VOLUME = #{thesisVolume},</if>
+            <if test="publish != null and publish != ''">PUBLISH = #{publish},</if>
+            <if test="position != null and position != ''">POSITION = #{position},</if>
+            <if test="isExtension != null and isExtension != ''">IS_EXTENSION = #{isExtension},</if>
+            <if test="publisTime != null">PUBLIS_TIME = #{publisTime},</if>
+            <if test="meetName != null and meetName != ''">MEET_NAME = #{meetName},</if>
+            <if test="meetTime != null">MEET_TIME = #{meetTime},</if>
+            <if test="annex != null">ANNEX = #{annex},</if>
+            <if test="auditState != null">AUDIT_STATE = #{auditState},</if>
+            <if test="procedureId != null">PROCEDURE_ID = #{procedureId},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsSkillThesisById" parameterType="Long">
+        update pms_skill_thesis set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsSkillThesisByIds" parameterType="String">
+        update pms_skill_thesis set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsEvaluateDataTempMapper">
+
+    <resultMap type="PmsEvaluateDataTemp" id="PmsEvaluateDataTempResult">
+        <result property="id" column="ID"/>
+        <result property="unitCode" column="UNIT_CODE"/>
+        <result property="guideCode" column="GUIDE_CODE"/>
+        <result property="guideValue" column="GUIDE_VALUE"/>
+        <result property="guideValueResult" column="GUIDE_VALUE_RESULT"/>
+        <result property="guideType" column="GUIDE_TYPE"/>
+        <result property="actDate" column="ACT_DATE"/>
+        <result property="actDateEnd" column="ACT_DATE_END"/>
+        <result property="actDateBegin" column="ACT_DATE_BEGIN"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+    </resultMap>
+
+    <sql id="selectPmsEvaluateDataTempVo">
+        select ID,
+               UNIT_CODE,
+               GUIDE_CODE,
+               GUIDE_VALUE,
+               GUIDE_VALUE_RESULT,
+               GUIDE_TYPE,
+               ACT_DATE,
+               ACT_DATE_END,
+               ACT_DATE_BEGIN,
+               DEL_FLAG,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK,
+               DEPT_CODE,
+               COMP_CODE,
+               ACCOUNT_CODE
+        from pms_evaluate_data_temp
+    </sql>
+
+    <select id="selectPmsEvaluateDataTempList" parameterType="PmsEvaluateDataTemp"
+            resultMap="PmsEvaluateDataTempResult">
+        <include refid="selectPmsEvaluateDataTempVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="unitCode != null  and unitCode != ''">and UNIT_CODE = #{unitCode}</if>
+            <if test="guideCode != null  and guideCode != ''">and GUIDE_CODE = #{guideCode}</if>
+            <if test="guideValue != null ">and GUIDE_VALUE = #{guideValue}</if>
+            <if test="guideValueResult != null ">and GUIDE_VALUE_RESULT = #{guideValueResult}</if>
+            <if test="guideType != null  and guideType != ''">and GUIDE_TYPE = #{guideType}</if>
+            <if test="actDate != null ">and ACT_DATE = #{actDate}</if>
+            <if test="actDateEnd != null ">and ACT_DATE_END = #{actDateEnd}</if>
+            <if test="actDateBegin != null ">and ACT_DATE_BEGIN = #{actDateBegin}</if>
+            <if test="delFlag != null  and delFlag != ''">and DEL_FLAG = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and REMARK = #{remark}</if>
+            <if test="deptCode != null  and deptCode != ''">and DEPT_CODE = #{deptCode}</if>
+            <if test="compCode != null  and compCode != ''">and COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''">and ACCOUNT_CODE = #{accountCode}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectPmsEvaluateDataTempById" parameterType="Long" resultMap="PmsEvaluateDataTempResult">
+        <include refid="selectPmsEvaluateDataTempVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+
+    <insert id="insertPmsEvaluateDataTemp" parameterType="PmsEvaluateDataTemp" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_evaluate_data_temp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitCode != null and unitCode != ''">UNIT_CODE,</if>
+            <if test="guideCode != null and guideCode != ''">GUIDE_CODE,</if>
+            <if test="guideValue != null">GUIDE_VALUE,</if>
+            <if test="guideValueResult != null">GUIDE_VALUE_RESULT,</if>
+            <if test="guideType != null and guideType != ''">GUIDE_TYPE,</if>
+            <if test="actDate != null">ACT_DATE,</if>
+            <if test="actDateEnd != null">ACT_DATE_END,</if>
+            <if test="actDateBegin != null">ACT_DATE_BEGIN,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="deptCode != null and deptCode != ''">DEPT_CODE,</if>
+            <if test="compCode != null and compCode != ''">COMP_CODE,</if>
+            <if test="accountCode != null and accountCode != ''">ACCOUNT_CODE,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="unitCode != null and unitCode != ''">#{unitCode},</if>
+            <if test="guideCode != null and guideCode != ''">#{guideCode},</if>
+            <if test="guideValue != null">#{guideValue},</if>
+            <if test="guideValueResult != null">#{guideValueResult},</if>
+            <if test="guideType != null and guideType != ''">#{guideType},</if>
+            <if test="actDate != null">#{actDate},</if>
+            <if test="actDateEnd != null">#{actDateEnd},</if>
+            <if test="actDateBegin != null">#{actDateBegin},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="deptCode != null and deptCode != ''">#{deptCode},</if>
+            <if test="compCode != null and compCode != ''">#{compCode},</if>
+            <if test="accountCode != null and accountCode != ''">#{accountCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateDataTemp" parameterType="PmsEvaluateDataTemp">
+        update pms_evaluate_data_temp
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitCode != null and unitCode != ''">UNIT_CODE = #{unitCode},</if>
+            <if test="guideCode != null and guideCode != ''">GUIDE_CODE = #{guideCode},</if>
+            <if test="guideValue != null">GUIDE_VALUE = #{guideValue},</if>
+            <if test="guideValueResult != null">GUIDE_VALUE_RESULT = #{guideValueResult},</if>
+            <if test="guideType != null and guideType != ''">GUIDE_TYPE = #{guideType},</if>
+            <if test="actDate != null">ACT_DATE = #{actDate},</if>
+            <if test="actDateEnd != null">ACT_DATE_END = #{actDateEnd},</if>
+            <if test="actDateBegin != null">ACT_DATE_BEGIN = #{actDateBegin},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="deptCode != null and deptCode != '' ">DEPT_CODE = #{deptCode},</if>
+            <if test="compCode != null and compCode != '' ">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null and accountCode != '' ">ACCOUNT_CODE = #{accountCode},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsEvaluateDataTempById" parameterType="Long">
+        update pms_evaluate_data_temp
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsEvaluateDataTempByIds" parameterType="String">
+        update pms_evaluate_data_temp set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID
+        in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertBatch">
+        <foreach collection="list" item="item" separator=";" close=";">
+            insert into pms_evaluate_data_temp
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.unitCode != null and item.unitCode != ''">UNIT_CODE,</if>
+                <if test="item.guideCode != null and item.guideCode != ''">GUIDE_CODE,</if>
+                <if test="item.guideValue != null">GUIDE_VALUE,</if>
+                <if test="item.guideValueResult != null">GUIDE_VALUE_RESULT,</if>
+                <if test="item.guideType != null and item.guideType != ''">GUIDE_TYPE,</if>
+                <if test="item.actDate != null">ACT_DATE,</if>
+                <if test="item.actDateEnd != null">ACT_DATE_END,</if>
+                <if test="item.actDateBegin != null">ACT_DATE_BEGIN,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+                <if test="item.deptCode != null and item.deptCode != '' ">DEPT_CODE,</if>
+                <if test="item.compCode != null and item.compCode != '' ">COMP_CODE,</if>
+                <if test="item.accountCode != null and item.accountCode != '' ">ACCOUNT_CODE,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.unitCode != null and item.unitCode != ''">#{item.unitCode},</if>
+                <if test="item.guideCode != null and item.guideCode != ''">#{item.guideCode},</if>
+                <if test="item.guideValue != null">#{item.guideValue},</if>
+                <if test="item.guideValueResult != null">#{item.guideValueResult},</if>
+                <if test="item.guideType != null and item.guideType != ''">#{item.guideType},</if>
+                <if test="item.actDate != null">#{item.actDate},</if>
+                <if test="item.actDateEnd != null">#{item.actDateEnd},</if>
+                <if test="item.actDateBegin != null">#{item.actDateBegin},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+                <if test="item.deptCode != null and item.deptCode != '' ">#{item.deptCode},</if>
+                <if test="item.compCode != null and item.compCode != '' ">#{item.compCode},</if>
+                <if test="item.accountCode != null and item.accountCode != '' ">#{item.accountCode},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+    <delete id="realDelete">
+        delete from pms_evaluate_data_temp
+        <where>
+            <if test="delFlag != null and delFlag != '' ">
+                and DEL_FLAG = #{delFlag}
+            </if>
+            <if test="deptCode != null and deptCode != '' ">
+                and DEPT_CODE = #{deptCode}
+            </if>
+            <if test="actDate != null  ">
+                and ACT_DATE = #{actDate}
+            </if>
+
+        </where>
+    </delete>
+
+</mapper>

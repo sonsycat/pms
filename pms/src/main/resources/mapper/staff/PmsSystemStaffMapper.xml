@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.system.mapper.PmsSystemStaffMapper">
+    <insert id="insertPmsSystemStaff">
+        insert into sys_staff
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="staffCode != null and staffCode != ''">staff_code ,</if>
+            <if test="staffName != null and staffName != ''">staff_name,</if>
+            <if test="orgCode != null and orgCode != ''">org_code ,</if>
+            <if test="orgName != null and orgName != ''">org_name ,</if>
+            <if test="deptCode != null and deptCode != ''">dept_code ,</if>
+            <if test="deptName != null and deptName != ''">dept_name ,</if>
+            <if test="sex != null and sex != ''">sex ,</if>
+            <if test="cardType != null and cardType != ''">card_type ,</if>
+            <if test="cardNo != null and cardNo != ''">card_no,</if>
+            <if test="delFlag != null and delFlag != ''" >DEL_FLAG ,</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY ,</if>
+            <if test="createTime != null ">CREATE_TIME ,</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY,</if>
+            <if test="updateTime != null ">UPDATE_TIME ,</if>
+            <if test="remark != null and remark != ''">REMARK ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="staffCode != null and staffCode != ''">#{staffCode},</if>
+            <if test="staffName != null and staffName != ''">#{staffName},</if>
+            <if test="orgCode != null and orgCode != ''"> #{orgCode},</if>
+            <if test="orgName != null and orgName != ''"> #{orgName},</if>
+            <if test="deptCode != null and deptCode != ''"> #{deptCode},</if>
+            <if test="deptName != null and deptName != ''"> #{deptName},</if>
+            <if test="sex != null and sex != ''"> #{sex},</if>
+            <if test="cardType != null and cardType != ''">#{cardType},</if>
+            <if test="cardNo != null and cardNo != ''">#{cardNo},</if>
+            <if test="delFlag != null and delFlag != ''" > #{delFlag},</if>
+            <if test="createBy != null and createBy != ''"> #{createBy},</if>
+            <if test="createTime != null "> #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''"> #{updateBy},</if>
+            <if test="updateTime != null "> #{updateTime},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+    <insert id="insertPmsSystemStaffLists" parameterType="java.util.ArrayList">
+        INSERT INTO `pms`.`sys_staff` ( `staff_code`, `staff_name`, `org_code`, `org_name`,`dept_code`,`dept_name`,
+        `sex`,`card_type`,`card_no`,`create_by`, `create_time`, `del_flag`, `remark` )
+        VALUES
+        <foreach item="PmsSystemStaff" collection="pmsSystemStaffList"  separator="," >
+            (
+            #{PmsSystemStaff.staffCode,jdbcType=VARCHAR},
+            #{PmsSystemStaff.staffName,jdbcType=VARCHAR},
+            #{PmsSystemStaff.orgCode,jdbcType=VARCHAR},
+            #{PmsSystemStaff.orgName,jdbcType=VARCHAR},
+            #{PmsSystemStaff.deptCode,jdbcType=VARCHAR},
+            #{PmsSystemStaff.deptName,jdbcType=VARCHAR},
+            #{PmsSystemStaff.sex,jdbcType=VARCHAR},
+            #{PmsSystemStaff.cardType,jdbcType=VARCHAR},
+            #{PmsSystemStaff.cardNo,jdbcType=VARCHAR},
+            #{PmsSystemStaff.createBy,jdbcType=VARCHAR},
+            #{PmsSystemStaff.createTime,jdbcType=VARCHAR},
+            ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL},
+            #{PmsSystemStaff.remark,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <update id="updatePmsSystemStaff">
+        update sys_staff
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="staffCode != null and staffCode != ''">staff_code = #{staffCode},</if>
+            <if test="staffName != null and staffName != ''">staff_name = #{staffName},</if>
+            <if test="orgCode != null and orgCode != ''">org_code = #{orgCode},</if>
+            <if test="orgName != null and orgName != ''">org_name = #{orgName},</if>
+            <if test="deptCode != null and deptCode != ''">dept_code = #{deptCode},</if>
+            <if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="cardType != null and cardType != ''">card_type = #{cardType},</if>
+            <if test="cardNo != null and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="delFlag != null and delFlag != ''" >DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null ">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null ">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null and remark != ''">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+    <delete id="deletePmsSystemStaffByIds">
+        update sys_staff set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectPmsSystemStaffList" resultType="com.zjry.pms.system.domain.PmsSystemStaff">
+        SELECT
+            id,
+            staff_code as staffCode,
+            staff_name as staffName,
+            org_code as orgCode,
+            org_name as orgName,
+            dept_code as deptCode,
+            dept_name as deptName,
+            sex,
+            card_type as cardType,
+            card_no as cardNo,
+            remark
+        FROM
+            sys_staff
+        <where>
+            AND DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="staffName != null  and staffName != ''"> AND staff_name LIKE CONCAT('%', #{staffName}, '%')</if>
+        </where>
+        order by update_time desc
+    </select>
+    <select id="selectPmsSystemStaffById" resultType="com.zjry.pms.system.domain.PmsSystemStaff">
+        SELECT
+            id,
+            staff_code as staffCode,
+            staff_name as staffName,
+            org_code as orgCode,
+            org_name as orgName,
+            dept_code as deptCode,
+            dept_name as deptName,
+            sex,
+            card_type as cardType,
+            card_no as cardNo,
+            remark
+        FROM
+            sys_staff
+        where ID = #{id} and  del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+</mapper>

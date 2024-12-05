@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-admin/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-advanceQuery/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-common/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-formDesign/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-framework/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-generator/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-quartz/pom.xml" />
+        <option value="$PROJECT_DIR$/zjry-system/pom.xml" />
+      </list>
+    </option>
+    <option name="workspaceImportForciblyTurnedOn" value="true" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8 (2)" project-jdk-type="JavaSDK" />
+</project>

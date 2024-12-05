@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.foundation.mapper.PmsFoundationEquivalentMapper">
+    <update id="updatePmsFundationEquivalent">
+        update pms_foundation_equivalent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="doctorAdviceNum != null">doctor_advice_num = #{doctorAdviceNum},</if>
+            <if test="doctorTechNum != null">doctor_tech_num = #{doctorTechNum},</if>
+            <if test="doctorNurseNum != null">doctor_nurse_num = #{doctorNurseNum},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+
+    <select id="selectPmsFundationEquivalentList"
+            resultType="com.zjry.pms.foundation.domain.PmsFundationEquivalent">
+        SELECT
+            id,
+            equivalent_dept_code as equivalentDeptCode,
+            equivalent_dept_name as equivalentDeptName,
+            equivalent_item_code as equivalentItemCode,
+            equivalent_item_name as equivalentItemName,
+            equivalent_type_name as equivalentTypeName,
+            equivalent_unit as equivalent_unit,
+            equivalent_price as equivalent_price,
+            doctor_advice_num as doctorAdviceNum,
+            doctor_tech_num as doctorTechNum,
+            doctor_nurse_num as doctorNurseNum,
+            group_name as groupName
+        FROM
+            pms_foundation_equivalent
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="equivalentDeptCode != null and equivalentDeptCode != '' "> and equivalent_dept_code = #{equivalentDeptCode}</if>
+            <if test="equivalentItemCode != null and equivalentItemCode != '' "> and equivalent_item_code = #{equivalentItemCode}</if>
+        </where>
+        order by CREAT_TIME desc
+    </select>
+    <select id="selectPmsEquivalentDeptList" resultType="com.zjry.pms.foundation.domain.PmsEquivalentDept">
+        SELECT
+            id as id,
+            equivalent_dept_code as equivalentDeptCode,
+            equivalent_dept_name as equivalentDeptName
+        FROM
+            pms_equivalent_dept
+
+    </select>
+    <select id="selectPmsEquivalentItemList" resultType="com.zjry.pms.foundation.domain.PmsEquivalentItem">
+        SELECT
+            id as id,
+            equivalent_item_code as equivalentItemCode,
+            equivalent_item_name as equivalentItemName
+        FROM
+            pms_equivalent_item
+        where
+            equivalent_item_code like concat('%', #{keywords}, '%')
+             or
+            equivalent_item_name like concat('%', #{keywords}, '%')
+    </select>
+    <select id="selectpPmsFundationEquivalentById"
+            resultType="com.zjry.pms.foundation.domain.PmsFundationEquivalent">
+        SELECT
+            id,
+            equivalent_dept_code as equivalentDeptCode,
+            equivalent_dept_name as equivalentDeptName,
+            equivalent_item_code as equivalentItemCode,
+            equivalent_item_name as equivalentItemName,
+            equivalent_type_name as equivalentTypeName,
+            equivalent_unit as equivalent_unit,
+            equivalent_price as equivalent_price,
+            doctor_advice_num as doctorAdviceNum,
+            doctor_tech_num as doctorTechNum,
+            doctor_nurse_num as doctorNurseNum
+        FROM
+            pms_foundation_equivalent
+        where
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and id = #{id}
+    </select>
+    <select id="selectPmsMatchDeptlist" resultType="com.zjry.pms.foundation.domain.PmsMatchDept">
+        select DISTINCT dy_dept_name as matchDeptName from pms_match_dept
+    </select>
+    <select id="selectPmsFundationEquivalentListByMatchDeptName"
+            resultType="com.zjry.pms.foundation.domain.PmsFundationEquivalent">
+        SELECT
+        pms_foundation_equivalent.id,
+        equivalent_dept_code as equivalentDeptCode,
+        equivalent_dept_name as equivalentDeptName,
+        equivalent_item_code as equivalentItemCode,
+        equivalent_item_name as equivalentItemName,
+        equivalent_type_name as equivalentTypeName,
+        equivalent_unit as equivalent_unit,
+        equivalent_price as equivalent_price,
+        doctor_advice_num as doctorAdviceNum,
+        doctor_tech_num as doctorTechNum,
+        doctor_nurse_num as doctorNurseNum,
+        group_name as groupName
+        FROM
+        pms_foundation_equivalent LEFT JOIN pms_match_dept on  equivalent_dept_code=  dept_code
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+          and dy_dept_name = #{matchDeptName}
+            <if test="equivalentDeptCode != null and equivalentDeptCode != '' "> and equivalent_dept_code = #{equivalentDeptCode}</if>
+            <if test="equivalentItemCode != null and equivalentItemCode != '' "> and equivalent_item_code = #{equivalentItemCode}</if>
+        </where>
+        order by CREAT_TIME desc
+    </select>
+</mapper>

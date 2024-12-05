@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.commission.mapper.SeparateAccountCommissionMapper">
+
+    <resultMap type="SeparateAccountCommission" id="SeparateAccountCommissionResult">
+        <result property="id" column="ID"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="deptName" column="DEPT_NAME"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="sortCode" column="SORT_CODE"/>
+        <result property="ratio" column="RATIO"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="commissionDate" column="COMMISSION_DATE"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <sql id="selectSeparateAccountCommissionVo">
+        select ID,
+               DEPT_CODE,
+               COMP_CODE,
+               DEPT_NAME,
+               ACCOUNT_CODE,
+               SORT_CODE,
+               RATIO,
+               DEL_FLAG,
+               COMMISSION_DATE,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK
+        from pms_separate_account_commission
+    </sql>
+
+    <select id="selectSeparateAccountCommissionList" parameterType="SeparateAccountCommission"
+            resultMap="SeparateAccountCommissionResult">
+        <include refid="selectSeparateAccountCommissionVo"/>
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="deptCode != null  and deptCode != ''">and DEPT_CODE = #{deptCode}</if>
+            <if test="compCode != null ">and COMP_CODE = #{compCode}</if>
+            <if test="deptName != null  and deptName != ''">and DEPT_NAME like concat('%', #{deptName}, '%')</if>
+            <if test="accountCode != null  and accountCode != ''">and ACCOUNT_CODE = #{accountCode}</if>
+            <if test="sortCode != null  and sortCode != ''">and SORT_CODE = #{sortCode}</if>
+            <if test="ratio != null ">and RATIO = #{ratio}</if>
+            <if test="delFlag != null  and delFlag != ''">and DEL_FLAG = #{delFlag}</if>
+            <if test="commissionDate != null ">and COMMISSION_DATE = #{commissionDate}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
+            <if test="remark != null  and remark != ''">and REMARK = #{remark}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectSeparateAccountCommissionById" parameterType="Long" resultMap="SeparateAccountCommissionResult">
+        <include refid="selectSeparateAccountCommissionVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+
+    <insert id="insertSeparateAccountCommission" parameterType="SeparateAccountCommission" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into pms_separate_account_commission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptCode != null">DEPT_CODE,</if>
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="deptName != null">DEPT_NAME,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="sortCode != null">SORT_CODE,</if>
+            <if test="ratio != null">RATIO,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="commissionDate != null">COMMISSION_DATE,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="compCode != null">#{compCode},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="sortCode != null">#{sortCode},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="commissionDate != null">#{commissionDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSeparateAccountCommission" parameterType="SeparateAccountCommission">
+        update pms_separate_account_commission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptCode != null">DEPT_CODE = #{deptCode},</if>
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="deptName != null">DEPT_NAME = #{deptName},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="sortCode != null">SORT_CODE = #{sortCode},</if>
+            <if test="ratio != null">RATIO = #{ratio},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="commissionDate != null">COMMISSION_DATE = #{commissionDate},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteSeparateAccountCommissionById" parameterType="Long">
+        update pms_separate_account_commission
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deleteSeparateAccountCommissionByIds" parameterType="String">
+        update pms_separate_account_commission set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="getCommissionTemp" resultType="com.zjry.pms.commission.domain.SeparateAccountCommissionVo">
+        select sdr.dept_room_code as deptRoomCode,
+               sdr.dept_room_name as deptRoomName,
+               psas.SORT_CODE     as sortCode,
+               psac.RATIO         as ratio,
+               psas.SORT_NAME     as sortName
+        from sys_dept_room sdr
+                 left join pms_separate_account_sort psas on psas.DEL_FLAG = '0'
+                 left join pms_separate_account_commission psac
+                           on psac.DEPT_CODE = sdr.dept_room_code and psac.COMMISSION_DATE = #{commissionDate} and
+                              psac.SORT_CODE = psas.SORT_CODE and psac.DEL_FLAG = '0'
+        where sdr.del_flag = '0'
+          and sdr.is_accounting = '0'
+    </select>
+
+    <delete id="realDelete">
+        delete
+        from pms_separate_account_commission
+        where COMMISSION_DATE = #{date}
+    </delete>
+
+
+    <insert id="saveBatch">
+
+        <foreach collection="list" item="item" separator=";" close=";">
+            insert into pms_separate_account_commission
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.deptCode != null">DEPT_CODE,</if>
+                <if test="item.compCode != null">COMP_CODE,</if>
+                <if test="item.deptName != null">DEPT_NAME,</if>
+                <if test="item.accountCode != null">ACCOUNT_CODE,</if>
+                <if test="item.sortCode != null">SORT_CODE,</if>
+                <if test="item.ratio != null">RATIO,</if>
+                <if test="item.delFlag != null">DEL_FLAG,</if>
+                <if test="item.commissionDate != null">COMMISSION_DATE,</if>
+                <if test="item.createBy != null">CREATE_BY,</if>
+                <if test="item.createTime != null">CREATE_TIME,</if>
+                <if test="item.updateBy != null">UPDATE_BY,</if>
+                <if test="item.updateTime != null">UPDATE_TIME,</if>
+                <if test="item.remark != null">REMARK,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.deptCode != null">#{item.deptCode},</if>
+                <if test="item.compCode != null">#{item.compCode},</if>
+                <if test="item.deptName != null">#{item.deptName},</if>
+                <if test="item.accountCode != null">#{item.accountCode},</if>
+                <if test="item.sortCode != null">#{item.sortCode},</if>
+                <if test="item.ratio != null">#{item.ratio},</if>
+                <if test="item.delFlag != null">#{item.delFlag},</if>
+                <if test="item.commissionDate != null">#{item.commissionDate},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.remark != null">#{item.remark},</if>
+            </trim>
+        </foreach>
+    </insert>
+</mapper>

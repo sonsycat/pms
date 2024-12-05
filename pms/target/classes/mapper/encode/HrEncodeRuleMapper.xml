@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.encode.mapper.HrEncodeRuleMapper">
+    
+    <resultMap type="HrEncodeRule" id="HrEncodeRuleResult">
+        <result property="id"    column="ID"    />
+        <result property="ruleName"    column="RULE_NAME"    />
+        <result property="ruleDb"    column="RULE_DB"    />
+        <result property="ruleColumn"    column="RULE_COLUMN"    />
+        <result property="ruleContent"    column="RULE_CONTENT"    />
+        <result property="ruleFirst"    column="RULE_FIRST"    />
+        <result property="ruleSecond"    column="RULE_SECOND"    />
+        <result property="ruleThird"    column="RULE_THIRD"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectHrEncodeRuleVo">
+        select ID, RULE_NAME, RULE_DB, RULE_COLUMN, RULE_CONTENT, RULE_FIRST, RULE_SECOND, RULE_THIRD, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK from hr_encode_rule
+    </sql>
+
+    <select id="selectHrEncodeRuleList" parameterType="HrEncodeRule" resultMap="HrEncodeRuleResult">
+        <include refid="selectHrEncodeRuleVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="ruleName != null  and ruleName != ''"> and RULE_NAME like concat('%', #{ruleName}, '%')</if>
+            <if test="ruleDb != null  and ruleDb != ''"> and RULE_DB = #{ruleDb}</if>
+            <if test="ruleColumn != null  and ruleColumn != ''"> and RULE_COLUMN = #{ruleColumn}</if>
+        </where>
+    </select>
+    
+    <select id="selectHrEncodeRuleById" parameterType="String" resultMap="HrEncodeRuleResult">
+        <include refid="selectHrEncodeRuleVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertHrEncodeRule" parameterType="HrEncodeRule">
+        insert into hr_encode_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="ruleName != null">RULE_NAME,</if>
+            <if test="ruleDb != null">RULE_DB,</if>
+            <if test="ruleColumn != null">RULE_COLUMN,</if>
+            <if test="ruleContent != null">RULE_CONTENT,</if>
+            <if test="ruleFirst != null">RULE_FIRST,</if>
+            <if test="ruleSecond != null">RULE_SECOND,</if>
+            <if test="ruleThird != null">RULE_THIRD,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="ruleName != null">#{ruleName},</if>
+            <if test="ruleDb != null">#{ruleDb},</if>
+            <if test="ruleColumn != null">#{ruleColumn},</if>
+            <if test="ruleContent != null">#{ruleContent},</if>
+            <if test="ruleFirst != null">#{ruleFirst},</if>
+            <if test="ruleSecond != null">#{ruleSecond},</if>
+            <if test="ruleThird != null">#{ruleThird},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrEncodeRule" parameterType="HrEncodeRule">
+        update hr_encode_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleName != null">RULE_NAME = #{ruleName},</if>
+            <if test="ruleDb != null">RULE_DB = #{ruleDb},</if>
+            <if test="ruleColumn != null">RULE_COLUMN = #{ruleColumn},</if>
+            <if test="ruleContent != null">RULE_CONTENT = #{ruleContent},</if>
+            <if test="ruleFirst != null">RULE_FIRST = #{ruleFirst},</if>
+            <if test="ruleSecond != null">RULE_SECOND = #{ruleSecond},</if>
+            <if test="ruleThird != null">RULE_THIRD = #{ruleThird},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteHrEncodeRuleById" parameterType="String">
+        update hr_encode_rule set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteHrEncodeRuleByIds" parameterType="String">
+        update hr_encode_rule set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

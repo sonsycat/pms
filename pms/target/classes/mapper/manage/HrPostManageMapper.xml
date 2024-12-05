@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.post.mapper.HrPostManageMapper">
+    
+    <resultMap type="HrPostManage" id="HrPostManageResult">
+        <result property="id"    column="ID"    />
+        <result property="postCode"    column="POST_CODE"    />
+        <result property="postName"    column="POST_NAME"    />
+        <result property="postExplain"    column="POST_EXPLAIN"    />
+        <result property="duty"    column="DUTY"    />
+        <result property="introduce"    column="INTRODUCE"    />
+        <result property="spare"    column="SPARE"    />
+        <result property="spareOne"    column="SPARE_ONE"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="postLevel"    column="POST_LEVEL"    />
+    </resultMap>
+
+    <sql id="selectHrPostManageVo">
+        select ID, POST_CODE, POST_NAME, DUTY, INTRODUCE, SPARE, SPARE_ONE, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, REMARK,POST_EXPLAIN,POST_LEVEL from hr_post_manage
+    </sql>
+
+    <select id="queryAllPostInfo"  resultType="com.zjry.pms.post.domain.HrPostManageVo">
+        select POST_CODE as "postCode", POST_NAME as "postName" from hr_post_manage
+         where  del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+
+    <select id="selectHrPostManageList" parameterType="HrPostManage" resultMap="HrPostManageResult">
+        <include refid="selectHrPostManageVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="postCode != null  and postCode != ''"> and POST_CODE = #{postCode}</if>
+            <if test="postName != null  and postName != ''"> and POST_NAME like concat('%', #{postName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectHrPostManageById" parameterType="Long" resultMap="HrPostManageResult">
+        <include refid="selectHrPostManageVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertHrPostManage" parameterType="HrPostManage" useGeneratedKeys="true" keyProperty="id">
+        insert into hr_post_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postCode != null">POST_CODE,</if>
+            <if test="postName != null">POST_NAME,</if>
+            <if test="postExplain != null">POST_EXPLAIN,</if>
+            <if test="duty != null">DUTY,</if>
+            <if test="introduce != null">INTRODUCE,</if>
+            <if test="spare != null">SPARE,</if>
+            <if test="spareOne != null">SPARE_ONE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="postLevel != null">POST_LEVEL,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postCode != null">#{postCode},</if>
+            <if test="postName != null">#{postName},</if>
+            <if test="postExplain != null">#{postExplain},</if>
+            <if test="duty != null">#{duty},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="spare != null">#{spare},</if>
+            <if test="spareOne != null">#{spareOne},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="postLevel != null">#{postLevel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrPostManage" parameterType="HrPostManage">
+        update hr_post_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="postCode != null">POST_CODE = #{postCode},</if>
+            <if test="postName != null">POST_NAME = #{postName},</if>
+            <if test="postExplain != null">POST_EXPLAIN = #{postExplain},</if>
+            <if test="duty != null">DUTY = #{duty},</if>
+            <if test="introduce != null">INTRODUCE = #{introduce},</if>
+            <if test="spare != null">SPARE = #{spare},</if>
+            <if test="spareOne != null">SPARE_ONE = #{spareOne},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="postLevel != null">POST_LEVEL = #{postLevel},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteHrPostManageById" parameterType="Long">
+        update hr_post_manage set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteHrPostManageByIds" parameterType="String">
+        update hr_post_manage set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.subsidy.mapper.PmsSubsidyFundMapper">
+    
+    <resultMap type="PmsSubsidyFund" id="PmsSubsidyAdjustBenefitResult">
+        <result property="id"    column="ID"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="deptCode"    column="dept_code"    />
+        <result property="fundTime"    column="fund_time"    />
+        <result property="fundMoney"    column="fund_money"    />
+        <result property="fundBalance"    column="fund_balance"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+    <delete id="deletePmsSubsidyFund" parameterType="String">
+        update pms_subsidy_fund set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} ,
+        UPDATE_BY = #{updateBy} , UPDATE_TIME = #{deleteTime} where ID in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPmsSubsidyFundById" parameterType="Long" resultType="com.zjry.pms.subsidy.domain.PmsSubsidyFund">
+        SELECT * from pms_subsidy_fund
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+
+    <select id="selectPmsSubsidyFundList" parameterType="PmsSubsidyFund" resultType="com.zjry.pms.subsidy.domain.PmsSubsidyFund">
+        SELECT id,DEPT_NAME,fund_time,fund_money,fund_state from pms_subsidy_fund
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+             and dept_code  = #{deptCode}
+            <if test="fundState != null  and fundState != ''"> and fund_state = #{fundState}</if>
+             and date_format(fund_time,'%Y-%m') = date_format(#{fundTime},'%Y-%m')
+             </where>
+        order by fund_time desc
+    </select>
+    <select id="getDeptFundBalance" resultType="PmsSubsidyFundBalance" parameterType="Long">
+        SELECT id,dept_code,dept_name,fund_balance FROM pms_subsidy_fund_balance where DEPT_CODE =  #{deptId} and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+
+    <select id="getDeptMaxDate" resultType="java.util.Date" parameterType="Long">
+        SELECT max(fund_time) FROM pms_subsidy_fund where DEPT_CODE =  #{deptCode}
+            and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </select>
+    <select id="getDeptMaxDateNoId" resultType="java.util.Date" parameterType="Long">
+        SELECT max(fund_time) FROM pms_subsidy_fund where DEPT_CODE =  #{deptCode}
+                    and del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+                    and id != #{id}
+    </select>
+    <select id="getMesByDateAndDept" resultType="com.zjry.pms.subsidy.domain.PmsSubsidyFund">
+        SELECT id,DEPT_NAME,fund_time,fund_money,fund_state from pms_subsidy_fund
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and dept_code =  #{deptCode}
+            and date_format(fund_time,'%Y-%m-%d') = date_format(#{fundTime},'%Y-%m-%d')
+
+        </where>
+    </select>
+    <select id="selectFundBalanceByDeptCode" resultType="java.lang.String">
+        select fund_balance from pms_subsidy_fund_balance where del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+                                                 and dept_code =  #{deptCode}
+    </select>
+    <select id="selectPmsSubsidyFundByIds" resultType="com.zjry.pms.subsidy.domain.PmsSubsidyFund">
+        select id,DEPT_NAME,fund_time,fund_money,fund_state  from pms_subsidy_fund
+        where ID in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getMesByDateANdState" resultType="com.zjry.pms.subsidy.domain.PmsSubsidyFund">
+        SELECT id,DEPT_NAME,fund_time,fund_money,fund_state from pms_subsidy_fund
+        <where>
+            del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and dept_code  = #{deptCode}
+            and fund_state = '2'
+            and date_format(fund_time,'%Y-%m') = date_format(#{fundTime},'%Y-%m')
+        </where>
+    </select>
+
+    <insert id="insertPmsSubsidyFund" parameterType="PmsSubsidyFund" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_subsidy_fund
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptName != null">dept_name,</if>
+            <if test="deptCode != null">dept_code,</if>
+            <if test="fundTime != null">fund_time,</if>
+            <if test="fundMoney != null">fund_money,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="fundState != null">fund_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptName != null">#{deptName},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="fundTime != null">#{fundTime},</if>
+            <if test="fundMoney != null">#{fundMoney},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fundState != null">#{fundState},</if>
+         </trim>
+    </insert>
+    <insert id="insertFundBalance">
+        insert into pms_subsidy_fund_balance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptName != null">dept_name,</if>
+            <if test="deptCode != null">dept_code,</if>
+            <if test="fundBalance != null">fund_balance,</if>
+            <if test="delFlag != null">del_flag,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptName != null">#{deptName},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="fundBalance != null">#{fundBalance},</if>
+            <if test="delFlag != null">${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updatePmsSubsidyFund" parameterType="PmsSubsidyAdjustBenefit">
+        update pms_subsidy_fund
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="fundTime != null">fund_time = #{fundTime},</if>
+            <if test="fundMoney != null">fund_money = #{fundMoney},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+    <update id="updateFundState">
+        update pms_subsidy_fund set
+        fund_state = #{fundState}  where   dept_code  = #{deptCode}
+                                     and date_format(fund_time,'%Y-%m') = date_format(#{fundTime},'%Y-%m')
+    </update>
+    <update id="updateFundBalance">
+        update pms_subsidy_fund_balance set
+            fund_balance = #{fundBalance}  where   id = #{id}
+    </update>
+    <update id="updateFundStaterByIds">
+        update pms_subsidy_fund set
+        fund_state = '2' where ID in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

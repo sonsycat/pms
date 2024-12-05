@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsEvaluateIndexMapper">
+    
+    <resultMap type="PmsEvaluateIndex" id="PmsEvaluateIndexResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="bscOneCode"    column="BSC_ONE_CODE"    />
+        <result property="bscSecondCode"    column="BSC_SECOND_CODE"    />
+        <result property="deptType"    column="DEPT_TYPE"    />
+        <result property="orgType"    column="ORG_TYPE"    />
+        <result property="indexCode"    column="INDEX_CODE"    />
+        <result property="indexName"    column="INDEX_NAME"    />
+        <result property="isExpress"    column="IS_EXPRESS"    />
+        <result property="formulaCode"    column="FORMULA_CODE"    />
+        <result property="formulaName"    column="FORMULA_NAME"    />
+        <result property="isSection"    column="IS_SECTION"    />
+        <result property="dbCode"    column="DB_CODE"    />
+        <result property="indexSql"    column="INDEX_SQL"    />
+        <result property="sectionStart"    column="SECTION_START"    />
+        <result property="sectionEnd"    column="SECTION_END"    />
+        <result property="isCouns"    column="IS_COUNS"    />
+        <result property="isStop"    column="IS_STOP"    />
+        <result property="isComp"    column="IS_COMP"    />
+        <result property="isAbsolute"    column="IS_ABSOLUTE"    />
+        <result property="indexType"    column="INDEX_TYPE"    />
+        <result property="isRegular"    column="IS_REGULAR"    />
+        <result property="indexRatio"    column="INDEX_RATIO"    />
+        <result property="indexContent"    column="INDEX_CONTENT"    />
+        <result property="indexSort"    column="INDEX_SORT"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="bscOneName"    column="bscOneName"    />
+        <result property="bscSecondName"    column="bscSecondName"    />
+        <result property="IS_NECESSARY"    column="isNecessary"    />
+        <result property="IS_BONUS"    column="isBonus"    />
+    </resultMap>
+
+    <sql id="selectPmsEvaluateIndexVo">
+      SELECT
+        a.ID,
+        a.COMP_CODE,
+        a.ACCOUNT_CODE,
+        a.BSC_ONE_CODE,
+        a.BSC_SECOND_CODE,
+        a.DEPT_TYPE,
+        a.ORG_TYPE,
+        a.DB_CODE,
+        a.INDEX_CODE,
+        a.INDEX_NAME,
+        a.IS_EXPRESS,
+        a.FORMULA_CODE,
+        a.FORMULA_NAME,
+        a.IS_SECTION,
+        a.INDEX_SQL,
+        a.SECTION_START,
+        a.SECTION_END,
+        a.IS_COUNS,
+        a.IS_STOP,
+        a.IS_COMP,
+        a.IS_ABSOLUTE,
+        a.INDEX_TYPE,
+        a.IS_REGULAR,
+        a.INDEX_RATIO,
+        a.INDEX_CONTENT,
+        a.INDEX_SORT,
+        a.DEL_FLAG,
+        a.IS_NECESSARY,
+        a.IS_BONUS,
+        b.BSC_NAME as bscOneName,
+        c.BSC_NAME as bscSecondName
+    FROM
+        pms_evaluate_index a
+        left join pms_evaluate_bsc b on a.BSC_ONE_CODE = b.BSC_CODE and b.DEL_FLAG = 0
+        left join pms_evaluate_bsc c on a.BSC_SECOND_CODE = c.BSC_CODE and c.DEL_FLAG = 0
+	</sql>
+
+    <select id="selectPmsEvaluateIndexList" parameterType="PmsEvaluateIndex" resultMap="PmsEvaluateIndexResult">
+        <include refid="selectPmsEvaluateIndexVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="id != null "> and a.ID != #{id}</if>
+            <if test="isBonus != null "> and a.IS_BONUS = #{isBonus}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="bscOneCode != null  and bscOneCode != ''"> and a.BSC_ONE_CODE = #{bscOneCode}</if>
+            <if test="bscSecondCode != null  and bscSecondCode != ''"> and a.BSC_SECOND_CODE = #{bscSecondCode}</if>
+            <if test="deptType != null  and deptType != ''"> and a.DEPT_TYPE = #{deptType}</if>
+            <if test="orgType != null  and orgType != ''"> and a.ORG_TYPE = #{orgType}</if>
+            <if test="iName != null  and iName != ''"> and a.INDEX_NAME = #{iName}</if>
+            <if test="indexCode != null  and indexCode != ''"> and a.INDEX_CODE = #{indexCode}</if>
+            <if test="indexName != null  and indexName != ''"> and a.INDEX_NAME like concat('%', #{indexName}, '%')</if>
+            <if test="isExpress != null  and isExpress != ''"> and a.IS_EXPRESS = #{isExpress}</if>
+            <if test="formulaCode != null  and formulaCode != ''"> and a.FORMULA_CODE = #{formulaCode}</if>
+            <if test="formulaName != null  and formulaName != ''"> and a.FORMULA_NAME like concat('%', #{formulaName}, '%')</if>
+            <if test="isSection != null  and isSection != ''"> and a.IS_SECTION = #{isSection}</if>
+            <if test="dbCode != null and dbCode != ''"> and a.DB_CODE = #{dbCode}</if>
+            <if test="indexSql != null  and indexSql != ''"> and a.INDEX_SQL = #{indexSql}</if>
+            <if test="sectionStart != null "> and a.SECTION_START = #{sectionStart}</if>
+            <if test="sectionEnd != null "> and a.SECTION_END = #{sectionEnd}</if>
+            <if test="isCouns != null  and isCouns != ''"> and a.IS_COUNS = #{isCouns}</if>
+            <if test="isStop != null  and isStop != ''"> and a.IS_STOP = #{isStop}</if>
+            <if test="isComp != null  and isComp != ''"> and a.IS_COMP = #{isComp}</if>
+            <if test="isAbsolute != null  and isAbsolute != ''"> and a.IS_ABSOLUTE = #{isAbsolute}</if>
+            <if test="indexType != null  and indexType != ''"> and a.INDEX_TYPE = #{indexType}</if>
+            <if test="isRegular != null  and isRegular != ''"> and a.IS_REGULAR = #{isRegular}</if>
+            <if test="indexRatio != null  and indexRatio != ''"> and a.INDEX_RATIO = #{indexRatio}</if>
+            <if test="indexContent != null  and indexContent != ''"> and a.INDEX_CONTENT = #{indexContent}</if>
+            <if test="indexSort != null  and indexSort != ''"> and a.INDEX_SORT = #{indexSort}</if>
+            <if test="isNecessary != null"> and a.IS_NECESSARY = #{isNecessary}</if>
+        </where>
+        order by a.INDEX_SORT
+    </select>
+    
+    <select id="selectPmsEvaluateIndexById" parameterType="Long" resultMap="PmsEvaluateIndexResult">
+        <include refid="selectPmsEvaluateIndexVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsEvaluateIndex" parameterType="PmsEvaluateIndex" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_evaluate_index
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="bscOneCode != null">BSC_ONE_CODE,</if>
+            <if test="bscSecondCode != null">BSC_SECOND_CODE,</if>
+            <if test="deptType != null">DEPT_TYPE,</if>
+            <if test="orgType != null">ORG_TYPE,</if>
+            <if test="indexCode != null">INDEX_CODE,</if>
+            <if test="indexName != null">INDEX_NAME,</if>
+            <if test="isExpress != null">IS_EXPRESS,</if>
+            <if test="formulaCode != null">FORMULA_CODE,</if>
+            <if test="formulaName != null">FORMULA_NAME,</if>
+            <if test="isSection != null">IS_SECTION,</if>
+            <if test="dbCode != null">DB_CODE,</if>
+            <if test="indexSql != null">INDEX_SQL,</if>
+            <if test="sectionStart != null">SECTION_START,</if>
+            <if test="sectionEnd != null">SECTION_END,</if>
+            <if test="isCouns != null">IS_COUNS,</if>
+            <if test="isStop != null">IS_STOP,</if>
+            <if test="isComp != null">IS_COMP,</if>
+            <if test="isAbsolute != null">IS_ABSOLUTE,</if>
+            <if test="indexType != null">INDEX_TYPE,</if>
+            <if test="isRegular != null">IS_REGULAR,</if>
+            <if test="indexRatio != null">INDEX_RATIO,</if>
+            <if test="indexContent != null">INDEX_CONTENT,</if>
+            <if test="indexSort != null">INDEX_SORT,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="isBonus != null">IS_BONUS,</if>
+            <if test="isNecessary != null">IS_NECESSARY,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="bscOneCode != null">#{bscOneCode},</if>
+            <if test="bscSecondCode != null">#{bscSecondCode},</if>
+            <if test="deptType != null">#{deptType},</if>
+            <if test="orgType != null">#{orgType},</if>
+            <if test="indexCode != null">#{indexCode},</if>
+            <if test="indexName != null">#{indexName},</if>
+            <if test="isExpress != null">#{isExpress},</if>
+            <if test="formulaCode != null">#{formulaCode},</if>
+            <if test="formulaName != null">#{formulaName},</if>
+            <if test="isSection != null">#{isSection},</if>
+            <if test="dbCode != null">#{dbCode},</if>
+            <if test="indexSql != null">#{indexSql},</if>
+            <if test="sectionStart != null">#{sectionStart},</if>
+            <if test="sectionEnd != null">#{sectionEnd},</if>
+            <if test="isCouns != null">#{isCouns},</if>
+            <if test="isStop != null">#{isStop},</if>
+            <if test="isComp != null">#{isComp},</if>
+            <if test="isAbsolute != null">#{isAbsolute},</if>
+            <if test="indexType != null">#{indexType},</if>
+            <if test="isRegular != null">#{isRegular},</if>
+            <if test="indexRatio != null">#{indexRatio},</if>
+            <if test="indexContent != null">#{indexContent},</if>
+            <if test="indexSort != null">#{indexSort},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isBonus != null">#{isBonus},</if>
+            <if test="isNecessary != null">#{isNecessary},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateIndex" parameterType="PmsEvaluateIndex">
+        update pms_evaluate_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="bscOneCode != null">BSC_ONE_CODE = #{bscOneCode},</if>
+            <if test="bscSecondCode != null">BSC_SECOND_CODE = #{bscSecondCode},</if>
+            <if test="deptType != null">DEPT_TYPE = #{deptType},</if>
+            <if test="orgType != null">ORG_TYPE = #{orgType},</if>
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="indexName != null">INDEX_NAME = #{indexName},</if>
+            <if test="isExpress != null">IS_EXPRESS = #{isExpress},</if>
+            <if test="formulaCode != null">FORMULA_CODE = #{formulaCode},</if>
+            <if test="formulaName != null">FORMULA_NAME = #{formulaName},</if>
+            <if test="isSection != null">IS_SECTION = #{isSection},</if>
+            <if test="indexSql != null">INDEX_SQL = #{indexSql},</if>
+            <if test="dbCode != null">DB_CODE = #{dbCode},</if>
+            SECTION_START = #{sectionStart},
+            SECTION_END = #{sectionEnd},
+            <if test="isCouns != null">IS_COUNS = #{isCouns},</if>
+            <if test="isStop != null">IS_STOP = #{isStop},</if>
+            <if test="isComp != null">IS_COMP = #{isComp},</if>
+            <if test="isAbsolute != null">IS_ABSOLUTE = #{isAbsolute},</if>
+            <if test="indexType != null">INDEX_TYPE = #{indexType},</if>
+            <if test="isRegular != null">IS_REGULAR = #{isRegular},</if>
+            <if test="indexRatio != null">INDEX_RATIO = #{indexRatio},</if>
+            <if test="indexContent != null">INDEX_CONTENT = #{indexContent},</if>
+            <if test="indexSort != null">INDEX_SORT = #{indexSort},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="isNecessary != null">IS_NECESSARY = #{isNecessary},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsEvaluateIndexById" parameterType="Long">
+        update pms_evaluate_index set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsEvaluateIndexByIds" parameterType="String">
+        update pms_evaluate_index set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectEvaluateSetIndexDtoOfBSC" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateIndexDto">
+        SELECT
+            sd.dept_code AS deptCode,
+            s.set_code AS setCode,
+            si.index_code AS indexCode,
+            si.weight AS weight,
+            IFNULL(si.weight_ratio, 0) AS weightRatio
+        FROM (SELECT dept_room_id FROM sys_dept_room WHERE dept_id = #{compCode} AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}) AS r
+        LEFT JOIN (SELECT dept_code,set_code FROM pms_evaluate_set_dept WHERE now_date = #{actDate} AND comp_code = #{compCode} AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}) AS sd ON r.dept_room_id=sd.dept_code
+        LEFT JOIN pms_evaluate_set AS s ON s.set_code = sd.set_code AND s.comp_code = #{compCode}
+                AND s.is_bonus = #{isBonus} AND s.part_year IN("1", date_format(#{actDate}, '%Y')) AND s.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        LEFT JOIN pms_evaluate_set_index AS si ON si.set_code = s.set_code AND si.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        WHERE si.index_code IS NOT NULL
+    </select>
+
+    <select id="selectEvaluateSetIndexDtoOfBonus" resultType="com.zjry.pms.evaluate.domain.PmsEvaluateIndexDto">
+        SELECT
+            r.dept_room_id AS deptCode,
+            r.is_independent_accounting AS setCode,
+            i.index_code AS indexCode,
+            1 AS weightRatio
+        FROM (SELECT dept_room_id,is_independent_accounting FROM sys_dept_room WHERE dept_id = #{compCode} AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND is_independent_accounting IS NOT NULL) AS r
+        LEFT JOIN pms_evaluate_index_bonus AS s ON r.is_independent_accounting=s.dept_room_type AND s.comp_code = #{compCode}
+        LEFT JOIN pms_evaluate_index AS i ON i.index_code = s.index_code AND i.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+        WHERE i.index_code IS NOT NULL AND ((i.IS_EXPRESS = 1 AND i.INDEX_SQL IS NOT NULL) OR (i.IS_EXPRESS = 0 AND i.FORMULA_CODE IS NOT NULL))
+    </select>
+
+    <select id="checkIsUsedInSet" parameterType="String" resultType="int">
+        SELECT COUNT(1) FROM (SELECT s.id FROM pms_evaluate_set s WHERE s.set_code IN(SELECT set_code FROM pms_evaluate_set_index WHERE index_code=#{indexCode}) AND s.del_flag="0" LIMIT 1) AS t
+    </select>
+</mapper>

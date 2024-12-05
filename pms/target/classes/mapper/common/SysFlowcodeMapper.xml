@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.common.mapper.SysFlowcodeMapper">
+    
+    <resultMap type="SysFlowHrcode" id="SysFlowcodeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="status"    column="status"    />
+        <result property="curVal"    column="cur_val"    />
+        <result property="codeLen"    column="code_len"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="prefix"    column="prefix"    />
+    </resultMap>
+
+    <sql id="selectSysFlowcodeVo">
+        select id, name, code, status, cur_val, code_len, create_by, update_by, create_time, update_time, del_flag, remark, prefix from sys_flowcode
+    </sql>
+
+    <select id="selectSysFlowcodeList" parameterType="SysFlowHrcode" resultMap="SysFlowcodeResult">
+        <include refid="selectSysFlowcodeVo"/>
+        <where>  
+        AND del_flag = '0'
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="curVal != null "> and cur_val = #{curVal}</if>
+            <if test="codeLen != null "> and code_len = #{codeLen}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+            <if test="prefix != null  and prefix != ''"> and prefix = #{prefix}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysFlowcodeById" parameterType="String" resultMap="SysFlowcodeResult">
+        <include refid="selectSysFlowcodeVo"/>
+        where del_flag='0' AND id = #{id}
+    </select>
+
+    <select id="selectSysFlowcodeByCode" parameterType="String" resultMap="SysFlowcodeResult">
+        <include refid="selectSysFlowcodeVo"/>
+        WHERE code = #{code}
+    </select>
+        
+    <insert id="insertSysFlowcode" parameterType="SysFlowHrcode">
+        insert into sys_flowcode
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="status != null">status,</if>
+            <if test="curVal != null">cur_val,</if>
+            <if test="codeLen != null">code_len,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="prefix != null">prefix,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="status != null">#{status},</if>
+            <if test="curVal != null">#{curVal},</if>
+            <if test="codeLen != null">#{codeLen},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="prefix != null">#{prefix},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysFlowcode" parameterType="SysFlowHrcode">
+        update sys_flowcode
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="curVal != null">cur_val = #{curVal},</if>
+            <if test="codeLen != null">code_len = #{codeLen},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="prefix != null">prefix = #{prefix},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysFlowcodeById" parameterType="String">
+        update sys_flowcode set del_flag='1' where id = #{id}
+    </delete>
+
+    <delete id="deleteSysFlowcodeByIds" parameterType="String">
+        update sys_flowcode set del_flag='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getJxFlowcodeByCode" resultType="SysFlowHrcode">
+        <include refid="selectSysFlowcodeVo"/>
+        WHERE  code = #{code}
+    </select>
+
+
+</mapper>

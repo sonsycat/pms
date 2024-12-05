@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.evaluate.mapper.PmsEvaluateSetDeptDetailMapper">
+
+    <resultMap type="PmsEvaluateSetDeptDetail" id="PmsEvaluateSetDeptDetailResult">
+        <result property="id" column="ID"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="setDeptCode" column="SET_DEPT_CODE"/>
+        <result property="indexCode" column="INDEX_CODE"/>
+        <result property="reduce" column="REDUCE"/>
+        <result property="deduct" column="DEDUCT"/>
+        <result property="increase" column="INCREASE"/>
+        <result property="extra" column="EXTRA"/>
+        <result property="unit" column="UNIT"/>
+        <result property="target" column="TARGET"/>
+        <result property="indexScore" column="INDEX_SCORE"/>
+        <result property="isHyper" column="IS_HYPER"/>
+        <result property="isNegative" column="IS_NEGATIVE"/>
+        <result property="isFixed" column="IS_FIXED"/>
+        <result property="threshold" column="THRESHOLD"/>
+        <result property="overLimit" column="OVER_LIMIT"/>
+        <result property="deductionLimit" column="DEDUCTION_LIMIT"/>
+        <result property="nowDate" column="NOW_DATE"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="bscOneCode" column="BSC_ONE_CODE"/>
+        <result property="deptName" column="deptName"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="setCode" column="SET_CODE"/>
+        <result property="indexName" column="INDEX_NAME"/>
+
+    </resultMap>
+
+    <sql id="selectPmsEvaluateSetDeptDetailVo">
+        SELECT a.ID,
+               a.COMP_CODE,
+               a.ACCOUNT_CODE,
+               a.SET_DEPT_CODE,
+               a.INDEX_CODE,
+               a.REDUCE,
+               a.DEDUCT,
+               a.INCREASE,
+               a.EXTRA,
+               a.UNIT,
+               a.TARGET,
+               a.INDEX_SCORE,
+               a.IS_HYPER,
+               a.IS_NEGATIVE,
+               a.IS_FIXED,
+               a.THRESHOLD,
+               a.OVER_LIMIT,
+               a.DEDUCTION_LIMIT,
+               a.NOW_DATE,
+               a.DEL_FLAG,
+               a.CREATE_BY,
+               a.CREATE_TIME,
+               a.UPDATE_BY,
+               a.UPDATE_TIME,
+               a.REMARK,
+               b.BSC_ONE_CODE,
+               b.INDEX_NAME
+        FROM pms_evaluate_set_dept_detail a
+                 LEFT JOIN pms_evaluate_index b ON a.INDEX_CODE = b.INDEX_CODE
+            AND b.DEL_FLAG = 0  </sql>
+
+    <select id="selectPmsEvaluateSetDeptDetailList" parameterType="PmsEvaluateSetDeptDetail"
+            resultMap="PmsEvaluateSetDeptDetailResult">
+        <include refid="selectPmsEvaluateSetDeptDetailVo"/>
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null ">and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''">and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="setDeptCode != null  and setDeptCode != ''">and a.SET_DEPT_CODE = #{setDeptCode}</if>
+            <if test="indexCode != null  and indexCode != ''">and a.INDEX_CODE = #{indexCode}</if>
+            <if test="isHyper != null  and isHyper != ''">and a.IS_HYPER = #{isHyper}</if>
+            <if test="isNegative != null  and isNegative != ''">and a.IS_NEGATIVE = #{isNegative}</if>
+            <if test="isFixed != null  and isFixed != ''">and a.IS_FIXED = #{isFixed}</if>
+            <if test="nowDate != null ">and a.NOW_DATE = #{nowDate}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+
+    <select id="selectPmsForDKSN" parameterType="PmsEvaluateSetDeptDetail" resultMap="PmsEvaluateSetDeptDetailResult">
+        SELECT
+        a.ID,
+        a.COMP_CODE,
+        a.ACCOUNT_CODE,
+        a.SET_DEPT_CODE,
+        a.INDEX_CODE,
+        a.REDUCE,
+        a.DEDUCT,
+        a.INCREASE,
+        a.EXTRA,
+        a.UNIT,
+        a.TARGET,
+        a.INDEX_SCORE,
+        a.IS_HYPER,
+        a.IS_NEGATIVE,
+        a.IS_FIXED,
+        a.THRESHOLD,
+        a.OVER_LIMIT,
+        a.DEDUCTION_LIMIT,
+        a.NOW_DATE,
+        a.DEL_FLAG,
+        a.CREATE_BY,
+        a.CREATE_TIME,
+        a.UPDATE_BY,
+        a.UPDATE_TIME,
+        a.REMARK ,
+        b.DEPT_CODE,
+        b.SET_CODE,
+        c.dept_room_name as deptName
+        FROM
+        pms_evaluate_set_dept_detail a
+        left join pms_evaluate_set_dept b on a.SET_DEPT_CODE = b.SET_DEPT_CODE and b.DEL_FLAG = 0
+        left join sys_dept_room c on c.dept_room_id = b.DEPT_CODE
+        <where>
+            AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null ">and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''">and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="setDeptCode != null  and setDeptCode != ''">and a.SET_DEPT_CODE = #{setDeptCode}</if>
+            <if test="indexCode != null  and indexCode != ''">and a.INDEX_CODE = #{indexCode}</if>
+            <if test="isHyper != null  and isHyper != ''">and a.IS_HYPER = #{isHyper}</if>
+            <if test="isNegative != null  and isNegative != ''">and a.IS_NEGATIVE = #{isNegative}</if>
+            <if test="isFixed != null  and isFixed != ''">and a.IS_FIXED = #{isFixed}</if>
+            <if test="nowDate != null ">and date_format(a.NOW_DATE, '%Y') = date_format( #{nowDate}, '%Y')</if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+
+    <select id="selectPmsEvaluateSetDeptDetailById" parameterType="Long" resultMap="PmsEvaluateSetDeptDetailResult">
+        <include refid="selectPmsEvaluateSetDeptDetailVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+
+    <insert id="insertPmsEvaluateSetDeptDetail" parameterType="PmsEvaluateSetDeptDetail" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into pms_evaluate_set_dept_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="setDeptCode != null">SET_DEPT_CODE,</if>
+            <if test="indexCode != null">INDEX_CODE,</if>
+            <if test="reduce != null">REDUCE,</if>
+            <if test="deduct != null">DEDUCT,</if>
+            <if test="increase != null">INCREASE,</if>
+            <if test="extra != null">EXTRA,</if>
+            <if test="unit != null">UNIT,</if>
+            <if test="target != null">TARGET,</if>
+            <if test="indexScore != null">INDEX_SCORE,</if>
+            <if test="isHyper != null">IS_HYPER,</if>
+            <if test="isNegative != null">IS_NEGATIVE,</if>
+            <if test="isFixed != null">IS_FIXED,</if>
+            <if test="threshold != null">THRESHOLD,</if>
+            <if test="overLimit != null">OVER_LIMIT,</if>
+            <if test="deductionLimit != null">DEDUCTION_LIMIT,</if>
+            <if test="nowDate != null">NOW_DATE,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="setDeptCode != null">#{setDeptCode},</if>
+            <if test="indexCode != null">#{indexCode},</if>
+            <if test="reduce != null">#{reduce},</if>
+            <if test="deduct != null">#{deduct},</if>
+            <if test="increase != null">#{increase},</if>
+            <if test="extra != null">#{extra},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="target != null">#{target},</if>
+            <if test="indexScore != null">#{indexScore},</if>
+            <if test="isHyper != null">#{isHyper},</if>
+            <if test="isNegative != null">#{isNegative},</if>
+            <if test="isFixed != null">#{isFixed},</if>
+            <if test="threshold != null">#{threshold},</if>
+            <if test="overLimit != null">#{overLimit},</if>
+            <if test="deductionLimit != null">#{deductionLimit},</if>
+            <if test="nowDate != null">#{nowDate},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmsEvaluateSetDeptDetail" parameterType="PmsEvaluateSetDeptDetail">
+        update pms_evaluate_set_dept_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="setDeptCode != null">SET_DEPT_CODE = #{setDeptCode},</if>
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="reduce != null">REDUCE = #{reduce},</if>
+            <if test="deduct != null">DEDUCT = #{deduct},</if>
+            <if test="increase != null">INCREASE = #{increase},</if>
+            <if test="extra != null">EXTRA = #{extra},</if>
+            <if test="unit != null">UNIT = #{unit},</if>
+            <if test="target != null">TARGET = #{target},</if>
+            <if test="indexScore != null">INDEX_SCORE = #{indexScore},</if>
+            <if test="isHyper != null">IS_HYPER = #{isHyper},</if>
+            <if test="isNegative != null">IS_NEGATIVE = #{isNegative},</if>
+            <if test="isFixed != null">IS_FIXED = #{isFixed},</if>
+            <if test="threshold != null">THRESHOLD = #{threshold},</if>
+            <if test="overLimit != null">OVER_LIMIT = #{overLimit},</if>
+            <if test="deductionLimit != null">DEDUCTION_LIMIT = #{deductionLimit},</if>
+            <if test="nowDate != null">NOW_DATE = #{nowDate},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsEvaluateSetDeptDetailById" parameterType="Long">
+        update pms_evaluate_set_dept_detail
+        set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID = #{id}
+    </delete>
+
+    <delete id="deletePmsEvaluateSetDeptDetailByIds" parameterType="String">
+        update pms_evaluate_set_dept_detail set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByDataAndCode">
+        delete
+        from pms_evaluate_set_dept_detail
+        where COMP_CODE = #{compCode}
+          and SET_DEPT_CODE = #{setDeptCode}
+          and NOW_DATE = #{nowDate}
+    </delete>
+
+    <select id="getSetDeptDetailByMonth" resultType="com.zjry.pms.evaluate.domain.EvaluateSetDeptDetailDto">
+        select sdr.dept_room_id as dept_room_code,
+               pesd.SET_CODE,
+               pesi.INDEX_CODE,
+               pede.GUIDE_VALUE                         as real_value,
+               pesdd.reduce,
+               pesdd.deduct,
+               pesdd.increase,
+               pesdd.extra,
+               ifnull(pesdd.unit, '1') as unit,
+               pesdd.target,
+               pesdd.index_score,
+               if(pesdd.is_hyper = '1', false, true)    as is_hyper,
+               if(pesdd.is_negative = '1', false, true) as is_negative,
+               if(pesdd.is_fixed = '0', true, false)    as is_fixed,
+               pesdd.threshold,
+               pesdd.over_limit,
+               pesdd.deduction_limit
+        from sys_dept_room sdr
+                 inner join
+             pms_evaluate_set_dept pesd on sdr.dept_room_id = pesd.DEPT_CODE
+                 inner join pms_evaluate_set_dept_detail pesdd on pesd.SET_DEPT_CODE = pesdd.SET_DEPT_CODE
+                 inner join pms_evaluate_set_index pesi on pesdd.INDEX_CODE = pesi.INDEX_CODE
+                 inner join pms_evaluate_data pede
+                            on pesi.INDEX_CODE = pede.GUIDE_CODE and pede.GUIDE_TYPE = 'K' and
+                               sdr.dept_room_code = pede.UNIT_CODE
+        where sdr.del_flag = '0'
+          and sdr.status = '0'
+          and pesd.DEL_FLAG = '0'
+          and pesd.NOW_DATE = #{date}
+          and pesi.DEL_FLAG = '0'
+          and pede.ACT_DATE = #{date}
+          and pesdd.NOW_DATE = #{date}
+    </select>
+
+    <select id="getSetDeptDetailList" resultType="com.zjry.pms.evaluate.domain.EvaluateSetDeptDetailDto">
+        select sdr.dept_room_id as dept_room_code,
+               pesd.SET_CODE,
+               pesi.INDEX_CODE,
+               pesdd.reduce,
+               pesdd.deduct,
+               pesdd.increase,
+               pesdd.extra,
+               ifnull(pesdd.unit, '1') as unit,
+               pesdd.target,
+               pesdd.index_score,
+               if(pesdd.is_hyper = '1', false, true)    as is_hyper,
+               if(pesdd.is_negative = '1', false, true) as is_negative,
+               if(pesdd.is_fixed = '0', true, false)    as is_fixed,
+               pesdd.threshold,
+               pesdd.over_limit,
+               pesdd.deduction_limit
+        from sys_dept_room sdr
+                 inner join pms_evaluate_set_dept pesd on sdr.dept_room_id = pesd.DEPT_CODE
+                 inner join pms_evaluate_set_dept_detail pesdd on pesd.SET_DEPT_CODE = pesdd.SET_DEPT_CODE
+                 inner join pms_evaluate_set_index pesi on pesdd.INDEX_CODE = pesi.INDEX_CODE
+        where sdr.del_flag = '0'
+          and sdr.status = '0'
+          and pesd.DEL_FLAG = '0'
+          and pesd.NOW_DATE = #{date}
+          and pesi.DEL_FLAG = '0'
+          and pesdd.NOW_DATE = #{date}
+    </select>
+</mapper>

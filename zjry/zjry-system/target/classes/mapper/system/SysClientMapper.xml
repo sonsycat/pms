@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.system.mapper.SysClientMapper">
+
+	<resultMap type="SysClient" id="SysClientResult">
+		<id     property="clientId"       column="client_id"      />
+		<result property="clientSecret"       column="client_secret"      />
+	</resultMap>
+	
+    <select id="selectClientList" parameterType="SysClient" resultMap="SysClientResult">
+		select a.client_id, a.client_secret
+		from sys_client_info a
+		<where>
+			<if test="clientId != null and clientId != ''">
+				and a.client_id = #{clientId}
+			</if>
+			<if test="clientSecret != null and clientSecret != ''">
+				and a.client_secret = #{clientSecret}
+			</if>
+		</where>
+	</select>
+	
+</mapper> 

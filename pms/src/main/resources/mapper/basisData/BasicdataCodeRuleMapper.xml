@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.basicData.BasicdataCodeRuleMapper">
+    
+    <resultMap type="BasicdataCodeRule" id="BasicdataCodeRuleResult">
+        <result property="id"    column="id"    />
+        <result property="ruleName"    column="rule_name"    />
+        <result property="ruleTable"    column="rule_table"    />
+        <result property="ruleColumns"    column="rule_columns"    />
+        <result property="ruleContent"    column="rule_content"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="isStructs"    column="is_structs"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="rulePrefix"    column="rule_prefix"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDate"    column="is_date"    />
+        <result property="dateFormat"    column="date_format"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="flowcodeLength"    column="flowcode_length"    />
+        <result property="remark"    column="remark"    />
+        <result property="systemFlag"    column="system_flag"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="useFlag"    column="use_flag"    />
+    </resultMap>
+
+    <sql id="selectBasicdataCodeRuleVo">
+        select id, rule_name, rule_table, rule_columns, rule_content, create_by, is_structs, create_time, rule_prefix, update_by, is_date, date_format, update_time, flowcode_length, remark, system_flag, del_flag, use_flag from basicdata_code_rule
+    </sql>
+
+    <select id="selectBasicdataCodeRuleList" parameterType="BasicdataCodeRule" resultMap="BasicdataCodeRuleResult">
+        <include refid="selectBasicdataCodeRuleVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="ruleName != null  and ruleName != ''"> and rule_name like concat('%', #{ruleName}, '%')</if>
+            <if test="ruleTable != null  and ruleTable != ''"> and rule_table = #{ruleTable}</if>
+            <if test="ruleColumns != null  and ruleColumns != ''"> and rule_columns = #{ruleColumns}</if>
+            <if test="useFlag != null  and useFlag != ''"> and use_flag = #{useFlag}</if>
+
+        </where>
+        order by update_time desc
+
+    </select>
+
+</mapper>

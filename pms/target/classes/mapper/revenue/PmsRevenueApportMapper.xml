@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.revenue.mapper.PmsRevenueApportMapper">
+    
+    <resultMap type="PmsRevenueApport" id="PmsRevenueApportResult">
+        <result property="id"    column="ID"    />
+        <result property="compCode"    column="COMP_CODE"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="revenueCode"    column="REVENUE_CODE"    />
+        <result property="revenueName"    column="REVENUE_NAME"    />
+        <result property="receiveNum"    column="RECEIVE_NUM"    />
+        <result property="actualNum"    column="ACTUAL_NUM"    />
+        <result property="dpetCode"    column="DPET_CODE"    />
+        <result property="dpetName"    column="DPET_NAME"    />
+        <result property="occureTime"    column="OCCURE_TIME"    />
+        <result property="revenueType"    column="REVENUE_TYPE"    />
+        <result property="revenueKind"    column="REVENUE_KIND"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="settleType"    column="SETTLE_TYPE"    />
+    </resultMap>
+
+    <sql id="selectPmsRevenueApportVo">
+     SELECT
+	a.ID,
+	a.COMP_CODE,
+	a.ACCOUNT_CODE,
+	a.REVENUE_CODE,
+	a.RECEIVE_NUM,
+	a.ACTUAL_NUM,
+	a.DPET_CODE,
+	a.OCCURE_TIME,
+	a.REVENUE_TYPE,
+	a.REVENUE_KIND,
+	a.DEL_FLAG,
+	a.CREATE_BY,
+	a.CREATE_TIME,
+	a.UPDATE_BY,
+	a.UPDATE_TIME,
+	a.REMARK,
+	a.SETTLE_TYPE ,
+ b.dept_room_name as DPET_NAME,
+ 	e.REVENUE_NAME
+FROM
+	pms_revenue_apport a
+	left join sys_dept_room b on a.DPET_CODE = b.dept_room_id and b.del_flag =0
+	left join pms_revenue e on a.REVENUE_CODE = e.REVENUE_CODE and e.del_flag =0 </sql>
+
+
+
+
+    <select id="getAfterValue" parameterType="PmsRevenueNum" resultType="String">
+        SELECT
+        SUM( ACTUAL_NUM )
+        FROM
+        pms_revenue_apport
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            and COMP_CODE = #{compCode}
+            and date_format(OCCURE_TIME, '%Y%m') = date_format(#{occureTime}, '%Y%m')
+            AND REVENUE_TYPE = #{revenueType}
+            AND REVENUE_KIND = #{revenueKind}
+            <if test="settleType != null  and settleType != ''"> and SETTLE_TYPE = #{settleType}</if>
+        </where>
+    </select>
+
+
+    <select id="selectPmsRevenueApportList" parameterType="PmsRevenueApport" resultMap="PmsRevenueApportResult">
+        <include refid="selectPmsRevenueApportVo"/>
+        <where>  
+        AND a.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="compCode != null "> and a.COMP_CODE = #{compCode}</if>
+            <if test="accountCode != null  and accountCode != ''"> and a.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="revenueCode != null  and revenueCode != ''"> and a.REVENUE_CODE = #{revenueCode}</if>
+            <if test="receiveNum != null "> and a.RECEIVE_NUM = #{receiveNum}</if>
+            <if test="actualNum != null "> and a.ACTUAL_NUM = #{actualNum}</if>
+            <if test="dpetCode != null "> and a.DPET_CODE = #{dpetCode}</if>
+            <if test="occureTime != null "> and a.OCCURE_TIME = #{occureTime}</if>
+            <if test="oTime != null ">  and date_format(a.OCCURE_TIME, '%Y%m') = date_format(#{oTime}, '%Y%m')</if>
+            <if test="revenueType != null  and revenueType != ''"> and a.REVENUE_TYPE = #{revenueType}</if>
+            <if test="revenueKind != null  and revenueKind != ''"> and a.REVENUE_KIND = #{revenueKind}</if>
+            <if test="settleType != null  and settleType != ''"> and a.SETTLE_TYPE = #{settleType}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectPmsRevenueApportById" parameterType="Long" resultMap="PmsRevenueApportResult">
+        <include refid="selectPmsRevenueApportVo"/>
+        where a.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND a.ID = #{id}
+    </select>
+        
+    <insert id="insertPmsRevenueApport" parameterType="PmsRevenueApport" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_revenue_apport
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE,</if>
+            <if test="accountCode != null">ACCOUNT_CODE,</if>
+            <if test="revenueCode != null">REVENUE_CODE,</if>
+            <if test="receiveNum != null">RECEIVE_NUM,</if>
+            <if test="actualNum != null">ACTUAL_NUM,</if>
+            <if test="dpetCode != null">DPET_CODE,</if>
+            <if test="occureTime != null">OCCURE_TIME,</if>
+            <if test="revenueType != null">REVENUE_TYPE,</if>
+            <if test="revenueKind != null">REVENUE_KIND,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="settleType != null">SETTLE_TYPE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null">#{compCode},</if>
+            <if test="accountCode != null">#{accountCode},</if>
+            <if test="revenueCode != null">#{revenueCode},</if>
+            <if test="receiveNum != null">#{receiveNum},</if>
+            <if test="actualNum != null">#{actualNum},</if>
+            <if test="dpetCode != null">#{dpetCode},</if>
+            <if test="occureTime != null">#{occureTime},</if>
+            <if test="revenueType != null">#{revenueType},</if>
+            <if test="revenueKind != null">#{revenueKind},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="settleType != null">#{settleType},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsRevenueApport" parameterType="PmsRevenueApport">
+        update pms_revenue_apport
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compCode != null">COMP_CODE = #{compCode},</if>
+            <if test="accountCode != null">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="revenueCode != null">REVENUE_CODE = #{revenueCode},</if>
+            <if test="receiveNum != null">RECEIVE_NUM = #{receiveNum},</if>
+            <if test="actualNum != null">ACTUAL_NUM = #{actualNum},</if>
+            <if test="dpetCode != null">DPET_CODE = #{dpetCode},</if>
+            <if test="occureTime != null">OCCURE_TIME = #{occureTime},</if>
+            <if test="revenueType != null">REVENUE_TYPE = #{revenueType},</if>
+            <if test="revenueKind != null">REVENUE_KIND = #{revenueKind},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="settleType != null">SETTLE_TYPE = #{settleType},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deletePmsRevenueApportById" parameterType="Long">
+        update pms_revenue_apport set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteByState" >
+        delete from pms_revenue_apport  where del_flag = '2'
+    </delete>
+
+    <delete id="updateByState" >
+        update pms_revenue_apport set del_flag='0' where del_flag = '2'
+    </delete>
+
+    <delete id="deletePmsRevenueApportByIds" parameterType="String">
+        update pms_revenue_apport set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.formDesign.mapper.FormDesignFieldMapper">
+
+    <resultMap type="FormDesignField" id="FormDesignFieldResult">
+        <result property="id" column="ID"/>
+        <result property="formDesignId" column="FORM_DESIGN_ID"/>
+        <result property="fieldName" column="FIELD_NAME"/>
+        <result property="fieldDesc" column="FIELD_DESC"/>
+        <result property="isNotNull" column="IS_NOT_NULL"/>
+        <result property="fieldLength" column="FIELD_LENGTH"/>
+        <result property="isList" column="IS_LIST"/>
+        <result property="isEdit" column="IS_EDIT"/>
+        <result property="isQuery" column="IS_QUERY"/>
+        <result property="queryType" column="QUERY_TYPE"/>
+        <result property="queryDefault" column="QUERY_DEFAULT"/>
+        <result property="sortNo" column="SORT_NO"/>
+        <result property="validType" column="VALID_TYPE"/>
+        <result property="dbType" column="DB_TYPE"/>
+        <result property="pmsType" column="PMS_TYPE"/>
+        <result property="fieldType" column="FIELD_TYPE"/>
+        <result property="dictType" column="DICT_TYPE"/>
+        <result property="textLines" column="TEXT_LINES"/>
+        <result property="maxValue" column="MAX_VALUE"/>
+        <result property="minValue" column="MIN_VALUE"/>
+        <result property="decimlDigit" column="DECIML_DIGIT"/>
+        <result property="isPercente" column="IS_PERCENTE"/>
+        <result property="defaultValue" column="DEFAULT_VALUE"/>
+        <result property="explain" column="PMS_EXPLAIN"/>
+        <result property="indexCode" column="INDEX_CODE"/>
+        <result property="isSort" column="IS_SORT"/>
+        <result property="soortType" column="SOORT_TYPE"/>
+        <result property="options" column="OPTIONS"/>
+        <result property="span" column="SPAN"/>
+        <result property="isSum" column="IS_SUM"/>
+        <result property="sumType" column="SUM_TYPE"/>
+        <result property="dateDefaultValue" column="DATE_DEFAULT_VALUE"/>
+        <result property="isListQuery" column="IS_LIST_QUERY"/>
+		<result property="pageNum" column="PAGE_NUM"/>
+        <result property="displayType" column="DISPLAY_TYPE"/>
+    </resultMap>
+
+
+    <update id="updateFormDesignField" parameterType="FormDesignField">
+        update form_design_field
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fieldName != null">FIELD_NAME = #{fieldName},</if>
+            <if test="fieldDesc != null">FIELD_DESC = #{fieldDesc},</if>
+            <if test="isNotNull != null">IS_NOT_NULL = #{isNotNull},</if>
+            <if test="fieldLength != null">FIELD_LENGTH = #{fieldLength},</if>
+            <if test="isList != null">IS_LIST = #{isList},</if>
+            <if test="isEdit != null">IS_EDIT = #{isEdit},</if>
+            <if test="isQuery != null">IS_QUERY = #{isQuery},</if>
+            <if test="queryType != null">QUERY_TYPE = #{queryType},</if>
+            <if test="queryDefault != null">QUERY_DEFAULT = #{queryDefault},</if>
+            <if test="sortNo != null">SORT_NO = #{sortNo},</if>
+            <if test="validType != null">VALID_TYPE = #{validType},</if>
+            <if test="dbType != null">DB_TYPE = #{dbType},</if>
+            <if test="pmsType != null">PMS_TYPE = #{pmsType},</if>
+            <if test="fieldType != null">FIELD_TYPE = #{fieldType},</if>
+            <if test="dictType != null">DICT_TYPE = #{dictType},</if>
+            <if test="textLines != null">TEXT_LINES = #{textLines},</if>
+            <if test="maxValue != null">MAX_VALUE = #{maxValue},</if>
+            <if test="minValue != null">MIN_VALUE = #{minValue},</if>
+            <if test="decimlDigit != null">DECIML_DIGIT = #{decimlDigit},</if>
+            <if test="isPercente != null">IS_PERCENTE = #{isPercente},</if>
+            <if test="defaultValue != null">DEFAULT_VALUE = #{defaultValue},</if>
+            <if test="explain != null">PMS_EXPLAIN = #{explain},</if>
+            <if test="indexCode != null">INDEX_CODE = #{indexCode},</if>
+            <if test="isSort != null">IS_SORT = #{isSort},</if>
+            <if test="soortType != null">SOORT_TYPE = #{soortType},</if>
+            <if test="options != null">OPTIONS = #{options},</if>
+            <if test="span != null">SPAN = #{span},</if>
+            <if test="isSum != null">IS_SUM = #{isSum},</if>
+            <if test="sumType != null">SUM_TYPE = #{sumType},</if>
+            <if test="dateDefaultValue != null">DATE_DEFAULT_VALUE = #{dateDefaultValue},</if>
+            <if test="isListQuery != null">IS_LIST_QUERY = #{isListQuery},</if>
+            <if test="displayType!= null">DISPLAY_TYPE = #{displayType},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+
+    <insert id="insertBatch">
+        INSERT INTO FORM_DESIGN_FIELD
+        (
+        ID,
+        FORM_DESIGN_ID,
+        FIELD_NAME,
+        FIELD_DESC,
+        IS_NOT_NULL,
+        FIELD_LENGTH,
+        IS_LIST,
+        IS_EDIT,
+        IS_QUERY,
+        QUERY_TYPE,
+        QUERY_DEFAULT,
+        SORT_NO,
+        VALID_TYPE,
+        DB_TYPE,
+        PMS_TYPE,
+        FIELD_TYPE,
+        DICT_TYPE,
+        TEXT_LINES,
+        MAX_VALUE,
+        MIN_VALUE,
+        DECIML_DIGIT,
+        IS_PERCENTE,
+        DEFAULT_VALUE,
+        PMS_EXPLAIN,
+        INDEX_CODE,
+        IS_SORT,
+        SOORT_TYPE,
+        OPTIONS,
+        SPAN,
+        IS_SUM,
+        SUM_TYPE,
+        DATE_DEFAULT_VALUE,
+        IS_LIST_QUERY,
+        DISPLAY_TYPE
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id},
+            #{item.formDesignId},
+            #{item.fieldName},
+            #{item.fieldDesc},
+            #{item.isNotNull},
+            #{item.fieldLength},
+            #{item.isList},
+            #{item.isEdit},
+            #{item.isQuery},
+            #{item.queryType},
+            #{item.queryDefault},
+            #{item.sortNo},
+            #{item.validType},
+            #{item.dbType},
+            #{item.pmsType},
+            #{item.fieldType},
+            #{item.dictType},
+            #{item.textLines},
+            #{item.maxValue},
+            #{item.minValue},
+            #{item.decimlDigit},
+            #{item.isPercente},
+            #{item.defaultValue},
+            #{item.explain},
+            #{item.indexCode},
+            #{item.isSort},
+            #{item.soortType},
+            #{item.options},
+            #{item.span},
+            #{item.isSum},
+            #{item.sumType},
+            #{item.dateDefaultValue},
+            #{item.isListQuery},
+            #{item.displayType}
+            )
+        </foreach>
+    </insert>
+
+    <sql id="selectFormDesignFieldVo">
+		ID,
+		FORM_DESIGN_ID,
+		FIELD_NAME,
+		FIELD_DESC,
+		SORT_NO,
+		IS_QUERY,
+		IS_LIST,
+		IS_EDIT,
+		IS_NOT_NULL,
+		FIELD_LENGTH,
+		QUERY_TYPE,
+		DB_TYPE,
+		VALID_TYPE,
+		FIELD_TYPE fieldType,
+		DICT_TYPE dictType,
+		OPTIONS options,
+		SPAN,
+        DISPLAY_TYPE
+	</sql>
+
+    <select id="findByDesignId" resultMap="FormDesignFieldResult">
+		SELECT a.*, b.PAGE_NUM
+       FROM form_design_field a
+        left join form_design b on a.FORM_DESIGN_ID = b.id
+		WHERE a.FORM_DESIGN_ID = #{formDesignId} order by a.SORT_NO
+	</select>
+
+    <select id="selectOne" resultMap="FormDesignFieldResult">
+		SELECT *
+		FROM form_design_field
+		WHERE FORM_DESIGN_ID = #{formDesignId}
+		AND FIELD_NAME = #{fieldName}
+	</select>
+
+    <select id="delByDesignId">
+		DELETE FROM form_design_field
+		WHERE FORM_DESIGN_ID = #{formDesignId}
+	</select>
+
+
+    <select id="selectDictType"
+            resultType="com.zjry.pms.basic.domain.AssetsBasicPublicVo">
+        SELECT dict_name as dictLabel , dict_type as dictValue FROM `sys_dict_type`
+        <where>
+            AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="dictLabel != null ">and dict_name like concat('%', #{dictLabel}, '%')</if>
+        </where>
+    </select>
+
+</mapper>

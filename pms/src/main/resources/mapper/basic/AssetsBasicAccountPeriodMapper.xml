@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.basic.mapper.AssetsBasicAccountPeriodMapper">
+    
+    <resultMap type="AssetsBasicAccountPeriod" id="AssetsBasicAccountPeriodResult">
+        <result property="id"    column="ID"    />
+        <result property="accountCode"    column="ACCOUNT_CODE"    />
+        <result property="accountYear"    column="ACCOUNT_YEAR"    />
+        <result property="startDate"    column="START_DATE"    />
+        <result property="endDate"    column="END_DATE"    />
+        <result property="periodNum"    column="PERIOD_NUM"    />
+        <result property="isPeriod"    column="IS_PERIOD"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="periodName"    column="PERIOD_NAME"    />
+    </resultMap>
+
+    <sql id="selectAssetsBasicAccountPeriodVo">
+        select
+            assets_basic_account_period.ID,
+            assets_basic_account_period.ACCOUNT_CODE,
+            assets_basic_account_period.ACCOUNT_YEAR,
+            assets_basic_account_period.START_DATE,
+            assets_basic_account_period.END_DATE,
+            assets_basic_account_period.PERIOD_NUM,
+            assets_basic_account_period.IS_PERIOD,
+            assets_basic_account_period.DEL_FLAG,
+            assets_basic_account_period.CREATE_BY,
+            assets_basic_account_period.CREATE_TIME,
+            assets_basic_account_period.UPDATE_BY,
+            assets_basic_account_period.UPDATE_TIME,
+            assets_basic_account_period.REMARK,
+            assets_basic_account_period.PERIOD_NAME,
+            account_set.name AS accountName
+        from assets_basic_account_period
+        INNER JOIN account_set ON assets_basic_account_period.ACCOUNT_CODE = account_set.code
+        AND account_set.DEL_FLAG = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+    </sql>
+
+    <select id="selectAssetsBasicAccountPeriodList" parameterType="AssetsBasicAccountPeriod" resultMap="AssetsBasicAccountPeriodResult">
+        <include refid="selectAssetsBasicAccountPeriodVo"/>
+        <where>  
+        AND assets_basic_account_period.del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+            <if test="accountName != null  and accountName != ''"> and account_set.name like concat('%', #{accountName}, '%')</if>
+            <if test="accountYear != null "> and assets_basic_account_period.ACCOUNT_YEAR = #{accountYear}</if>
+            <if test="periodNum != null "> and assets_basic_account_period.PERIOD_NUM = #{periodNum}</if>
+            <if test="accountCode != null "> and assets_basic_account_period.ACCOUNT_CODE = #{accountCode}</if>
+            <if test="isPeriod != null "> and assets_basic_account_period.IS_PERIOD = #{isPeriod}</if>
+        </where>
+        ORDER BY assets_basic_account_period.UPDATE_TIME DESC
+    </select>
+    
+    <select id="selectAssetsBasicAccountPeriodById" parameterType="Long" resultMap="AssetsBasicAccountPeriodResult">
+        <include refid="selectAssetsBasicAccountPeriodVo"/>
+        where assets_basic_account_period.del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND assets_basic_account_period.ID = #{id}
+    </select>
+        
+    <insert id="insertAssetsBasicAccountPeriod" parameterType="AssetsBasicAccountPeriod" useGeneratedKeys="true" keyProperty="id">
+        insert into assets_basic_account_period
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountCode != null and accountCode != ''">ACCOUNT_CODE,</if>
+            <if test="accountYear != null">ACCOUNT_YEAR,</if>
+            <if test="startDate != null">START_DATE,</if>
+            <if test="endDate != null">END_DATE,</if>
+            <if test="periodNum != null and periodNum != ''">PERIOD_NUM,</if>
+            <if test="isPeriod != null and isPeriod != ''">IS_PERIOD,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="periodName != null">PERIOD_NAME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountCode != null and accountCode != ''">#{accountCode},</if>
+            <if test="accountYear != null">#{accountYear},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="periodNum != null and periodNum != ''">#{periodNum},</if>
+            <if test="isPeriod != null and isPeriod != ''">#{isPeriod},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="periodName != null">#{periodName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssetsBasicAccountPeriod" parameterType="AssetsBasicAccountPeriod">
+        update assets_basic_account_period
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountCode != null and accountCode != ''">ACCOUNT_CODE = #{accountCode},</if>
+            <if test="accountYear != null">ACCOUNT_YEAR = #{accountYear},</if>
+            <if test="startDate != null">START_DATE = #{startDate},</if>
+            <if test="endDate != null">END_DATE = #{endDate},</if>
+            <if test="periodNum != null and periodNum != ''">PERIOD_NUM = #{periodNum},</if>
+            <if test="isPeriod != null and isPeriod != ''">IS_PERIOD = #{isPeriod},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="periodName != null">PERIOD_NAME = #{periodName},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteAssetsBasicAccountPeriodById" parameterType="Long">
+        update assets_basic_account_period set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteAssetsBasicAccountPeriodByIds" parameterType="String">
+        update assets_basic_account_period set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteAssetsBasicAccountPeriodByNameYear" parameterType="AssetsBasicAccountPeriod">
+        update assets_basic_account_period set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE}
+        where
+            assets_basic_account_period.ACCOUNT_YEAR = #{accountYear}
+            <if test="accountCode != null  and accountCode != ''"> and ACCOUNT_CODE = #{accountCode} </if>
+    </delete>
+</mapper>

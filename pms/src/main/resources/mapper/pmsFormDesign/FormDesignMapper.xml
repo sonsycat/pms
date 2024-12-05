@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.pmsFormDesign.mapper.PmsFormDesignMapper">
+    
+    <resultMap type="PmsFormDesign" id="FormDesignResult">
+        <result property="id"    column="ID"    />
+        <result property="formName"    column="FORM_NAME"    />
+        <result property="formJson"    column="FORM_JSON"    />
+        <result property="formData"    column="FORM_DATA"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createDate"    column="CREATE_DATE"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateDate"    column="UPDATE_DATE"    />
+        <result property="remarks"    column="REMARKS"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="formCode"    column="FORM_CODE"    />
+        <result property="genTableName"    column="GEN_TABLE_NAME"    />
+        <result property="formUrl"    column="FORM_URL"    />
+        <result property="formHtml"    column="FORM_HTML"    />
+        <result property="formType"    column="FORM_TYPE"    />
+    </resultMap>
+
+    <sql id="selectFormDesignVo">
+        select ID, FORM_NAME, FORM_JSON, FORM_HTML, FORM_DATA, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE, REMARKS, DEL_FLAG,FORM_TYPE, FORM_CODE, GEN_TABLE_NAME, FORM_URL from pms_form_design
+    </sql>
+
+    <select id="selectFormDesignList" parameterType="PmsFormDesign" resultMap="FormDesignResult">
+        <include refid="selectFormDesignVo"/>
+        <where>  
+        AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} 
+            <if test="formName != null  and formName != ''"> and FORM_NAME like concat('%', #{formName}, '%')</if>
+            <if test="formCode != null  and formCode != ''"> and FORM_CODE like concat('%', #{formCode}, '%')</if>
+        </where>
+        order by update_date desc
+    </select>
+    
+    <select id="selectFormDesignById" parameterType="String" resultMap="FormDesignResult">
+        <include refid="selectFormDesignVo"/>
+        where del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL} AND ID = #{id}
+    </select>
+        
+    <insert id="insertFormDesign" parameterType="PmsFormDesign">
+        insert into pms_form_design
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="formName != null">FORM_NAME,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createDate != null">CREATE_DATE,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateDate != null">UPDATE_DATE,</if>
+            <if test="remarks != null">REMARKS,</if>
+            <if test="delFlag != null and delFlag != ''">DEL_FLAG,</if>
+            <if test="formCode != null and formCode != ''">FORM_CODE,</if>
+            <if test="formUrl != null">FORM_URL,</if>
+            <if test="formType != null">FORM_TYPE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	#{id},
+            <if test="formName != null">#{formName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="formCode != null and formCode != ''">#{formCode},</if>
+            <if test="formUrl != null">#{formUrl},</if>
+            <if test="formType != null">#{formType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFormDesign" parameterType="PmsFormDesign">
+        update pms_form_design
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="formName != null">FORM_NAME = #{formName},</if>
+            <if test="formJson != null">FORM_JSON = #{formJson},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createDate != null">CREATE_DATE = #{createDate},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateDate != null">UPDATE_DATE = #{updateDate},</if>
+            <if test="remarks != null">REMARKS = #{remarks},</if>
+            <if test="delFlag != null and delFlag != ''">DEL_FLAG = #{delFlag},</if>
+            <if test="formCode != null and formCode != ''">FORM_CODE = #{formCode},</if>
+            <if test="genTableName != null">GEN_TABLE_NAME = #{genTableName},</if>
+            <if test="formUrl != null">FORM_URL = #{formUrl},</if>
+            <if test="formType != null">FORM_TYPE = #{formType},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteFormDesignById" parameterType="String">
+        update pms_form_design set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID = #{id}
+    </delete>
+
+    <delete id="deleteFormDesignByIds" parameterType="String">
+        update pms_form_design set del_flag=${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_DELETE} where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <update id="updateFormJson">
+		UPDATE pms_form_design SET
+			form_json = #{formJson},
+			form_html = #{formHtml},
+			GEN_TABLE_NAME = #{genTableName},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateFormData">
+		UPDATE pms_form_design SET
+			form_data = #{formData}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="checkTableExists" resultType="Integer">
+		SELECT count(0) 
+		FROM information_schema.TABLES 
+		WHERE table_name = #{tableName}
+	</select>
+	
+	<select id="checkColumnExists" resultType="Integer">
+		select count(0)
+		from information_schema.columns 
+		where TABLE_NAME = #{tableName}
+		AND COLUMN_NAME = #{columnName}
+	</select>
+	
+	<update id="addColumn" parameterType="map">
+		alter table ${tableName} add column ${columnName} ${dbType}
+	</update>
+	
+	<update id="modifyColumn" parameterType="map">
+		alter table ${tableName} modify ${columnName} ${dbType}
+	</update>
+	
+	<select id="checkFormCodeUnique" resultType="Integer">
+		SELECT count(0)
+		FROM pms_form_design a
+		WHERE a.form_code = #{formCode}
+		AND del_flag = ${@com.zjry.common.core.domain.BaseEntity@DEL_FLAG_NORMAL}
+	</select>
+	
+	<update id="createTable" parameterType="map">
+		CREATE TABLE ${tableName}
+		(
+			`id` VARCHAR(64) PRIMARY KEY,
+			<foreach collection="configs" item="cf">
+				`${cf.fieldName}` ${cf.dbType} ${cf.nullVal},
+			</foreach>
+			`create_by` VARCHAR(64), 
+			`create_date` datetime, 
+			`update_by` VARCHAR(64), 
+			`update_date` datetime, 
+			`remarks` VARCHAR(255), 
+			`del_flag` CHAR(1) NOT NULL,
+			`proc_ins_id` varchar(32)
+		)
+	</update>
+</mapper>

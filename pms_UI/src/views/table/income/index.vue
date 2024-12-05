@@ -1,0 +1,163 @@
+<template>
+  <!--全院固定资产折旧汇总表  -->
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" :rules="rules">
+      <el-form-item label="起始年月" prop="month">
+        <el-date-picker style="width:250px" clearable
+                        v-model="queryParams.month"
+                        type="monthrange"
+                        range-separator="至"
+                        start-placeholder="开始月份"
+                        end-placeholder="结束月份">
+                        value-format="yyyy-MM"
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结算标识:" prop="settleMark">
+        <el-select class="search_w220" v-model="queryParams.settleMark" clearable placeholder="请选择结算标识">
+          <el-option
+            v-for="dict in settleMarkOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="科室"  prop="deptCode" >
+        <el-select class="search_w220" v-model="queryParams.deptCode" clearable placeholder="请选择科室">
+          <el-option
+            v-for="dict in deptList"
+            :key="dict.deptRoomId"
+            :label="dict.deptRoomName"
+            :value="dict.deptRoomId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+    <div v-loading="loading" :style="'height:'+ height">
+      <iframe :src="src" frameborder="no" style="width: 100%;height: 50%" scrolling="auto" />
+      <iframe :src="src1" frameborder="no" style="width: 100%;height: 50%" scrolling="auto" />
+    </div>
+  </div>
+</template>
+
+<script>
+
+  import {getYear} from "@/utils/date";
+  import { treeRoom } from '@/api/until'
+
+  export default {
+    name: "UreportDisplay",
+    components: {
+    },
+    data() {
+      return {
+        src: "",
+        src1: "",
+        height: document.documentElement.clientHeight - 210 + "px;",
+        loading: true,
+        // 查询参数
+        typeOptions :[],
+        settleMarkOptions: [],
+        queryParams: {
+          type : '1',
+          month : [new Date(),new Date()],
+          year : null,
+          settleMark: '1',
+          deptCode: null,
+        },
+        rules: {
+          deptCode: [
+            { required: true, message: "科室不能为空", trigger: "blur" }
+          ],
+        },
+        //科室字典
+        deptList: [],
+
+      };
+    },
+    watch: {
+      "$store.state.dicts": {
+        handler(val) {
+          // 基础字典
+          let baseDicts = val.baseDicts;
+          // this.deptList = val.deptInfo;
+        },
+        deep: true,
+        immediate: true
+      },
+    },
+    created() {
+      this.getDicts("DEPT_TYPE_OPC").then(response => {
+        this.typeOptions = response.data;
+      });
+      this.getDicts("pms_jsbs_type").then(response => {
+        this.settleMarkOptions = response.data;
+      });
+      this.getDeptList(this.$store.state.user.userInfo.deptId);
+    },
+    mounted: function() {
+      setTimeout(() => {
+        this.loading = false;
+      }, 230);
+      const that = this;
+      window.onresize = function temp() {
+        that.height = document.documentElement.clientHeight - 94.5 + "px;";
+      };
+    },
+    methods:{
+      //获取科室
+      getDeptList(deptId){
+        let data={deptId:deptId}
+        treeRoom(data).then(response=>{
+          if(response.code==200){
+            this.deptList=JSON.parse(JSON.stringify(response.rows))
+          }
+        })
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.queryParams.year = null
+        this.queryParams.month = [new Date(),new Date()]
+        this.queryParams.settleMark = '1'
+        this.queryParams.type = '1'
+        this.queryParams.deptCode = null
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.$refs["queryForm"].validate(valid => {
+          if (valid) {
+            var nowDate = this.queryParams.month[0];
+            if (nowDate.length != 10) {
+              var year = nowDate.getFullYear();
+              var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;
+              var day = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
+              this.queryParams.month[0] = year + "-" + month + "-" + day;
+              nowDate = this.queryParams.month[1];
+              var year = nowDate.getFullYear();
+              var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;
+              var day = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
+              this.queryParams.month[1] = year + "-" + month + "-" + day;
+            }
+            console.log(this.queryParams.month[0].length)
+            console.log(this.queryParams.month[1].length)
+            var fxb = "科室收支核算表.ureport.xml";
+            this.src = "/ureport/preview?_u=mysql:"+fxb+"&dateStr="+this.queryParams.year+"&date="+this.queryParams.year
+              +"&compCode=" +this.$store.state.user.accountInfo.deptId+"&compName="+this.$store.state.user.accountInfo.deptName
+              +"&deptCode="+this.queryParams.deptCode +"&settleMark="+this.queryParams.settleMark
+              +"&startTime="+this.queryParams.month[0] +"&endTime="+this.queryParams.month[1];
+            var fxb1 = "科室收支核算表1.ureport.xml";
+            this.src1 = "/ureport/preview?_u=mysql:"+fxb1+"&dateStr="+this.queryParams.year+"&date="+this.queryParams.year
+              +"&compCode=" +this.$store.state.user.accountInfo.deptId+"&compName="+this.$store.state.user.accountInfo.deptName
+              +"&deptCode="+this.queryParams.deptCode +"&settleMark="+this.queryParams.settleMark
+              +"&startTime="+this.queryParams.month[0] +"&endTime="+this.queryParams.month[1];
+          }
+        })
+      }
+
+    }
+  }
+</script>

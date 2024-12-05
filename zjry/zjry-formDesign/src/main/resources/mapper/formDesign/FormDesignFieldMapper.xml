@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.formDesign.mapper.FormDesignFieldMapper">
+    
+	<insert id="insertBatch">
+		INSERT INTO FORM_DESIGN_FIELD
+		(
+			ID,
+			FORM_DESIGN_ID,
+			FIELD_NAME,
+			FIELD_DESC,
+			SORT_NO,
+			IS_QUERY,
+			IS_LIST,
+			IS_EDIT,
+			IS_NOT_NULL,
+			FIELD_LENGTH,
+			VALID_TYPE,
+			QUERY_TYPE,
+			DB_TYPE,
+			FIELD_TYPE,
+			DICT_TYPE,
+			OPTIONS
+		)
+		values
+		<foreach collection="list" item="item" separator=",">
+		(
+			#{item.id},
+			#{item.formDesignId},
+			#{item.fieldName},
+			#{item.fieldDesc},
+			#{item.sortNo},
+			#{item.isQuery},
+			#{item.isList},
+			#{item.isEdit},
+			#{item.isNotNull},
+			#{item.fieldLength},
+			#{item.validType},
+			#{item.queryType},
+			#{item.dbType},
+			#{item.fieldType},
+			#{item.dictType},
+			#{item.options}
+		)
+		</foreach>
+	</insert>
+	
+	<sql id="selectFormDesignFieldVo">
+		ID,
+		FORM_DESIGN_ID,
+		FIELD_NAME,
+		FIELD_DESC,
+		SORT_NO,
+		IS_QUERY,
+		IS_LIST,
+		IS_EDIT,
+		IS_NOT_NULL,
+		FIELD_LENGTH,
+		QUERY_TYPE,
+		DB_TYPE,
+		VALID_TYPE,
+		FIELD_TYPE fieldType,
+		DICT_TYPE dictType,
+		OPTIONS options
+	</sql>
+	
+	<select id="findByDesignId" resultType="FormDesignField">
+		SELECT 
+			<include refid="selectFormDesignFieldVo"/>
+		FROM form_design_field
+		WHERE FORM_DESIGN_ID = #{formDesignId}
+	</select>
+	
+	<select id="selectOne" resultType="FormDesignField">
+		SELECT
+		<include refid="selectFormDesignFieldVo"/>
+		FROM form_design_field
+		WHERE FORM_DESIGN_ID = #{formDesignId}
+		AND FIELD_NAME = #{fieldName}
+	</select>
+	
+	<select id="delByDesignId">
+		DELETE FROM form_design_field
+		WHERE FORM_DESIGN_ID = #{formDesignId}
+	</select>
+	
+</mapper>

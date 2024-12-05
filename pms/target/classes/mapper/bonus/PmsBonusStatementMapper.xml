@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.bonus.mapper.PmsBonusStatementMapper">
+
+    <select id="selectEquivalentTypelist" resultType="com.zjry.pms.bonus.domain.PmsStatementEquivalentType">
+        SELECT
+            id as id,
+            equivalent_type_code as equivalentTypeCode,
+            equivalent_type_name as equivalentTypeName
+        FROM
+            pms_bonus_statement_equivalent_type
+    </select>
+    <select id="selectAchievementTypeList" resultType="com.zjry.pms.bonus.domain.PmsStatementAchievementType">
+        SELECT
+            id as id,
+            achievement_type_code as achievementTypeCode,
+            achievement_type_name as achievementTypeName
+        FROM
+            pms_bonus_statement_achievement_type
+    </select>
+    <select id="selectlabourTypelistList" resultType="com.zjry.pms.bonus.domain.PmsStatementLabourType">
+        SELECT
+            id as id,
+            labour_type_code as labourTypeCode,
+            labour_type_name as labourTypeName
+        FROM
+            pms_bonus_statement_labour_type
+    </select>
+    <select id="selectEquivalentList" resultType="com.zjry.pms.bonus.domain.PmsStatementEquivalent">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{equivalentTypeCode}
+          AND date_time = #{date}
+
+    </select>
+    <select id="getEquivalentListSum" resultType="java.lang.Integer">
+        SELECT
+            count(id)
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{equivalentTypeCode}
+          AND date_time = #{date}
+    </select>
+    <select id="subList" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentOne">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+    <select id="subListTwo" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentTwo">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+    <select id="subListThree" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentThree">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+    <select id="subListFour" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentFour">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+    <select id="subListFive" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentFive">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+    <select id="subListSix" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentSix">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+    <select id="subListSeven" resultType="com.zjry.pms.bonus.domain.equivalent.PmsStatementEquivalentSeven">
+        SELECT
+            id,
+            illness_code,
+            illness_name,
+            yz_dept_code,
+            yz_dept_name,
+            dt_dept_name,
+            hr_dept_name,
+            zy_dept_code,
+            zy_dept_name,
+            ordered_by_dept,
+            dept_name,
+            ordered_by_doctor,
+            user_name,
+            zl_code,
+            class_name,
+            zl_name,
+            class_on_reckoning,
+            item_code,
+            item_name,
+            item_price,
+            number,
+            bz_num,
+            jx_num,
+            total_num,
+            state
+        FROM
+            pms_bonus_statement_equivalent
+        WHERE
+            equivalent_type_code = #{pmsStatementEquivalent.equivalentTypeCode}
+          AND date_time = #{pmsStatementEquivalent.date}
+            LIMIT #{startLen},3000
+    </select>
+
+</mapper>

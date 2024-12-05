@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjry.pms.table.mapper.PmsTableMapper">
+
+    <select id="selectListOpcList" resultType="com.zjry.pms.table.domain.PmsTableOpcRes">
+        SELECT
+        case b.dept_room_code when '' then '合计' else  MIN(b.dept_room_name)
+        end as deptName,
+        SUM(charges) total,
+        SUM(case a.reck_class when '01' then  charges else 0 end) xyFee,
+        SUM(case a.reck_class when '02' then  charges else 0 end) zyFee,
+        SUM(case a.reck_class when '03' then  charges else 0 end) cyFee,
+        SUM(case a.reck_class when '04' then  charges else 0 end) tsclFee,
+        SUM(case a.reck_class when '05' then  charges else 0 end) zcFee,
+        SUM(case a.reck_class when '06' then  charges else 0 end) ghFee,
+        SUM(case a.reck_class when '07' then  charges else 0 end) tjFee,
+        SUM(case a.reck_class when '08' then  charges else 0 end) jhcFee,
+        SUM(case a.reck_class when '09' then  charges else 0 end) qnFee,
+        SUM(case a.reck_class when '10' then  charges else 0 end) cwFee,
+        SUM(case a.reck_class when '11' then  charges else 0 end) hzFee,
+        SUM(case a.reck_class when '12' then  charges else 0 end) hlFee,
+        SUM(case a.reck_class when '13' then  charges else 0 end) qjFee,
+        SUM(case a.reck_class when '14' then  charges else 0 end) zsFee,
+        SUM(case a.reck_class when '15' then  charges else 0 end) zlFee,
+        SUM(case a.reck_class when '16' then  charges else 0 end) jcFee,
+        SUM(case a.reck_class when '17' then  charges else 0 end) sxFee,
+        SUM(case a.reck_class when '18' then  charges else 0 end) ccFee,
+        SUM(case a.reck_class when '19' then  charges else 0 end) fsFee,
+        SUM(case a.reck_class when '20' then  charges else 0 end) jyFee,
+        SUM(case a.reck_class when '21' then  charges else 0 end) blFee,
+        SUM(case a.reck_class when '22' then  charges else 0 end) ndtFee,
+        SUM(case a.reck_class when '23' then  charges else 0 end) jdtFee,
+        SUM(case a.reck_class when '24' then  charges else 0 end) fgnFee,
+        SUM(case a.reck_class when '25' then  charges else 0 end) xdtFee,
+        SUM(case a.reck_class when '26' then  charges else 0 end) wjFee,
+        SUM(case a.reck_class when '27' then  charges else 0 end) mzFee,
+        SUM(case a.reck_class when '28' then  charges else 0 end) shFee,
+        SUM(case a.reck_class when '29' then  charges else 0 end) otherFee,
+        SUM(case a.reck_class when '30' then  charges else 0 end) ctFee,
+        SUM(case a.reck_class when '31' then  charges else 0 end) kfFee,
+        SUM(case a.reck_class when '32' then  charges else 0 end) jzkjcFee,
+        SUM(case a.reck_class when '33' then  charges else 0 end) icujcFee,
+        SUM(case a.reck_class when '34' then  charges else 0 end) nykjcFee,
+        SUM(case a.reck_class when '35' then  charges else 0 end) nekjcFee,
+        SUM(case a.reck_class when '36' then  charges else 0 end) tjkjcFee,
+        SUM(case a.reck_class when '37' then  charges else 0 end) wgkjcFee,
+        SUM(case a.reck_class when '38' then  charges else 0 end) fckjcFee,
+        SUM(case a.reck_class when '39' then  charges else 0 end) wekjcFee,
+        SUM(case a.reck_class when '40' then  charges else 0 end) grkjcFee,
+        SUM(case a.reck_class when '41' then  charges else 0 end) yqFee,
+        SUM(case a.reck_class when '42' then  charges else 0 end) xclFee
+        FROM outp_bill_items a, sys_dept_room b
+        WHERE
+        a.ST_DATE_OLD &gt;=  #{startTime}
+        AND a.ST_DATE_OLD &lt;  #{endTime}
+        AND a.ORDERED_BY_DEPT = b.dept_room_code
+        GROUP BY b.dept_room_code
+        ORDER BY b.dept_room_code
+    </select>
+    <select id="selectListBihList" resultType="com.zjry.pms.table.domain.PmsTableBihRes">
+        SELECT
+        case b.dept_room_code when '' then '合计' else  MIN(b.dept_room_name)
+        end as deptName,
+        SUM(charges) total,
+        SUM(case a.reck_class when '01' then  charges else 0 end) xyFee,
+        SUM(case a.reck_class when '02' then  charges else 0 end) zyFee,
+        SUM(case a.reck_class when '03' then  charges else 0 end) cyFee,
+        SUM(case a.reck_class when '04' then  charges else 0 end) tsclFee,
+        SUM(case a.reck_class when '05' then  charges else 0 end) zcFee,
+        SUM(case a.reck_class when '06' then  charges else 0 end) ghFee,
+        SUM(case a.reck_class when '07' then  charges else 0 end) tjFee,
+        SUM(case a.reck_class when '08' then  charges else 0 end) jhcFee,
+        SUM(case a.reck_class when '09' then  charges else 0 end) qnFee,
+        SUM(case a.reck_class when '10' then  charges else 0 end) cwFee,
+        SUM(case a.reck_class when '11' then  charges else 0 end) hzFee,
+        SUM(case a.reck_class when '12' then  charges else 0 end) hlFee,
+        SUM(case a.reck_class when '13' then  charges else 0 end) qjFee,
+        SUM(case a.reck_class when '14' then  charges else 0 end) zsFee,
+        SUM(case a.reck_class when '15' then  charges else 0 end) zlFee,
+        SUM(case a.reck_class when '16' then  charges else 0 end) jcFee,
+        SUM(case a.reck_class when '17' then  charges else 0 end) sxFee,
+        SUM(case a.reck_class when '18' then  charges else 0 end) ccFee,
+        SUM(case a.reck_class when '19' then  charges else 0 end) fsFee,
+        SUM(case a.reck_class when '20' then  charges else 0 end) jyFee,
+        SUM(case a.reck_class when '21' then  charges else 0 end) blFee,
+        SUM(case a.reck_class when '22' then  charges else 0 end) ndtFee,
+        SUM(case a.reck_class when '23' then  charges else 0 end) jdtFee,
+        SUM(case a.reck_class when '24' then  charges else 0 end) fgnFee,
+        SUM(case a.reck_class when '25' then  charges else 0 end) xdtFee,
+        SUM(case a.reck_class when '26' then  charges else 0 end) wjFee,
+        SUM(case a.reck_class when '27' then  charges else 0 end) mzFee,
+        SUM(case a.reck_class when '28' then  charges else 0 end) shFee,
+        SUM(case a.reck_class when '29' then  charges else 0 end) otherFee,
+        SUM(case a.reck_class when '30' then  charges else 0 end) ctFee,
+        SUM(case a.reck_class when '31' then  charges else 0 end) kfFee,
+        SUM(case a.reck_class when '32' then  charges else 0 end) jzkjcFee,
+        SUM(case a.reck_class when '33' then  charges else 0 end) icujcFee,
+        SUM(case a.reck_class when '34' then  charges else 0 end) nykjcFee,
+        SUM(case a.reck_class when '35' then  charges else 0 end) nekjcFee,
+        SUM(case a.reck_class when '36' then  charges else 0 end) tjkjcFee,
+        SUM(case a.reck_class when '37' then  charges else 0 end) wgkjcFee,
+        SUM(case a.reck_class when '38' then  charges else 0 end) fckjcFee,
+        SUM(case a.reck_class when '39' then  charges else 0 end) wekjcFee,
+        SUM(case a.reck_class when '40' then  charges else 0 end) grkjcFee,
+        SUM(case a.reck_class when '41' then  charges else 0 end) yqFee,
+        SUM(case a.reck_class when '42' then  charges else 0 end) xclFee
+        FROM inp_bill_detail a, sys_dept_room b
+        WHERE
+            a.ST_DATE_OLD &gt;=  #{startTime}
+          AND a.ST_DATE_OLD &lt;  #{endTime}
+        AND a.ORDERED_BY_DEPT = b.dept_room_code
+        GROUP BY b.dept_room_code
+        ORDER BY b.dept_room_code
+    </select>
+    <select id="listDeptbeList" resultType="com.zjry.pms.table.domain.PmsTableDeptbeRes">
+        SELECT IFNULL(A.dept_room_code, 999999) dept_code,
+        IFNULL(A.dept_room_name, '其他') dept_name,
+        SUM(COSTS) hj,
+        SUM(case COSTS_TAG when '1' then  COSTS else 0 end) zyhj,
+        SUM(case COSTS_TAG when '1' then  CHARGES else 0 end) zyss,
+        SUM(case COSTS_TAG when '1' then  INCOME else 0 end) zyjd,
+        SUM(case COSTS_TAG when '0' then  COSTS else 0 end) mzhj,
+        SUM(case COSTS_TAG when '0' then  CHARGES else 0 end) mzss,
+        SUM(case COSTS_TAG when '0' then  INCOME else 0 end) mzjd
+        FROM sys_dept_room A, DEPT_INCOME_PER_MON B
+        WHERE A.dept_room_code = B.DEPT_CODE
+        AND B.ST_DATE  &gt;=  #{startTime}
+        AND B.ST_DATE &lt;  #{endTime}
+        <if test="isReck == 0">
+            AND B.reck_class NOT IN
+            ('D14', 'D18', 'E10', 'E12', 'E15', 'E19', 'd20')
+        </if>
+        <if test="isReck == 1">
+            AND B.reck_class  IN
+            ('D14', 'D18', 'E10', 'E12', 'E15', 'E19', 'd20')
+        </if>
+        <if test="opTag != null  and opTag != ''">
+        AND B.OP_TAG = #{opTag}
+        </if>
+          <if test="deptCode != null  and deptCode != ''">
+        AND A.dept_room_code = #{deptCode}
+        </if>
+        GROUP BY A.dept_room_code, A.dept_room_name
+        ORDER BY IFNULL(A.dept_room_code, 999999)
+
+    </select>
+    <select id="listHsdeptList" resultType="com.zjry.pms.table.domain.PmsTableHsdeptRes">
+        SELECT CASE
+
+        WHEN IF(ITEM_NAME IS NULL, 1, 0) = 1 AND IF(CLASS_NAME IS NULL, 1, 0) = 1 THEN
+        ' 合计'
+        ELSE
+        class_name
+        END className,
+        CASE
+        WHEN IF(ITEM_NAME IS NULL, 1, 0) = 1 AND IF(CLASS_NAME IS NULL, 1, 0) = 0 THEN
+        CLASS_NAME || ''
+        ELSE
+        '　　' || ITEM_NAME
+        END itemName,
+        SUM(accountincomes) accountincomes,
+        SUM(facaccountincomes) facaccountincomes,
+        SUM(armaccountincomes) armaccountincomes,
+        SUM(hrealincomes) hrealincomes,
+        SUM(hvalationincomes) hvalationincomes,
+        SUM(crealincomes) crealincomes,
+        SUM(cvalationincomes) cvalationincomes
+        FROM (SELECT reck_item,
+        B.ITEM_NAME,
+        B.CLASS_TYPE || B.CLASS_NAME class_name,
+        ifnull((SUM(ifnull(incomes, 0)) - SUM(ifnull(incomes_charges, 0)) +
+        SUM(ifnull(incomes_charges, 0))),
+        0) accountincomes,
+        ifnull(SUM(ifnull(incomes_charges, 0)), 0) facaccountincomes,
+        ifnull(SUM(ifnull(incomes, 0) - ifnull(incomes_charges, 0)), 0) armaccountincomes,
+        ifnull(SUM(CASE
+        WHEN costs_tag = '0' THEN
+        ifnull(incomes_charges, 0)
+        END),
+        0) AS hrealincomes,
+        ifnull(SUM(CASE
+        WHEN costs_tag = '0' THEN
+        ifnull(incomes, 0) - ifnull(incomes_charges, 0)
+        END),
+        0) AS hvalationincomes,
+        ifnull(SUM(CASE
+        WHEN costs_tag = '1' THEN
+        ifnull(incomes_charges, 0)
+        END),
+        0) AS crealincomes,
+        ifnull(SUM(CASE
+        WHEN costs_tag = '1' THEN
+        ifnull(incomes, 0) - ifnull(incomes_charges, 0)
+        END),
+        0) AS cvalationincomes
+        FROM CBHS_INCOMS_INFO_ACCOUNT    a,
+        CBHS_DISTRIBUTION_CALC_SCHM b
+        WHERE (a.balance_tag = #{balanceTag})
+        <if test="deptCode != null  and deptCode != ''">
+            AND A.DEPT_CODE         = #{deptCode}
+        </if>
+        AND A.RECK_ITEM = B.ITEM_CLASS
+        AND date_time &gt;=  #{startTime}
+        AND date_time &lt;  #{endTime}
+        GROUP BY reck_item, B.ITEM_NAME, B.CLASS_TYPE, B.CLASS_NAME) c
+        GROUP BY CLASS_NAME, ITEM_NAME
+        WITH ROLLUP
+        HAVING ITEM_NAME IS NOT NULL
+        --  ORDER BY CLASS_NAME, ITEM_NAME
+    </select>
+    <select id="listDeptarList" resultType="com.zjry.pms.table.domain.PmsTableDeptarRes">
+        SELECT ifnull(B.dept_room_code, 999999) DEPT_CODE,
+        ifnull(B.dept_room_name, '其他') DEPT_NAME,
+        SUM(INCOMES) HJ,
+        SUM(case COSTS_TAG when '0' then  INCOMES else 0 end) ZYHJ,
+        SUM(case COSTS_TAG when '0' then  INCOMES_CHARGES else 0 end) ZYSS,
+        SUM(case COSTS_TAG when '0' then  INCOMES - INCOMES_CHARGES else 0 end) ZYJD,
+        SUM(case COSTS_TAG when '1' then  INCOMES else 0 end) MZHJ,
+        SUM(case COSTS_TAG when '1' then  INCOMES_CHARGES else 0 end) MZSS,
+        SUM(case COSTS_TAG when '1' then  INCOMES - INCOMES_CHARGES else 0 end) MZJD
+        FROM CBHS_INCOMS_INFO_ACCOUNT A, sys_dept_room B
+        WHERE A.DEPT_CODE = B.dept_room_code
+        AND A.DATE_TIME &gt;=  #{startTime}
+        AND A.DATE_TIME &lt;  #{endTime}
+        AND A.BALANCE_TAG = #{balanceTag}
+        <if test="isReck == 0">
+            AND A.RECK_ITEM NOT IN ('D14', 'D18', 'E10', 'E12', 'E15', 'E19', 'd20')
+        </if>
+        <if test="isReck == 1">
+            AND A.RECK_ITEM  IN ('D14', 'D18', 'E10', 'E12', 'E15', 'E19', 'd20')
+        </if>
+        <if test="deptCode != null  and deptCode != ''">
+            AND B.dept_room_code = #{deptCode}
+        </if>
+        GROUP BY B.dept_room_code, B.dept_room_name
+        ORDER BY ifnull(B.dept_room_name, 999999)
+    </select>
+    <select id="listIncsumList" resultType="com.zjry.pms.table.domain.PmsTableIncsumRes">
+        SELECT CASE
+
+        WHEN IF(b.dept_room_name IS NULL, 1, 0) = 1 AND IF(costs_tag IS NULL, 1, 0) = 1 THEN
+        '合计'
+        ELSE
+        b.dept_room_name
+        END deptName,
+        CASE
+        WHEN IF(b.dept_room_name IS NULL, 1, 0) = 0 AND IF(costs_tag IS NULL, 1, 0) = 1 THEN
+        '小计'
+        ELSE
+        (CASE
+        WHEN a.costs_tag = '0' THEN
+        '住院'
+        when a.costs_tag = '1' then
+        '门诊'
+        ELSE
+        ''
+        END)
+        END deptType,
+        round(sum(INCOMES), 2) total,
+        round(SUM(case c.CLASS_TYPE when 'A' then  INCOMES else 0 end), 2) yp,
+        round(SUM(case c.CLASS_TYPE when 'B' then  INCOMES else 0 end), 2) jy,
+        round(SUM(case c.CLASS_TYPE when 'C' then  INCOMES else 0 end), 2) jc,
+        round(SUM(case c.CLASS_TYPE when 'D' then  INCOMES else 0 end), 2) zl,
+        round(SUM(case c.CLASS_TYPE when 'E' then  INCOMES else 0 end), 2) fs,
+        round(SUM(case c.CLASS_TYPE when 'F' then  INCOMES else 0 end), 2) ss,
+        round(SUM(case c.CLASS_TYPE when 'G' then  INCOMES else 0 end), 2) sx,
+        round(SUM(case c.CLASS_TYPE when 'H' then  INCOMES else 0 end), 2) hl,
+        round(SUM(case c.CLASS_TYPE when 'I' then  INCOMES else 0 end), 2) gh,
+        round(SUM(case c.CLASS_TYPE when 'J' then  INCOMES else 0 end), 2) cw,
+        round(SUM(case c.CLASS_TYPE when 'K' then  INCOMES else 0 end), 2) qt,
+        round(SUM(case c.CLASS_TYPE when 'M' then  INCOMES else 0 end), 2) zlsr,
+        round(SUM(case c.CLASS_TYPE when 'N' then  INCOMES else 0 end), 2) zlf,
+        round(SUM(case c.CLASS_TYPE when 'O' then  INCOMES else 0 end), 2) mz,
+        round(SUM(case c.CLASS_TYPE when 'P' then  INCOMES else 0 end), 2) zx,
+        round(SUM(case c.CLASS_TYPE when 'X' then  INCOMES else 0 end), 2) cl
+        from CBHS_INCOMS_INFO_ACCOUNT    a,
+        sys_dept_room               b,
+        CBHS_DISTRIBUTION_CALC_SCHM c
+        WHERE a.reck_item = c.item_class
+        and a.DATE_TIME &gt;=  #{startTime}
+        AND a.DATE_TIME &lt;  #{endTime}
+        and a.DEPT_CODE = b.dept_room_code
+        and a.BALANCE_TAG = #{balanceTag}
+        GROUP BY b.dept_room_name, costs_tag
+        WITH ROLLUP
+        HAVING b.dept_room_name IS NOT NULL
+    </select>
+    <select id="listDocList" resultType="com.zjry.pms.table.domain.PmsTableDocRes">
+        select a.ordered_by_doctor orderedByDoctor,
+        case a.ORDERED_BY_DOCTOR when '' then '合计' else min(b.user_name) end docName,
+        sum(COSTS) total,
+        SUM(case a.reck_class when 'A01' then  charges else 0 end) xyf,
+        SUM(case a.reck_class when 'A02' then  charges else 0 end) zchyf,
+        SUM(case a.reck_class when 'A03' then  charges else 0 end) zcyf,
+        SUM(case a.reck_class when 'B01' then  charges else 0 end) ghf,
+        SUM(case a.reck_class when 'C01' then  charges else 0 end) zcf,
+        SUM(case a.reck_class when 'D01' then  charges else 0 end) jcf,
+        SUM(case a.reck_class when 'D02' then  charges else 0 end) hyf,
+        SUM(case a.reck_class when 'D03' then  charges else 0 end) cgl,
+        SUM(case a.reck_class when 'D04' then  charges else 0 end) shl,
+        SUM(case a.reck_class when 'D05' then  charges else 0 end) myl,
+        SUM(case a.reck_class when 'D06' then  charges else 0 end) xjl,
+        SUM(case a.reck_class when 'D07' then  charges else 0 end) dzf,
+        SUM(case a.reck_class when 'D08' then  charges else 0 end) xd,
+        SUM(case a.reck_class when 'D09' then  charges else 0 end) dtxd,
+        SUM(case a.reck_class when 'D10' then  charges else 0 end) nd,
+        SUM(case a.reck_class when 'D11' then  charges else 0 end) dtnd,
+        SUM(case a.reck_class when 'D12' then  charges else 0 end) bc,
+        SUM(case a.reck_class when 'D13' then  charges else 0 end) cc,
+        SUM(case a.reck_class when 'D14' then  charges else 0 end) ss,
+        SUM(case a.reck_class when 'D15' then  charges else 0 end) fsf,
+        SUM(case a.reck_class when 'D16' then  charges else 0 end) tsf,
+        SUM(case a.reck_class when 'D17' then  charges else 0 end) zyf,
+        SUM(case a.reck_class when 'D18' then  charges else 0 end) ppf,
+        SUM(case a.reck_class when 'D19' then  charges else 0 end) blf,
+        SUM(case a.reck_class when 'D20' then  charges else 0 end) zzl,
+        SUM(case a.reck_class when 'D21' then  charges else 0 end) gjhj,
+        SUM(case a.reck_class when 'D22' then  charges else 0 end) zbl,
+        SUM(case a.reck_class when 'D23' then  charges else 0 end) yjf,
+        SUM(case a.reck_class when 'D24' then  charges else 0 end) ctf,
+        SUM(case a.reck_class when 'D25' then  charges else 0 end) topbct,
+        SUM(case a.reck_class when 'D26' then  charges else 0 end) tbct,
+        SUM(case a.reck_class when 'D27' then  charges else 0 end) hcf,
+        SUM(case a.reck_class when 'D28' then  charges else 0 end) topbhc,
+        SUM(case a.reck_class when 'D29' then  charges else 0 end) tbhc,
+        SUM(case a.reck_class when 'D30' then  charges else 0 end) jjf,
+        SUM(case a.reck_class when 'D31' then  charges else 0 end) wj,
+        SUM(case a.reck_class when 'D32' then  charges else 0 end) cj,
+        SUM(case a.reck_class when 'D33' then  charges else 0 end) tjc,
+        SUM(case a.reck_class when 'E01' then  charges else 0 end) zlf,
+        SUM(case a.reck_class when 'E02' then  charges else 0 end) syf,
+        SUM(case a.reck_class when 'E03' then  charges else 0 end) sxf,
+        SUM(case a.reck_class when 'E04' then  charges else 0 end) hyczf,
+        SUM(case a.reck_class when 'E05' then  charges else 0 end) jdf,
+        SUM(case a.reck_class when 'E06' then  charges else 0 end) jzfee,
+        SUM(case a.reck_class when 'E07' then  charges else 0 end) jzf,
+        SUM(case a.reck_class when 'E08' then  charges else 0 end) cxf,
+        SUM(case a.reck_class when 'E09' then  charges else 0 end) zsf,
+        SUM(case a.reck_class when 'E10' then  charges else 0 end) txf,
+        SUM(case a.reck_class when 'E11' then  charges else 0 end) gyf,
+        SUM(case a.reck_class when 'E12' then  charges else 0 end) gcf,
+        SUM(case a.reck_class when 'E13' then  charges else 0 end) ndf,
+        SUM(case a.reck_class when 'E14' then  charges else 0 end) ccf,
+        SUM(case a.reck_class when 'E15' then  charges else 0 end) llf,
+        SUM(case a.reck_class when 'E16' then  charges else 0 end) zjf,
+        SUM(case a.reck_class when 'E17' then  charges else 0 end) amf,
+        SUM(case a.reck_class when 'E18' then  charges else 0 end) rlf,
+        SUM(case a.reck_class when 'E19' then  charges else 0 end) shf,
+        SUM(case a.reck_class when 'E20' then  charges else 0 end) qhf,
+        SUM(case a.reck_class when 'E21' then  charges else 0 end) clf,
+        SUM(case a.reck_class when 'F01' then  charges else 0 end) mzf,
+        SUM(case a.reck_class when 'F02' then  charges else 0 end) ssf,
+        SUM(case a.reck_class when 'F03' then  charges else 0 end) jsf,
+        SUM(case a.reck_class when 'G01' then  charges else 0 end) hlf,
+        SUM(case a.reck_class when 'H01' then  charges else 0 end) qjgc,
+        SUM(case a.reck_class when 'H02' then  charges else 0 end) lgf,
+        SUM(case a.reck_class when 'I01' then  charges else 0 end) cwf,
+        SUM(case a.reck_class when 'J01' then  charges else 0 end) qnf,
+        SUM(case a.reck_class when 'K01' then  charges else 0 end) ljf,
+        SUM(case a.reck_class when 'L01' then  charges else 0 end) qtf,
+        SUM(case a.reck_class when 'L02' then  charges else 0 end) wcf,
+        SUM(case a.reck_class when 'M01' then  charges else 0 end) jhf,
+        SUM(case a.reck_class when 'M02' then  charges else 0 end) hzf,
+        SUM(case a.reck_class when 'M03' then  charges else 0 end) szq,
+        SUM(case a.reck_class when 'M04' then  charges else 0 end) xwf,
+        SUM(case a.reck_class when 'M05' then  charges else 0 end) smf
+        from OUTP_CLASS2_INCOME a, sys_user b, sys_dept_room c
+        WHERE st_date &gt;=  #{startTime}
+        AND st_date &lt;=  #{endTime}
+        and a.ORDERED_BY_DOCTOR = b.user_id
+        and a.ORDERED_BY_DEPT = c.dept_room_code
+        group by a.ORDERED_BY_DOCTOR
+        WITH ROLLUP
+        HAVING a.ORDERED_BY_DOCTOR IS NOT NULL
+    </select>
+    <select id="listCostList" resultType="com.zjry.pms.table.domain.PmsTableCostRes">
+        SELECT b.dept_room_code deptCode,
+        b.sort sort,
+        case b.dept_room_name when  '' then  '合计' else  b.dept_room_name end deptName,
+        SUM(COSTS_ARMYFREE + COSTS) total,
+        SUM(case a.ITEM_CODE when 'A0' then  COSTS_ARMYFREE + COSTS else 0 end) rlcb,
+        SUM(case a.ITEM_CODE when 'B01' then  COSTS_ARMYFREE + COSTS else 0 end) wscl,
+        SUM(case a.ITEM_CODE when 'B02' then  COSTS_ARMYFREE + COSTS else 0 end) ssscl,
+        SUM(case a.ITEM_CODE when 'B03' then  COSTS_ARMYFREE + COSTS else 0 end) xdclf,
+        SUM(case a.ITEM_CODE when 'B04' then  COSTS_ARMYFREE + COSTS else 0 end) dzyh,
+        SUM(case a.ITEM_CODE when 'C0' then  COSTS_ARMYFREE + COSTS else 0 end) xyf,
+        SUM(case a.ITEM_CODE when 'C01' then  COSTS_ARMYFREE + COSTS else 0 end) zcf,
+        SUM(case a.ITEM_CODE when 'C02' then  COSTS_ARMYFREE + COSTS else 0 end) zyf,
+        SUM(case a.ITEM_CODE when 'D0' then  COSTS_ARMYFREE + COSTS else 0 end) zjf,
+        SUM(case a.ITEM_CODE when 'D01' then  COSTS_ARMYFREE + COSTS else 0 end) fwzjf,
+        SUM(case a.ITEM_CODE when 'D02' then  COSTS_ARMYFREE + COSTS else 0 end) zcczf,
+        SUM(case a.ITEM_CODE when 'F0' then  COSTS_ARMYFREE + COSTS else 0 end) ylfxjj,
+        SUM(case a.ITEM_CODE when 'G0' then  COSTS_ARMYFREE + COSTS else 0 end) ylsbdk,
+        SUM(case a.ITEM_CODE when 'G01' then  COSTS_ARMYFREE + COSTS else 0 end) wxhf,
+        SUM(case a.ITEM_CODE when 'G02' then  COSTS_ARMYFREE + COSTS else 0 end) ylsbkcf,
+        SUM(case a.ITEM_CODE when 'G03' then  COSTS_ARMYFREE + COSTS else 0 end) clf,
+        SUM(case a.ITEM_CODE when 'G04' then  COSTS_ARMYFREE + COSTS else 0 end) bfxdf,
+        SUM(case a.ITEM_CODE when 'G05' then  COSTS_ARMYFREE + COSTS else 0 end) sf,
+        SUM(case a.ITEM_CODE when 'G06' then  COSTS_ARMYFREE + COSTS else 0 end) dtsyf,
+        SUM(case a.ITEM_CODE when 'G07' then  COSTS_ARMYFREE + COSTS else 0 end) df,
+        SUM(case a.ITEM_CODE when 'G08' then  COSTS_ARMYFREE + COSTS else 0 end) sbxlf,
+        SUM(case a.ITEM_CODE when 'G09' then  COSTS_ARMYFREE + COSTS else 0 end) ydf,
+        SUM(case a.ITEM_CODE when 'G10' then  COSTS_ARMYFREE + COSTS else 0 end) yzf,
+        SUM(case a.ITEM_CODE when 'G11' then  COSTS_ARMYFREE + COSTS else 0 end) ysf,
+        SUM(case a.ITEM_CODE when 'G12' then  COSTS_ARMYFREE + COSTS else 0 end) bjf,
+        SUM(case a.ITEM_CODE when 'G13' then  COSTS_ARMYFREE + COSTS else 0 end) yyljclf,
+        SUM(case a.ITEM_CODE when 'G14' then  COSTS_ARMYFREE + COSTS else 0 end) kykqf,
+        SUM(case a.ITEM_CODE when 'G15' then  COSTS_ARMYFREE + COSTS else 0 end) yqf,
+        SUM(case a.ITEM_CODE when 'G16' then  COSTS_ARMYFREE + COSTS else 0 end) glf,
+        SUM(case a.ITEM_CODE when 'G17' then  COSTS_ARMYFREE + COSTS else 0 end) qtzc,
+        SUM(case a.ITEM_CODE when 'G18' then  COSTS_ARMYFREE + COSTS else 0 end) qnf,
+        SUM(case a.ITEM_CODE when 'G19' then  COSTS_ARMYFREE + COSTS else 0 end) wsclf,
+        SUM(case a.ITEM_CODE when 'G20' then  COSTS_ARMYFREE + COSTS else 0 end) ylsbxlf,
+        SUM(case a.ITEM_CODE when 'G21' then  COSTS_ARMYFREE + COSTS else 0 end) yqpjf,
+        SUM(case a.ITEM_CODE when 'G22' then  COSTS_ARMYFREE + COSTS else 0 end) qxf,
+        SUM(case a.ITEM_CODE when 'G23' then  COSTS_ARMYFREE + COSTS else 0 end) bgf,
+        SUM(case a.ITEM_CODE when 'G24' then  COSTS_ARMYFREE + COSTS else 0 end) qtjtf,
+        SUM(case a.ITEM_CODE when 'G25' then  COSTS_ARMYFREE + COSTS else 0 end) pxf,
+        SUM(case a.ITEM_CODE when 'G26' then  COSTS_ARMYFREE + COSTS else 0 end) hyjdf,
+        SUM(case a.ITEM_CODE when 'G27' then  COSTS_ARMYFREE + COSTS else 0 end) lwf,
+        SUM(case a.ITEM_CODE when 'G28' then  COSTS_ARMYFREE + COSTS else 0 end) flf,
+        SUM(case a.ITEM_CODE when 'G29' then  COSTS_ARMYFREE + COSTS else 0 end) qtcl,
+        SUM(case a.ITEM_CODE when 'G30' then  COSTS_ARMYFREE + COSTS else 0 end) ghjf,
+        SUM(case a.ITEM_CODE when 'G31' then  COSTS_ARMYFREE + COSTS else 0 end) wxf,
+        SUM(case a.ITEM_CODE when 'G32' then  COSTS_ARMYFREE + COSTS else 0 end) yhsxf,
+        SUM(case a.ITEM_CODE when 'G33' then  COSTS_ARMYFREE + COSTS else 0 end) zlf,
+        SUM(case a.ITEM_CODE when 'G34' then  COSTS_ARMYFREE + COSTS else 0 end) qtspfw,
+        SUM(case a.ITEM_CODE when 'G35' then  COSTS_ARMYFREE + COSTS else 0 end) hwf,
+        SUM(case a.ITEM_CODE when 'G36' then  COSTS_ARMYFREE + COSTS else 0 end) xcp,
+        SUM(case a.ITEM_CODE when 'G37' then  COSTS_ARMYFREE + COSTS else 0 end) wyglf,
+        SUM(case a.ITEM_CODE when 'G38' then  COSTS_ARMYFREE + COSTS else 0 end) lxf,
+        SUM(case a.ITEM_CODE when 'G39' then  COSTS_ARMYFREE + COSTS else 0 end) hyf,
+        SUM(case a.ITEM_CODE when 'G40' then  COSTS_ARMYFREE + COSTS else 0 end) wtywf,
+        SUM(case a.ITEM_CODE when 'G41' then  COSTS_ARMYFREE + COSTS else 0 end) qtclf,
+        SUM(case a.ITEM_CODE when 'G42' then  COSTS_ARMYFREE + COSTS else 0 end) qyf,
+        SUM(case a.ITEM_CODE when 'G43' then  COSTS_ARMYFREE + COSTS else 0 end) wxzctx,
+        SUM(case a.ITEM_CODE when 'H0' then  COSTS_ARMYFREE + COSTS else 0 end) bfgzf,
+        SUM(case a.ITEM_CODE when 'H01' then  COSTS_ARMYFREE + COSTS else 0 end) dnhcf,
+        SUM(case a.ITEM_CODE when 'H02' then  COSTS_ARMYFREE + COSTS else 0 end) yybgf,
+        SUM(case a.ITEM_CODE when 'H03' then  COSTS_ARMYFREE + COSTS else 0 end) zwcl,
+        SUM(case a.ITEM_CODE when 'I0' then  COSTS_ARMYFREE + COSTS else 0 end) xf
+        FROM CBHS_DEPT_COST_DETAIL a, sys_dept_room b
+        WHERE ACCOUNTING_DATE  &gt;=  #{startTime}
+        AND ACCOUNTING_DATE &lt;  #{endTime}
+        AND a.DEPT_CODE = b.dept_room_code
+        AND (a.BALANCE_TAG = #{balanceTag} OR a.BALANCE_TAG IS NULL)
+        GROUP BY b.dept_room_code,b.dept_room_name,b.sort
+        ORDER BY b.sort
+
+    </select>
+</mapper>
